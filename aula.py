@@ -1,4 +1,5 @@
 import math
+    c = 8
 class Numero(object):
     def __init__(self):
          self.x = int(input("Digite um numero: "))
