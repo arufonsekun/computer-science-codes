@@ -21,7 +21,9 @@ def cisne(img,cv2):
     body2 = np.array([[575,725],[667,725],[670,815]], np.int32)
     tail1 = np.array([[689,660],[689,809],[830,806]], np.int32)
     tail2 = np.array([[686,630],[797,741],[926,630]], np.int32)
-    cv2.polylines(img,[head1,head2,neck,body1,body2, tail1, tail2],True,(0,255,255),6)
+    cv2.polylines(img,[head1,head2,neck,body1,body2, tail1, tail2],True,(0,255,255),4)
+    ##The follow line fill de polygon
+    cv2.fillPoly(img, [head1,head2,neck,body1,body2, tail1, tail2], (0,255,255), lineType=8, shift=0)
 
 def logo(img, cv2):
     r1 = 70
@@ -49,11 +51,11 @@ def logo(img, cv2):
     cv2.ellipse(img, dot_red, (r1, r1), 0, 130, 55, black, full)
     cv2.ellipse(img, dot_green, (r1, r1), 0, 295, 360, black, full)
     cv2.ellipse(img, dot_blue, (r1, r1), 0, 240, 305, black, full)
-    cv2.putText(img, "OpenCV", (69,409), 5, 4,(255,0,0),2,cv2.LINE_AA) 
+    cv2.putText(img, "OpenCV", (69,409), 5, 4,(255,0,0),2,cv2.LINE_AA)
 
 
-#atom(img,cv2)
-#cisne(img,cv2)
-logo(img, cv2)
+atom(img,cv2)
+cisne(img,cv2)
+#logo(img, cv2)
 plt.imshow(img)
 plt.show()
