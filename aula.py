@@ -1,4 +1,5 @@
 import math
+    c = 8
 class Numero(object):
     def __init__(self):
          self.x = int(input("Digite um numero: "))
@@ -17,4 +18,6 @@ def exercicio():
     print (a < b and not b <= 4 or c == a + b)
     print (a < c and b > a and c != b)
 
+def maior_impar();
+    c,y,z = input()
 exercicio()

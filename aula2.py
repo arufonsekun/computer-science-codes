@@ -52,7 +52,39 @@ def fatorial(x,fat):
         print ("O fatorial eh %i" % fat)
     else:
         fatorial(x - 1, fat * x)
+def maior():
+    x = int(input("Digite um numero: "))
+    y = int(input("Digite outro: "))
+    if x > y : return (x)
+    else : return (y)
 
+##def somaParImpar():
+##    lista = list()
+##    for i in range(0,3):
+##        x = input("Digite um numero: ")
+##        lista.append(x)
+##    par = 0
+##    odd = 0
+##    for i in range(0,3):
+##        if lista[i] % 2 == 0:
+##            par += lista[i]
+##        else:
+##            odd += lista[i]
+def biggest():
+    lista = list()
+    for i in range(0,3):
+        x = int(input("Digite um numero: "))
+        lista.append(x)
+    menor = int(0); maior = int(0)
+    for el in lista:
+        if el > maior:
+            maior = el
+    menor = maior
+    for el in lista:
+        if el < menor:
+            menor = el            
+    print ("Maior é ", maior, "e O menor é", menor)
+    
 #soma()
 #soma_numeros()
 #sucessor_antecessor()
@@ -60,3 +92,5 @@ def fatorial(x,fat):
 #conversao()
 #salario()
 #fatorial(5,1)
+#print(maior())
+#somaParImpar()
