@@ -1,0 +1,49 @@
+#Exercicio1
+def exe1():
+	x,y = input("Digite dois numeros: ").split(",")
+	if x == y:
+		print("Numeros iguais")
+	elif x > y:
+		print("{0} é o numero maior".format(x))
+	elif y > x:
+		print("{0} é o maior numero".format(y))
+
+def categoria():
+	x = int(input("Qual é sua idade: "))
+	categoria = str()
+	if x < 5:
+		categoria = "Mini"
+	elif x >= 5 and x <= 7:
+		categoria = "Infantil A"
+	elif x >= 8 and x <= 10:
+		categoria = "Infantil B"
+	elif x >= 11 and x <= 13:
+		categoria = "Juvenil A"
+	elif x >= 14 and x <= 17:
+		categoria = "Juvenil B"
+	else:
+		categoria = "Adulto"
+	print("Sua categoria é {0}".format(categoria))
+
+def exe3():
+	n = int(input("Digite um numero: "))
+	if n <= 10: print("F1")
+	elif n > 10 and n <= 100: print("F2")
+	else: print("F3")
+
+def compra():
+	nome = input("Para iniciar a compra digite seu nome: ")
+	parafuso = int(input("Digite a quantidade de parafusos que o senhor quer comprar: "))
+	porcas = int(input("Digite a quantidade de porcas: "))
+	arruela = int(input("Digite a quantidade de arruelas: "))
+	print("O senhor {0} gastou R${0:8.2f} em parafusos, R${0:8.2f} em porcas e R${0:8.2f} em arruelas".format(nome, parafuso * 0.10, porcas * 0.08, arruela * 0.03))
+	print("(respectivos valores sem descontos)")
+	desconto = (parafuso * 0.10 * 0.20) + (porcas * 0.08 * 0.10) + (arruela * 0.03 * 0.3)
+	print("O desconto total foi de R${0:8.2f} ".format(desconto))Crescimento de Regiões (Region Growing)
+
+
+#exe1()
+#categoria()
+#exe3()
+compra()
+
