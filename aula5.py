@@ -50,7 +50,7 @@ def reinventar_a_roda():
   num = n1
   while num >= n2:
     num -= n2
-    count += 1 
+    count += 1
   print ("{0} / {1} = {2}, o resto é {3}".format(n1, n2, count, num))
 
 #Exercicio 4
@@ -79,7 +79,7 @@ def salario():
     salarios.append(y)
     count += 1
     if y > maior:
-      maior = y 
+      maior = y
     if y < menor:
       menor = y
   print("A media dos salarios é",media/5)
@@ -91,7 +91,7 @@ def fatorial():
   x = int(input("Digite um numero: "))
   fat = int(1)
   while x > 0:
-    fat *= x 
+    fat *= x
     x -= 1
   print("O fatorial é",fat)
 
@@ -101,8 +101,8 @@ def tabuada():
   count = 1
   while count <= 10:
     print("{0} X {1} = {2}".format(x, count, x*count))
-    count += 1 
-    
+    count += 1
+
 #Exercicio 8
 def fibonacci():
   termo = int(input("Digite o a posição do termo: "))
@@ -113,7 +113,7 @@ def fibonacci():
   if termo == 0:
       print(primeiro)
   else:
-    count += 1 
+    count += 1
     print(primeiro)
     while count <= termo:
         print (valor)
@@ -135,10 +135,24 @@ def primo():
     count += 1
   if divInt == 2:print("É primo")
   else:print("Não é primo")
+
+def greetings():
+    while 1:
+        print("1- Boas vindas a CC \n 2- Primeiro programa \n 3- Condições ")
+        print("4- Repetições \n 0- Sair do programa")
+        x = input("Digite sua entrada: ")
+        if x == '1': print ("Seja bem-vindo ao curso de Ciência da Computação")
+        if x == '2': print ("Alô Mundo em Python")
+        if x == '3': print ("IF, ELIF, ELSE")
+        if x == '4': print ("WHILE, FOR")
+        if x == '0': exit()
+        else: print("Entrada inválida")
+
 #fatorial()
 #salario()
 #reinventar_a_roda()
 #senha()
 #mediaNotas()
 #soma()
-paresImpares()
+#paresImpares()
+greetings()
