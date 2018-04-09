@@ -61,7 +61,6 @@ def soma():
     soma += count
     count += 1
   print("A soma é {0}".format(soma))
-soma()
 
 #Exercicio 5
 def salario():
@@ -137,16 +136,25 @@ def primo():
   else:print("Não é primo")
 
 def greetings():
+    dic = {
+            '1':"Seja bem-vindo ao curso de Ciência da Computação",
+            '2':"Alô Mundo em Python",
+            '3':"IF, ELIF, ELSE",
+            '4':"WHILE, FOR"
+        }
     while 1:
-        print("1- Boas vindas a CC \n 2- Primeiro programa \n 3- Condições ")
-        print("4- Repetições \n 0- Sair do programa")
+        print("*------------------------------------*")
+        print("1- Boas vindas a CC \n 2- Primeiro programa \n 3- Condições ") 
+        print("4- Repetições \n 0- Sair do programa") 
+        print("*------------------------------------*") 
         x = input("Digite sua entrada: ")
-        if x == '1': print ("Seja bem-vindo ao curso de Ciência da Computação")
-        if x == '2': print ("Alô Mundo em Python")
-        if x == '3': print ("IF, ELIF, ELSE")
-        if x == '4': print ("WHILE, FOR")
-        if x == '0': exit()
-        else: print("Entrada inválida")
+        try: 
+            print (dic[x])
+        except KeyError:
+            if x == '0':
+                exit()
+            else:
+                print("Entrada inválida")
 
 #fatorial()
 #salario()
