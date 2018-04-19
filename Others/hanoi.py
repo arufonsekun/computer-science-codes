@@ -9,8 +9,8 @@ class Disco:
         return str(self.tamanho)
 
 
-class Pino:
 
+class Pino:
     def __init__(self, n_discos=0):
         if n_discos > 0:
             self.discos = [Disco(t) for t in range(1, n_discos+1)]
