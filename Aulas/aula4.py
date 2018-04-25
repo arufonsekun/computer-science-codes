@@ -49,3 +49,4 @@ def shit2():
     if x == y: print ("São iguais")
     elif x > y: print ("{0} é maior que {1}".format(x,y))
     else: print("{0} é maior que {1}".format(y,x))
+fibonacci(100)
