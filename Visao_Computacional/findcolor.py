@@ -1,4 +1,3 @@
-#-*-encoding:utf-8-*-#
 import cv2 as cv
 import numpy as np
 import matplotlib.pyplot as plt
@@ -19,10 +18,11 @@ def init(name):
                 quantity[cores.index(color_tuple)] += 1
             else:
                 quantity[cores.index(color_tuple)] += 1
-    print "A cor: RGB" , cores[quantity.index(max(quantity))]
-    print"Esta presente em: ", max(quantity), " pixels"
+    print("A cor: RGB" , cores[quantity.index(max(quantity))])
+    print("Esta presente em: ", max(quantity), " pixels")
+    print(quantity)
     show(cores[quantity.index(max(quantity))], img)
-#Function that show the color and the image
+#Function that shows the color and the image
 def show(x,img):
     color = x[::-1]
     img1 = np.zeros((512,512,3), np.uint8)
