@@ -16,6 +16,7 @@ def init(name):
             if not color_tuple in cores:
                 cores.append(color_tuple)
                 quantity.append(0)
+                quantity[cores.index(color_tuple)] += 1
             else:
                 quantity[cores.index(color_tuple)] += 1
     print "A cor: RGB" , cores[quantity.index(max(quantity))]
