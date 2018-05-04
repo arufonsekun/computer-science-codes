@@ -2,8 +2,10 @@ import cv2 as cv
 import numpy as np
 import matplotlib.pyplot as plt
 import sys
+from PIL import Image
 #Function wich gets the colors of the image
 def init(name):
+    resize(name)
     img = np.array(cv.imread(name))
     cores = []
     quantity = []
@@ -20,8 +22,8 @@ def init(name):
                 quantity[cores.index(color_tuple)] += 1
     print("A cor: RGB" , cores[quantity.index(max(quantity))])
     print("Esta presente em: ", max(quantity), " pixels")
-    print(quantity)
     show(cores[quantity.index(max(quantity))], img)
+
 #Function that shows the color and the image
 def show(x,img):
     color = x[::-1]
@@ -30,5 +32,16 @@ def show(x,img):
     cv.imshow("Imagem original", img)
     cv.imshow("Esta é a cor predominante",img1)
     cv.waitKey(0)
+
+#Function wich resizes the Image
+def resize(img_name):
+    img = Image.open(img_name)
+    width, height = img.size
+    if width > height:
+        rate = width / height
+    else:
+        rate = height / width
+    img = img.resize((int(150 * rate), 150), Image.ANTIALIAS)
+    img.save(img_name)
 
 init(sys.argv[1])
