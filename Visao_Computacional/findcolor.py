@@ -5,7 +5,7 @@ import sys
 from PIL import Image
 #Function wich gets the colors of the image
 def init(name):
-    resize(name)
+    size = resize(name)
     img = np.array(cv.imread(name))
     cores = []
     quantity = []
@@ -20,17 +20,20 @@ def init(name):
                 quantity[cores.index(color_tuple)] += 1
             else:
                 quantity[cores.index(color_tuple)] += 1
-    print("A cor: RGB" , cores[quantity.index(max(quantity))])
-    print("Esta presente em: ", max(quantity), " pixels")
-    show(cores[quantity.index(max(quantity))], img)
+    #print("A cor: RGB" , cores[quantity.index(max(quantity))])
+    #print("Esta presente em: ", max(quantity), " pixels")
+    color1 = cores[quantity.index(max(quantity))]
+    frequency = (max(quantity) * 100) / size
+    show(color1, img, frequency)
 
 #Function that shows the color and the image
-def show(x,img):
-    color = x[::-1]
-    img1 = np.zeros((512,512,3), np.uint8)
-    cv.rectangle(img1,(180,190),(300,300),(int(color[0]), int(color[1]), int(color[2])),-1)
+def show(color1, img, frequency):
+    color1 = color1[::-1]
+    img1 = np.zeros((180,180,3), np.uint8)
+    cv.rectangle(img1,(0,0),(180,180),(int(color1[0]), int(color1[1]), int(color1[2])),-1)
+    cv.putText(img1, "{0:.1f}%".format(frequency), (0, 90), cv.FONT_HERSHEY_SIMPLEX, 0.8, (255, 255, 255), 2, cv.LINE_AA)
     cv.imshow("Imagem original", img)
-    cv.imshow("Esta é a cor predominante",img1)
+    cv.imshow("Esta eh a cor predominante",img1)
     cv.waitKey(0)
 
 #Function wich resizes the Image
@@ -39,9 +42,11 @@ def resize(img_name):
     width, height = img.size
     if width > height:
         rate = width / height
+        img = img.resize((int(150 * rate), 150), Image.ANTIALIAS)
     else:
         rate = height / width
-    img = img.resize((int(150 * rate), 150), Image.ANTIALIAS)
+        img = img.resize((150, int(150 * rate)), Image.ANTIALIAS)
     img.save(img_name)
-
+    return width * height
+resize(sys.argv[1])
 init(sys.argv[1])
