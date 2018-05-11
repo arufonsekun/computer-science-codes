@@ -1,7 +1,7 @@
 import pygame as pg
 import time
 class Game(object):
-    #Initializa de Surface
+    #Initialize the Surface
     def __init__(self):
         pg.init()
         self.init_surface = Initial_Surface()
@@ -19,7 +19,7 @@ class Game(object):
             self.init_surface.display.update()
 
 class Initial_Surface():
-    #Initialize de module and others atributes
+    #Initialize the pygame module and others atributes
     def __init__(self):
         self.display = pg.display
         self.dimentions = (768,489)
@@ -27,7 +27,7 @@ class Initial_Surface():
         self.xbar1 = 769
 
     def screen(self):
-        self.display.set_mode(self.dimentions, 0)#initialize the screen
+        self.display.set_mode(self.dimentions, 0)
         self.display.set_caption("Flappy Bird")
         self.icon = pg.image.load("Images/ico.png").convert_alpha()
         self.display.set_icon(self.icon)
