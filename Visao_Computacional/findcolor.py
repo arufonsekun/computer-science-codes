@@ -16,8 +16,7 @@ def init(name):
             color_tuple = (color[2],color[1],color[0])
             if not color_tuple in cores:
                 cores.append(color_tuple)
-                quantity.append(0)
-                quantity[cores.index(color_tuple)] += 1
+                quantity.append(1)
             else:
                 quantity[cores.index(color_tuple)] += 1
     #print("A cor: RGB" , cores[quantity.index(max(quantity))])
@@ -31,7 +30,7 @@ def show(color1, img, frequency):
     color1 = color1[::-1]
     img1 = np.zeros((180,180,3), np.uint8)
     cv.rectangle(img1,(0,0),(180,180),(int(color1[0]), int(color1[1]), int(color1[2])),-1)
-    cv.putText(img1, "{0:.1f}%".format(frequency), (0, 90), cv.FONT_HERSHEY_SIMPLEX, 0.8, (255, 255, 255), 2, cv.LINE_AA)
+    cv.putText(img1, "{0:.2f}%".format(frequency), (45, 90), cv.FONT_HERSHEY_SIMPLEX, 0.8, (255, 255, 255), 2, cv.LINE_AA)
     cv.imshow("Imagem original", img)
     cv.imshow("Esta eh a cor predominante",img1)
     cv.waitKey(0)
