@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+#font: ubuntumono
 import pygame as pg
 import time
 import random
@@ -13,6 +14,7 @@ class Game(object):
         self.icon = pg.image.load("Images/ico.png").convert_alpha()
         self.display.set_icon(self.icon)
         self.screen = pg.display.get_surface()#get the surface
+        self.begin = False
 
     #Instantiate the objects that will compose the game
     def composition(self):
@@ -24,7 +26,7 @@ class Game(object):
         self.bird = Bird(self.screen)
         self.bird.show()
 
-        #Create object cloud  
+        #Create object cloud
         self.cloud1 = Cloud(self.screen, 200, 10)
         self.cloud1.show()
 
@@ -32,29 +34,43 @@ class Game(object):
         self.cloud2 = Cloud(self.screen, 760, 100)
         self.cloud2.show()
 
+    #Esse __main__ não faz parte do objeto jogo
     def __main__(self):
         while True:
+            #A surface deve ser a primeira imagem a ser mostrada
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     exit()#Exit de Game
-            time.sleep(0.006)
-            self.init_surface.moves()
-            self.init_surface.show()
+                if event.type == pg.KEYUP:
+                    if event.key == pg.K_SPACE:
+                        self.begin = True
+                        #Aqui eu implemento o passaro caindo ou subindo
 
-            self.cloud1.moves()
-            self.cloud1.show()
+            if self.begin == True:
+                time.sleep(0.006)
+                self.bird.fall()
+                self.bird.show()
 
-            self.cloud2.moves()
-            self.cloud2.show()
+            if self.begin == False:
+                time.sleep(0.006)
+                self.bird.moves()
+                self.bird.show()
+            self.move_game_surface()
+    def move_game_surface(self):
+        self.init_surface.moves()
+        self.init_surface.show()
+        
+        self.cloud2.moves()
+        self.cloud2.show()
 
-            self.bird.moves()
-            self.bird.show()
+        self.cloud1.moves()
+        self.cloud1.show()
 
-            self.display.flip()
-            self.display.update()
+        self.display.flip()
+        self.display.update()
 
 class Initial_Surface():
-    
+
     def __init__(self, screen):
         self.screen = screen
         self.xbar = 0
@@ -100,7 +116,10 @@ class Bird():
             self.birdy += 1
         if self.birdy == 230:
             self.fly = 0
-        #self.bird.scroll(self.birdx, self.birdy)
+
+    #Faz o bird cair
+    def fall(self):
+        self.birdy += 1
 
 class Cloud():
     def __init__(self,screen, x, y):
@@ -115,7 +134,7 @@ class Cloud():
 
     def moves(self):
         if self.xcloud == -205:
-            self.xcloud = random.choice(self.new_x_position)    
+            self.xcloud = random.choice(self.new_x_position)
         else:
             self.xcloud -= 1
         #self.cloud.scroll(self.xsun, self.ysun)
