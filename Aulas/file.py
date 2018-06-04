@@ -21,6 +21,9 @@ def read_csv(nome):
     print ("A media dos valores do arquivo: {0} é {1:1.2f}".format(nome, media / num))
     fiou.close()
 
+def plot_file(nome):
+
+
 
 
 read_csv(sys.argv[1])
