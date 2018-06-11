@@ -62,7 +62,7 @@ def mostra_banda(bandas):
 #mostra_banda(ler_banda())
 
 """
-    Exercicio 2 ler matrícula e notas de cinso alunos e
+    Exercicio  ler matrícula e notas de cinso alunos e
     mostrar a media de cada um e a matícula
 """
 class Academico(object):
