@@ -8,7 +8,7 @@ def arquivo(nome):
     scores = scores_file.read().splitlines()
     scores_file.close()
     for el in scores:
-        media += float(el)
+        media += float(m)
     return (media/len(scores))
 
 def read_csv(nome):
@@ -20,11 +20,6 @@ def read_csv(nome):
         for el in row: media += float(el); num += 1
     print ("A media dos valores do arquivo: {0} é {1:1.2f}".format(nome, media / num))
     fiou.close()
-
-def plot_file(nome):
-
-
-
 
 read_csv(sys.argv[1])
 #print("Media {:1.2f}".format(arquivo(sys.argv[1])))
