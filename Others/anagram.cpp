@@ -9,7 +9,7 @@ array<int, 26> repetitions;
 int checkRep(string a) {
 	unsigned short int repeat = 0;
 	for (int i = 0; i < a.size(); i++){
-		if (repetitions.at(a[i] -'a') >= 0){
+		if (repetitions.at(a[i] - 'a') >= 0){
 			repetitions.at(a[i] - 'a') += 1;
 			repeat++;
 		}
