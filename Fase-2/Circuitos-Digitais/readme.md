@@ -1,17 +1,17 @@
 
-<b><h1>Conteudo do semestre</h1></b>
+#Conteudo do semestre
 <ul>
 	<li>Fundamentos de Eletrônica;</li>
 	<li>Famílias Lógicas; </li>
 	<li>Simulação de Circuitos Lógicos; </li>
 	<li>Álgebra de Boole; </li>
 	<ul>
-		Circuitos Combinacionais: 
+		<h4><b> Circuitos Combinacionais: </b></h4>
 		<li>codificadores;</li>
 		<li>multiplexadores e aritméticos;</li>
 	</ul>
 	<ul>
-		Circuitos Sequenciais: 
+		<h4><b> Circuitos Sequenciais: </b> </h4>
 		<li>Latches;</li>
 		<li>Flip-Flops e Registradores;</li>
 	</ul>
