@@ -1,5 +1,6 @@
 
-<h1> Conteudo do semestre </h1>
+<h1> <b> Conteudo do semestre </b> </h1>
+
 <ul>
 	<li>Fundamentos de Eletrônica;</li>
 	<li>Famílias Lógicas; </li>
@@ -15,5 +16,6 @@
 		<li>Latches;</li>
 		<li>Flip-Flops e Registradores;</li>
 	</ul>
+	</br>
 	<li>Memórias;</li>
 </ul>
