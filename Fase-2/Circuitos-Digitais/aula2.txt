@@ -1,0 +1,2 @@
+numeros positivos: 2^(n-1)
+numeros negativos: 2^(n-1) - 1
