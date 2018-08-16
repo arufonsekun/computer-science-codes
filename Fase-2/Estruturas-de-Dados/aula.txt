@@ -2,3 +2,7 @@ tipos de variáveis{
         escalar: só armazena um valor por vez (int, float, char) - tipos primitivos;
         multi-valor: armazena diversos valores com o mesmo nome (vetor e matriz);
 }
+
+vetores:  
+matrizes: 
+structs: variável composta, 
