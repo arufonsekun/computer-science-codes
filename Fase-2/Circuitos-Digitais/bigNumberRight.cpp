@@ -6,7 +6,6 @@ using namespace std;
 
 vector<int> pieces1;
 vector<int> pieces2;
-vector<int> output;
 string bigNum1;
 string bigNum2;
 
@@ -23,6 +22,7 @@ void print(){
 }
 
 void sum(){
+    vector<int> output;
 
 
 }
