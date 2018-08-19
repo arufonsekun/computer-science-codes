@@ -91,7 +91,7 @@ class damas:
                   [self.peca11],[self.peca12],[self.branco1],[self.branco2],[self.branco3],
                   [self.branco4],[self.branco5],[self.branco6],[self.branco7],[self.branco8],
                   [self.branco9],[self.branco10],[self.branco11],[self.branco12]]
-    
+
   def Pegar_posicao_ocupada(self):
     if (self.pos[0] >= 126 and self.pos[0]< 182) and (self.pos[1] >= 182 and self.pos[1] < 240): #pos 6b
       if self.tabuleiro[2][1] != []:
@@ -105,7 +105,7 @@ class damas:
         self.indice = [0,1]
       else:
         self.pos_vazia = (135,78)
-    if (self.pos[0] >= 241 and self.pos[0] <= 298) and (self.pos[1] >= 67 and self.pos[1] <= 124): #pos 8d 
+    if (self.pos[0] >= 241 and self.pos[0] <= 298) and (self.pos[1] >= 67 and self.pos[1] <= 124): #pos 8d
       if self.tabuleiro[0][3] != []:
         self.pos_ocupada = self.tabuleiro[0][3]
         self.indice = [0,3]
@@ -324,9 +324,9 @@ class damas:
       dama.move()
       dama.atualiza()
       pygame.display.update()
-      
-      
-  def troca_dama(self):        
+
+
+  def troca_dama(self):
     if self.pos_ocupada == [self.peca1]:
       self.blita.remove([self.peca1])
       self.peca1 = pygame.image.load(self.dama).convert()
@@ -478,7 +478,7 @@ class damas:
     self.peca = ([self.peca1],[self.peca2],[self.peca3],[self.peca4],[self.peca5],
                  [self.peca6],[self.peca7],[self.peca8],[self.peca9],[self.peca10],
                  [self.peca11],[self.peca12])
-                 
+
   def atualiza(self):
     if [self.background] in self.blita:
       self.window.blit(self.background,self.po1)
@@ -531,18 +531,18 @@ class damas:
     if [self.branco12] in self.blita:
       self.window.blit(self.branco12,self.po25)
     if self.vence_marron == True:
-      self.mensagem = self.fonte.render("O ganhador é o jogador marron",0,((255,255,0)))
+      self.mensagem = self.fonte.render("O ganhador ï¿½ o jogador marron",0,((255,255,0)))
       self.window.blit(self.mensagem,(90,5))
     if self.vence_branco == True:
-      self.mensagem = self.fonte.render("O ganhador é o jogador branco",0,((255,255,0)))
+      self.mensagem = self.fonte.render("O ganhador ï¿½ o jogador branco",0,((255,255,0)))
       self.window.blit(self.mensagem,(90,5))
-      
+
   def vencedor(self):
     if[self.branco1] not in self.blita and [self.branco2] not in self.blita and [self.branco3] not in self.blita and [self.branco4] not in self.blita and [self.branco5] not in self.blita and [self.branco6] not in self.blita and [self.branco7] not in self.blita and [self.branco8] not in self.blita and [self.branco9] not in self.blita and [self.branco10] not in self.blita and [self.branco11] not in self.blita and [self.branco12] not in self.blita:
       self.vence_marron = True
     if [self.peca1] not in self.blita and [self.peca2] not in self.blita and [self.peca3] not in self.blita and [self.peca4] not in self.blita and [self.peca5] not in self.blita and [self.peca6] not in self.blita and [self.peca7] not in self.blita and [self.peca8] not in self.blita and [self.peca9] not in self.blita and [self.peca10] not in self.blita and [self.peca11] not in self.blita and [self.peca12] not in self.blita:
       self.vence_branco = True
-      
+
   def Valida(self):
     if self.pos_ocupada in self.list_dama:
       dama.movimento_dama()
@@ -572,7 +572,7 @@ class damas:
         if self.pos_vazia == (192,370):
           self.tabuleiro[6][1] = []
           self.tabuleiro[5][2] = self.pos_ocupada
-          self.jogada = True 
+          self.jogada = True
         if self.pos_vazia == (252,310) and self.tabuleiro[5][2] in self.peca and self.tabuleiro[4][3] == []:
           self.tabuleiro[6][1] = []
           self.blita.remove(self.tabuleiro[5][2])
@@ -1289,7 +1289,7 @@ class damas:
         if self.pos_vazia == (251,427):
           self.tabuleiro[5][4] = []
           self.tabuleiro[6][3] = self.pos_ocupada
-          self.jogada = True    
+          self.jogada = True
         if self.pos_vazia == (368,427):
           self.tabuleiro[5][4] = []
           self.tabuleiro[6][5] = self.pos_ocupada
@@ -1495,11 +1495,11 @@ class damas:
       elif self.indice == [1,6] and (self.pos_vazia == (368,194) or self.pos_vazia == (485,194) or self.pos_vazia == (310,250)):
         self.jogada_branca = True
         if self.pos_vazia == (368,194):
-          self.tabuleiro[1][6] = []                           
+          self.tabuleiro[1][6] = []
           self.tabuleiro[2][5] = self.pos_ocupada
           self.jogada = True
         if self.pos_vazia == (485,194):
-          self.tabuleiro[1][6] = []          
+          self.tabuleiro[1][6] = []
           self.tabuleiro[2][7] = self.pos_ocupada
           self.jogada = True
         if self.pos_vazia == (310,250) and self.tabuleiro[2][5] in self.branco and self.tabuleiro[3][4] == []:
@@ -1511,9 +1511,9 @@ class damas:
     else:
       self.jogada = False
       self.pos_vazia = ()
-    
-           
-   
+
+
+
   def move(self):
     if self.jogada == True:
       if self.pos_ocupada == [self.peca1] and self.pos_vazia != ():
@@ -1612,7 +1612,7 @@ class damas:
         self.po25 = self.pos_vazia
         self.pos_ocupada = 0
         self.pos_vazia = ()
-        
+
   def movimento_dama(self):
     if self.indice == [5,0] and (self.pos_vazia == (134,310) or self.pos_vazia == (193,250)):
       if self.pos_vazia == (134,310):
@@ -1655,7 +1655,7 @@ class damas:
         self.tabuleiro[5][2] = []
         self.tabuleiro[4][1] = self.pos_ocupada
         self.jogada = True
-      if self.pos_vazia == (368,310) and ((self.tabuleiro[6][3] in self.branco and (self.tabuleiro[5][2] in self.peca or self.tabuleiro[5][4] in self.peca)) or (self.tabuleiro[6][3] in self.peca and (self.tabuleiro[5][2] in self.branco or self.tabuleiro[5][4] in self.branco))) and self.tabuleiro[4][5] == []:                                         
+      if self.pos_vazia == (368,310) and ((self.tabuleiro[6][3] in self.branco and (self.tabuleiro[5][2] in self.peca or self.tabuleiro[5][4] in self.peca)) or (self.tabuleiro[6][3] in self.peca and (self.tabuleiro[5][2] in self.branco or self.tabuleiro[5][4] in self.branco))) and self.tabuleiro[4][5] == []:
         self.tabuleiro[6][3] = []
         self.blita.remove(self.tabuleiro[5][4])
         self.tabuleiro[5][4] = []
@@ -2292,7 +2292,7 @@ class damas:
       if self.pos_vazia == (251,427):
         self.tabuleiro[5][4] = []
         self.tabuleiro[6][3] = self.pos_ocupada
-        self.jogada = True    
+        self.jogada = True
       if self.pos_vazia == (368,427):
         self.tabuleiro[5][4] = []
         self.tabuleiro[6][5] = self.pos_ocupada
@@ -2475,11 +2475,11 @@ class damas:
         self.jogada = True
     elif self.indice == [1,6] and (self.pos_vazia == (368,194) or self.pos_vazia == (485,194) or self.pos_vazia == (310,250)):
       if self.pos_vazia == (368,194):
-        self.tabuleiro[1][6] = []                           
+        self.tabuleiro[1][6] = []
         self.tabuleiro[2][5] = self.pos_ocupada
         self.jogada = True
       if self.pos_vazia == (485,194):
-        self.tabuleiro[1][6] = []          
+        self.tabuleiro[1][6] = []
         self.tabuleiro[2][7] = self.pos_ocupada
         self.jogada = True
       if self.pos_vazia == (310,250) and (self.tabuleiro[1][6] in self.peca and (self.tabuleiro[2][5] in self.branco) or self.tabuleiro[1][6] in self.branco and (self.tabuleiro[2][5] in self.peca)) and self.tabuleiro[3][4] == []:
@@ -2489,8 +2489,6 @@ class damas:
         self.tabuleiro[3][4] = self.pos_ocupada
         self.jogada = True
 
-    
+
 dama = damas(600,600)
 dama.__main__()
-damas.py
-Exibindo damas.py.
