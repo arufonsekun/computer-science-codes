@@ -22,8 +22,29 @@ void print(){
 }
 
 void sum(){
-    vector<int> output;
+    vector<string> output;
+    string buffer1 = "0";
+    int buffer2 = 0;
 
+    for (unsigned short int i = 0; i < pieces1.size(); i++){
+        buffer2 = pieces1.at(i) + pieces2.at(i);
+        if (buffer1 != "0")
+            buffer2 += stoi(buffer1);
+        buffer1 = to_string(buffer2);
+
+        if (buffer1.size() <= 8){
+            output.push_back(buffer1);
+            buffer1 = "0";
+        }else{
+            output.push_back( buffer1.substr( buffer1.size() - 8, buffer1.size() ) );
+            buffer1 = buffer1.substr(0, buffer1.size() - 8);
+        }
+    }
+
+    for (int i = output.size()-1; i >= 0; i--){
+        cout << output.at(i);
+    }
+    cout << endl;
 
 }
 
@@ -68,7 +89,8 @@ int main(){
     cin >> bigNum2;
 
     cut();
-    print();
+    sum();
+    //print();
 
     return 0;
 }
