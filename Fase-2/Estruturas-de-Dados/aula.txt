@@ -1,8 +1,14 @@
 tipos de variáveis{
         escalar: só armazena um valor por vez (int, float, char) - tipos primitivos;
-        multi-valor: armazena diversos valores com o mesmo nome (vetor e matriz);
+        vetorial: armazena diversos valores com o mesmo nome (vetor e matriz);
 }
 
-vetores:  
-matrizes: 
-structs: variável composta, 
+vetores:
+matrizes:
+structs: variável composta;
+
+NUNCA COLOCAR \N NO SCANF()
+
+COMANDOS QUE EU NÃO CONHECIA
+//Imprime uma string com 20 caracteres
+printf("20s", string);
