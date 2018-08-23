@@ -9,16 +9,21 @@ vector<int> pieces2;
 string bigNum1;
 string bigNum2;
 
-void print(){
-    for (unsigned int i = 0; i < pieces1.size(); i++){
-        cout << pieces1.at(i) << " ";
+string fillZeros(int number){
+    string output;
+    string input = to_string(number);
+    if (input.size() >= 8){
+        return input;
     }
-    cout << endl;
-    for (unsigned int i = 0; i < pieces2.size(); i++){
-        cout << pieces2.at(i) << " ";
+    else{
+        for(unsigned short int i = 0; i < 8; i++){
+            if (i <= 7 - input.size()){
+                output.push_back('0');
+            }
+        }
+        output+=input;
+        return output;
     }
-    cout << endl;
-
 }
 
 void sum(){
@@ -26,21 +31,22 @@ void sum(){
     string buffer1 = "0";
     int buffer2 = 0;
 
-    for (unsigned short int i = 0; i < pieces1.size(); i++){
+    for (unsigned short int i = 0; i < pieces1.size()-1; i++){
         buffer2 = pieces1.at(i) + pieces2.at(i);
         if (buffer1 != "0")
             buffer2 += stoi(buffer1);
-        buffer1 = to_string(buffer2);
+        buffer1 = fillZeros(buffer2);
 
-        if (buffer1.size() <= 8){
+        if (buffer1.size() == 8){
             output.push_back(buffer1);
             buffer1 = "0";
         }else{
-            output.push_back( buffer1.substr( buffer1.size() - 8, buffer1.size() ) );
-            buffer1 = buffer1.substr(0, buffer1.size() - 8);
+            output.push_back( buffer1.substr( 1, buffer1.size() ) );
+            buffer1 = buffer1.at(0);
         }
     }
 
+    output.push_back(to_string(pieces1.at(pieces1.size() -1) + pieces2.at(pieces2.size() -1)));
     for (int i = output.size()-1; i >= 0; i--){
         cout << output.at(i);
     }
@@ -87,10 +93,8 @@ int main(){
 
     cin >> bigNum1;
     cin >> bigNum2;
-
     cut();
     sum();
-    //print();
 
     return 0;
 }
