@@ -12,3 +12,4 @@ NUNCA COLOCAR \N NO SCANF()
 COMANDOS QUE EU NÃO CONHECIA
 //Imprime uma string com 20 caracteres
 printf("20s", string);
+getcha(); -> limpa o buffer de entrada
