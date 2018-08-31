@@ -1,0 +1,6 @@
+Dec - Hex: converte o decimal em binário, agrupa os bits em palavras e converte para hex.
+  Ex: 1 1011 0011
+      1   B   3 
+Bin - Oct: agrupa os bits de três em três, pois 8 = 2^3.
+  Ex: 110 110 011
+       6   6   3
