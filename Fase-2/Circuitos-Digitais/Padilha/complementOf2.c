@@ -1,9 +1,25 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 int output[8];
+char input[9];
 
-void not(char input[9]){
+void fit(char binary[9]){
+    int len = strlen(binary) -1;
+    for (int i = 7; i >= 0; i--){
+        if (len >= 0){
+            input[i] = binary[len];
+        }
+        else{
+            input[i] = '0';
+        }
+        len--;
+    }
+
+}
+
+void not(){
     for (int i = 0; i < 8; i++){
         if (input[i] == '1'){
             output[i] = 0;
@@ -13,24 +29,12 @@ void not(char input[9]){
     }
 }
 
-void plusOne(int len){
+void plusOne(){
     unsigned short int carry[8] = {0,0,0,0,0,0,0,0};
-    unsigned short int operator[8] = {0,0,0,0,0,0,0,0};
+    unsigned short int operator[8] = {0,0,0,0,0,0,0,1};
     unsigned short int val = 0;
-    operator[len-1] = 1;
 
-
-    /*for (int j = 0; j < 8; j++){
-        printf("%d", carry[j]);
-    }
-    printf("\n");
-
-    for (int i = 0; i < len; i++){
-        printf("%d", output[i]);
-    }
-    printf("\n");*/
-
-    for (int i = len -1; i >= 0; i--){
+    for (int i = 7; i >= 0; i--){
         val = output[i] + operator[i] + carry[i];
         if (val == 2){
             output[i] = 0;
@@ -43,8 +47,8 @@ void plusOne(int len){
 
 }
 
-void print(int x){
-    for (int i = 0; i < x; i++){
+void print(){
+    for (int i = 0; i < strlen(input); i++){
         if (i == 4)
             printf(" ");
         printf("%d", output[i]);
@@ -53,16 +57,22 @@ void print(int x){
 }
 
 int main(){
-    char input[9];
+    char binary[9];
     memset(output, 0, 8);
-    scanf("%s", input);
-    if (strcmp(input, "00000000") == 0)
-        print(strlen(input));
+    memset(input, '0', 8);
+
+    scanf("%s", binary);
+
+    if (atoi(binary) == 0)
+        printf("0000 0000\n");
+
     else{
-        not(input);
-        plusOne(strlen(input));
-        print(strlen(input));
+        fit(binary);
+        not();
+        plusOne();
+        print();
     }
+
 
     return 0;
 }

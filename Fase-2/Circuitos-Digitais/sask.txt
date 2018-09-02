@@ -1,0 +1,2 @@
+Reproduzir o circuito da figura 3.12 do material de apoio (Circuitos Combinacionais)
+no logiSim e explicar a tabela 3.12 referente ao mesmo.
