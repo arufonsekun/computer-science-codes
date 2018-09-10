@@ -1,0 +1,7 @@
+heap: espaço da memória (RAM) disponivel;
+int *p = NULL; // liberar o lixo da memória
+stdlib.h -> alocação dinâmica
+poiner = (int*) malloc(n° bytes);//(int *): casting
+	alocação contígua: espaço alocado um ao lado do outro;
+
+
