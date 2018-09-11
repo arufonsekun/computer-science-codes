@@ -5,48 +5,64 @@ struct list
 {
   int value;
   struct list *next;
+  unsigned int size;
 };
 
-void push_back(int val, struct list *lista)
+void push_back(int val, struct list *mylist)
 {
-    struct list *new;
-    new = (struct list *) malloc(sizeof(struct list));
-    new->value = val;
-    new->next = NULL;
 
-    if (lista->next == NULL)
+    if (mylist->size == 0)
     {
-        lista->next = new;
+        mylist->value = val;
+        mylist->next = NULL;
+        mylist->size = 1;
+        printf("%s\n", "birl");
     }
 
     else
     {
-        while (lista->next != NULL)
+        struct list *new = (struct list *) malloc(sizeof(struct list));
+        new->value = val;
+        new->next = NULL;
+
+        while (mylist->next != NULL)
         {
-            lista = lista->next;
+            mylist->size++;
+            mylist = mylist->next;
         }
-        lista = new;
+
+        new->size = mylist->size;
+        mylist->next = new;
     }
 }
 
-void __init__(struct list* mylist){
-    mylist->value = 0;
-    mylist->next = NULL;
+void print(struct list *first){
+
+    unsigned short int i = 0;
+    while (1) {
+        printf("vector [%d] = %d\n", i, first->value);
+        if (first->next == NULL)
+            break;
+        first = first->next;
+        i++;
+    }
 }
 
 int main()
 {
 
-    struct list mylist* = __init__();
-    struct list mylist;
-    push_back(4, &mylist);
-    push_back(3, &mylist);
+    struct list *mylist, *first;
+    mylist->next = NULL;
+    first = mylist;
 
-    printf("%d\n", mylist.value);
-    printf("%d\n", mylist.next->value);
+    push_back(4, mylist);
+    push_back(5, mylist);
+    push_back(6, mylist);
+    push_back(7, mylist);
+    push_back(8, mylist);
 
-    //push_back(2, &mylist);
-
+    print(first);
+    printf("%d\n", first->value);
 
     return 0;
 }
