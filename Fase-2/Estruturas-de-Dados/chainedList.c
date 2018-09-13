@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+//encontrar elemento na lista
+//limpar a lista 
+
 struct list
 {
   int value;
@@ -16,7 +19,6 @@ void push_back(int val, struct list *mylist)
         mylist->value = val;
         mylist->next = NULL;
         mylist->size = 1;
-        printf("%s\n", "birl");
     }
 
     else
@@ -39,14 +41,40 @@ void push_back(int val, struct list *mylist)
 void print(struct list *first){
 
     unsigned short int i = 0;
-    while (1) {
+    while (first != NULL) {
         printf("vector [%d] = %d\n", i, first->value);
-        if (first->next == NULL)
-            break;
         first = first->next;
         i++;
     }
+
+
 }
+
+void get(int i, struct list *head){
+    struct list *aux = head;
+    int counter = 0;
+
+    while (counter < i){
+        aux = aux->next;        
+        counter++;
+    }
+    printf("list[%d] = %d\n", counter, aux->value);
+}
+
+
+void clear(struct list *mylist){
+
+    struct list *aux = mylist;
+
+    while (aux != NULL){
+        mylist = aux->next;
+        free(aux);
+        aux = mylist;
+    }
+    printf("List is clear");
+    
+}
+
 
 int main()
 {
@@ -60,9 +88,14 @@ int main()
     push_back(6, mylist);
     push_back(7, mylist);
     push_back(8, mylist);
+    push_back(9, mylist);
 
+    //gets the element at position 3 (indexes starting in 0)
+    get(3, first);
+    //list the elemets
     print(first);
-    printf("%d\n", first->value);
+    clear(first);
+    printf("List size: %d\n", first->size + 1);
 
     return 0;
 }
