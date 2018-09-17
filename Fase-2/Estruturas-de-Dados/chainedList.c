@@ -11,91 +11,110 @@ struct list
   unsigned int size;
 };
 
-void push_back(int val, struct list *mylist)
+struct list * push_back(int val, struct list *tail)
 {
 
-    if (mylist->size == 0)
+    if (tail == NULL)
     {
-        mylist->value = val;
-        mylist->next = NULL;
-        mylist->size = 1;
+        tail = (struct list *) malloc(sizeof(struct list));
+        tail->value = val;
+        tail->next = NULL;
+        tail->size = 1;
     }
 
     else
     {
-        struct list *new = (struct list *) malloc(sizeof(struct list));
-        new->value = val;
-        new->next = NULL;
-
-        while (mylist->next != NULL)
-        {
-            mylist->size++;
-            mylist = mylist->next;
-        }
-
-        new->size = mylist->size;
-        mylist->next = new;
+        tail->next = (struct list *) malloc(sizeof(struct list));
+        tail->next->value = val;
+        tail->size++;
+        tail->next->size =  tail->size;
+        tail->next->next = NULL;
+        tail = tail->next;
     }
+    return tail;
 }
 
-void print(struct list *first){
+void print(struct list *head){
 
     unsigned short int i = 0;
-    while (first != NULL) {
-        printf("vector [%d] = %d\n", i, first->value);
-        first = first->next;
+    while (head != NULL) {
+        printf("vector [%d] = %d\n", i, head->value);
+        head = head->next;
         i++;
-    }
-
-
+    }    
 }
 
 void get(int i, struct list *head){
-    struct list *aux = head;
     int counter = 0;
-
-    while (counter < i){
-        aux = aux->next;        
+    
+    while (head != NULL){
+        if (i == counter)
+            break;
+        head = head->next;        
         counter++;
     }
-    printf("list[%d] = %d\n", counter, aux->value);
+    if (i == counter)
+        printf("list[%d] = %d\n", counter, head->value);
+    else
+        printf("index %d not found\n", i);
 }
 
 
-void clear(struct list *mylist){
+void clear(struct list *head){
 
-    struct list *aux = mylist;
+    struct list *aux = head;
 
     while (aux != NULL){
-        mylist = aux->next;
+        head = aux->next;
         free(aux);
-        aux = mylist;
+       //printf("%d", aux->value);
+        aux = head;
     }
-    printf("List is clear");
+    printf("List is clear\n");
     
 }
 
+void in(int value, struct list *head){
+    int are = 0;
+    while (head != NULL){
+        if (head->value == value)
+            are = 1;
+        head = head->next;
+    }
+    printf("%s\n", (are == 1 ? "true" : "false"));
+}
 
 int main()
 {
+    
+    struct list *tail = NULL, *head = NULL;
+    int insert;
+    int index, value;
 
-    struct list *mylist, *first;
-    mylist->next = NULL;
-    first = mylist;
+    scanf("%d", &insert);
+    while (insert != 0)
+    {
+        tail = push_back(insert, tail);
+        if (tail->size == 1)
+            head = tail;
+        scanf("%d", &insert);
 
-    push_back(4, mylist);
-    push_back(5, mylist);
-    push_back(6, mylist);
-    push_back(7, mylist);
-    push_back(8, mylist);
-    push_back(9, mylist);
+    }
+    //shows the all values
+    print(head);
+    printf("List size: %d\n", tail->size);
 
-    //gets the element at position 3 (indexes starting in 0)
-    get(3, first);
-    //list the elemets
-    print(first);
-    clear(first);
-    printf("List size: %d\n", first->size + 1);
+    //checks if value is in the list
+    printf("Type an value to search in the list: ");
+    scanf("%d", &value);
+    in(value, head);
+
+    //get a value given an index
+    printf("Type an index to get his value: ");
+    scanf("%d", &index);
+    get(index, head);
+    
+    clear(head);
 
     return 0;
 }
