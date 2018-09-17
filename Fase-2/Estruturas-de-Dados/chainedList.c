@@ -43,6 +43,41 @@ void print(struct list *head){
         i++;
     }    
 }
+ 
+struct list * delete(int i, struct list *head){
+    struct list *left = NULL, *right = NULL, *first = head;
+    int counter = 0;
+
+    if (i == 0){
+        right = head->next;
+        free(head);
+        return right;
+    }
+
+    else{
+
+        while (head->next != NULL){
+            if (counter == i-1) left = head;
+            if (counter == i+1) right = head;
+            head = head->next;
+            counter++;
+        }
+
+        if (i != head->size -1){
+            free(left->next);
+            left->next = right;
+            return first;
+        }
+
+        else
+        {
+            printf("Entrou\n");
+            left->next = NULL;
+            free(head);
+        }
+    }
+    return first;
+}
 
 void get(int i, struct list *head){
     int counter = 0;
@@ -89,7 +124,7 @@ int main()
     
     struct list *tail = NULL, *head = NULL;
     int insert;
-    int index, value;
+    int index, value, vremove;
 
     scanf("%d", &insert);
     while (insert != 0)
@@ -113,6 +148,12 @@ int main()
     printf("Type an index to get his value: ");
     scanf("%d", &index);
     get(index, head);
+
+    printf("Type an index to remove: ");
+    scanf("%d", &vremove);
+    head = delete(vremove, head);
+
+    print(head);
     
     clear(head);
 
