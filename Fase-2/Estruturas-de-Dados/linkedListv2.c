@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+//update (int old, int new)
 struct vector{
     int value;
     struct vector* next;
@@ -22,6 +23,20 @@ void push_back(vector **list, int value){
         (*list)->next->next = NULL;
         (*list) = (*list)->next;
     }
+}
+
+vector * get(vector * head, int value){
+    vector * find = NULL;
+    while (head != NULL){
+        if (head->value == value)
+            return head;
+        head = head->next;
+    }
+}
+
+void update(vector * head, int old, int new){
+    vector * find = get(head, old);
+    (find != NULL ? find->value = new : printf("Value not find\n"));
 }
 
 void print(vector * head){
@@ -61,27 +76,65 @@ void in(vector *head, int value){
     printf("%s\n", output);
 }
 
+void delete(vector **head, int value){
+    vector * aux;
+    vector *head1 = *head;
+
+    if ((*head)->value == value){
+        aux = *head;
+        *head = (*head)->next;
+        free(aux);
+    }
+    else{
+        aux = head1;
+        while (head1 != NULL){
+            if (head1->value == value){
+                aux->next = head1->next; 
+                free(head1);
+            }
+
+            aux = head1;
+            head1 = head1->next;
+        }
+
+    }
+
+}
+
 int main(){
     vector *tail = NULL, *head = NULL;
     int input, first = 1;
+    int old, new, del;
 
     //inputs values
-    while (scanf(" %d", &input) != EOF){
+    scanf(" %d", &input);
+    while (input != 0){
         push_back(&tail, input);
         
         if (first){
             first = 0;
             head = tail;
         }
+        scanf(" %d", &input);
 
     }
 
-    print(head); 
-    printf("Type a value to search: ");
+   /* printf("Type a value to search: ");
     scanf("%d", &input);
     in(head, input);
+    
+    printf("Type a value to change and the new value: ");
+    scanf("%d %d", &old, &new);
+    update(head, old, new);*/
+    print(head);
+   
+    printf("Type a value to remove: ");
+    scanf("%d", &del);
+    delete(&head, del);
+    print(head);
+
     clear(head);
-    printf("%p", head->value);
+    //printf("%p", head->value);
 
     return 0;
 }
