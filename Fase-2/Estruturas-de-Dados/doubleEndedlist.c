@@ -88,6 +88,16 @@ vector * delete(int value, vector ** head){
     
 }
 
+vector * findValue(vector * head, int value){
+    while (head != NULL){
+        if (head->value == value){
+            return head;
+        }
+        head = head->next;
+    }
+    return NULL;
+}
+
 void insertBefore(int new, int before, vector ** head){
     vector * newValue = (vector *) malloc (sizeof(vector *));
     newValue->value = new;
@@ -116,11 +126,11 @@ void insertBefore(int new, int before, vector ** head){
 
 int main(){
     //tail era pra ser list mas como list apontava pro fim agora vai ser tail o nome e fodasse
-    vector * tail = NULL, * head;
+    vector * tail = NULL, * head, * find;
     int operation = 1, input, before;
     int counter = 0;
    
-    printf("\n0-Leave \n1-Insert \n2-Remove \n3-List Normal \n4-List Backwards \n5-Insert Before \n6-Clear terminal\n");
+    printf("\n0-Leave \n1-Insert \n2-Remove \n3-List Normal \n4-List Backwards \n5-Insert Before \n6-Get a value \n7-Clear terminal\n");
     while (operation != 0){
         
         printf("Type the operation code: ");
@@ -154,7 +164,12 @@ int main(){
             scanf("%d %d", &input, &before);
             insertBefore(input, before, &head);
         }
-
+        else if (operation == 6){
+            printf("Type the value to search: ");
+            scanf("%d", &input);
+            find = findValue(head, input);
+            (find == NULL ? printf("Value not found\n") : printf("Value exists = %d\n", find->value));
+        }
         else{
             system("clear");
             printf("\n0-Leave \n1-Insert \n2-Remove \n3-List Normal \n4-List Backwards \n5-Insert Before \n6-Clear terminal\n");
