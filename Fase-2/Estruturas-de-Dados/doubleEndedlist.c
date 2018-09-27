@@ -48,6 +48,7 @@ void printBackwards(vector * tail){
 }
 
 //delete an element given a value
+//return a pointer to the last value
 vector * delete(int value, vector ** head){
     vector * aux = *head;
     vector * auxHead = *head;
@@ -56,6 +57,9 @@ vector * delete(int value, vector ** head){
         (*head)->next->previous = NULL;
         *head = (*head)->next;
         free(aux);
+        while (auxHead->next != NULL)
+            auxHead = auxHead->next;
+        return auxHead;
     }
 
     else{
@@ -115,10 +119,10 @@ int main(){
     vector * tail = NULL, * head;
     int operation = 1, input, before;
     int counter = 0;
-    
+   
+    printf("\n0-Leave \n1-Insert \n2-Remove \n3-List Normal \n4-List Backwards \n5-Insert Before \n6-Clear terminal\n");
     while (operation != 0){
         
-        printf("\n0-Leave \n1-Insert \n2-Remove \n3-List Normal \n4-List Backwards \n5-Insert Before \n6-Clear terminal");
         printf("Type the operation code: ");
         scanf("%d", &operation);
 
@@ -141,16 +145,20 @@ int main(){
 
         else if (operation == 3)
             print(head);
+
         else if (operation == 4)
             printBackwards(tail);
+
         else if (operation == 5){
             printf("Type the value to insert followed by the existing value: ");
             scanf("%d %d", &input, &before);
             insertBefore(input, before, &head);
         }
-        else
-            system("clear");
 
+        else{
+            system("clear");
+            printf("\n0-Leave \n1-Insert \n2-Remove \n3-List Normal \n4-List Backwards \n5-Insert Before \n6-Clear terminal\n");
+        }
     }
 
     return 0;
