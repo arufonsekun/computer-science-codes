@@ -59,54 +59,74 @@ This file is intended to be loaded by Logisim (http://www.cburch.com/logisim/).
     <a name="clabel" val=""/>
     <a name="clabelup" val="east"/>
     <a name="clabelfont" val="SansSerif plain 12"/>
-    <wire from="(440,160)" to="(500,160)"/>
-    <wire from="(440,30)" to="(440,160)"/>
-    <wire from="(450,180)" to="(500,180)"/>
-    <wire from="(450,180)" to="(450,200)"/>
-    <wire from="(70,130)" to="(110,130)"/>
-    <wire from="(400,170)" to="(500,170)"/>
-    <wire from="(250,130)" to="(290,130)"/>
-    <wire from="(290,250)" to="(330,250)"/>
-    <wire from="(290,130)" to="(330,130)"/>
-    <wire from="(290,30)" to="(330,30)"/>
-    <wire from="(360,130)" to="(400,130)"/>
-    <wire from="(290,30)" to="(290,130)"/>
-    <wire from="(350,40)" to="(350,80)"/>
-    <wire from="(400,130)" to="(400,170)"/>
-    <wire from="(440,200)" to="(450,200)"/>
-    <wire from="(440,200)" to="(440,250)"/>
-    <wire from="(360,30)" to="(440,30)"/>
-    <wire from="(360,250)" to="(440,250)"/>
-    <wire from="(350,140)" to="(350,190)"/>
-    <wire from="(350,260)" to="(350,310)"/>
-    <wire from="(290,130)" to="(290,250)"/>
-    <wire from="(160,170)" to="(160,230)"/>
-    <comp lib="2" loc="(360,130)" name="BitSelector">
+    <wire from="(270,240)" to="(270,310)"/>
+    <wire from="(720,280)" to="(770,280)"/>
+    <wire from="(250,230)" to="(310,230)"/>
+    <wire from="(710,130)" to="(710,260)"/>
+    <wire from="(170,230)" to="(220,230)"/>
+    <wire from="(710,260)" to="(770,260)"/>
+    <wire from="(310,230)" to="(310,240)"/>
+    <wire from="(520,230)" to="(560,230)"/>
+    <wire from="(560,350)" to="(600,350)"/>
+    <wire from="(560,230)" to="(600,230)"/>
+    <wire from="(560,130)" to="(600,130)"/>
+    <wire from="(630,230)" to="(670,230)"/>
+    <wire from="(670,270)" to="(770,270)"/>
+    <wire from="(190,240)" to="(190,260)"/>
+    <wire from="(190,200)" to="(190,220)"/>
+    <wire from="(720,280)" to="(720,300)"/>
+    <wire from="(190,220)" to="(220,220)"/>
+    <wire from="(160,260)" to="(190,260)"/>
+    <wire from="(160,200)" to="(190,200)"/>
+    <wire from="(620,140)" to="(620,180)"/>
+    <wire from="(190,240)" to="(220,240)"/>
+    <wire from="(670,230)" to="(670,270)"/>
+    <wire from="(230,250)" to="(230,290)"/>
+    <wire from="(560,130)" to="(560,230)"/>
+    <wire from="(250,240)" to="(270,240)"/>
+    <wire from="(560,230)" to="(560,350)"/>
+    <wire from="(710,300)" to="(710,350)"/>
+    <wire from="(630,130)" to="(710,130)"/>
+    <wire from="(630,350)" to="(710,350)"/>
+    <wire from="(430,270)" to="(430,330)"/>
+    <wire from="(620,240)" to="(620,290)"/>
+    <wire from="(620,360)" to="(620,410)"/>
+    <wire from="(710,300)" to="(720,300)"/>
+    <wire from="(310,230)" to="(380,230)"/>
+    <comp lib="2" loc="(630,230)" name="BitSelector">
       <a name="width" val="6"/>
       <a name="group" val="2"/>
     </comp>
-    <comp lib="2" loc="(360,250)" name="BitSelector">
+    <comp lib="0" loc="(230,290)" name="Clock">
+      <a name="facing" val="north"/>
+    </comp>
+    <comp lib="2" loc="(630,350)" name="BitSelector">
       <a name="width" val="6"/>
       <a name="group" val="2"/>
     </comp>
-    <comp lib="0" loc="(350,190)" name="Pin">
+    <comp lib="0" loc="(310,240)" name="Pin">
+      <a name="facing" val="north"/>
+      <a name="output" val="true"/>
+      <a name="width" val="6"/>
+      <a name="labelloc" val="east"/>
+    </comp>
+    <comp lib="0" loc="(620,410)" name="Pin">
       <a name="facing" val="north"/>
       <a name="width" val="2"/>
       <a name="tristate" val="false"/>
     </comp>
-    <comp lib="0" loc="(70,130)" name="Pin">
-      <a name="width" val="6"/>
-      <a name="tristate" val="false"/>
-    </comp>
-    <comp lib="2" loc="(360,30)" name="BitSelector">
-      <a name="width" val="6"/>
-      <a name="group" val="2"/>
-    </comp>
-    <comp lib="0" loc="(160,230)" name="Pin">
+    <comp lib="0" loc="(620,290)" name="Pin">
       <a name="facing" val="north"/>
+      <a name="width" val="2"/>
       <a name="tristate" val="false"/>
     </comp>
-    <comp lib="4" loc="(250,130)" name="ROM">
+    <comp lib="0" loc="(270,310)" name="Pin">
+      <a name="facing" val="north"/>
+      <a name="output" val="true"/>
+      <a name="label" val="Acabou"/>
+      <a name="labelloc" val="east"/>
+    </comp>
+    <comp lib="4" loc="(520,230)" name="ROM">
       <a name="addrWidth" val="6"/>
       <a name="dataWidth" val="6"/>
       <a name="contents">addr/data: 6 6
@@ -114,12 +134,7 @@ This file is intended to be loaded by Logisim (http://www.cburch.com/logisim/).
 21 21 33 3f 21 32 13 31
 </a>
     </comp>
-    <comp lib="0" loc="(350,80)" name="Pin">
-      <a name="facing" val="north"/>
-      <a name="width" val="2"/>
-      <a name="tristate" val="false"/>
-    </comp>
-    <comp lib="5" loc="(500,160)" name="DotMatrix">
+    <comp lib="5" loc="(770,260)" name="DotMatrix">
       <a name="inputtype" val="row"/>
       <a name="matrixcols" val="2"/>
       <a name="matrixrows" val="3"/>
@@ -127,7 +142,29 @@ This file is intended to be loaded by Logisim (http://www.cburch.com/logisim/).
       <a name="offcolor" val="#000000"/>
       <a name="dotshape" val="circle"/>
     </comp>
-    <comp lib="0" loc="(350,310)" name="Pin">
+    <comp lib="0" loc="(160,200)" name="Pin">
+      <a name="tristate" val="false"/>
+    </comp>
+    <comp lib="0" loc="(170,230)" name="Pin">
+      <a name="width" val="6"/>
+      <a name="tristate" val="false"/>
+    </comp>
+    <comp lib="4" loc="(250,230)" name="Counter">
+      <a name="width" val="6"/>
+      <a name="max" val="0x3f"/>
+    </comp>
+    <comp lib="0" loc="(430,330)" name="Pin">
+      <a name="facing" val="north"/>
+      <a name="tristate" val="false"/>
+    </comp>
+    <comp lib="0" loc="(160,260)" name="Pin">
+      <a name="tristate" val="false"/>
+    </comp>
+    <comp lib="2" loc="(630,130)" name="BitSelector">
+      <a name="width" val="6"/>
+      <a name="group" val="2"/>
+    </comp>
+    <comp lib="0" loc="(620,180)" name="Pin">
       <a name="facing" val="north"/>
       <a name="width" val="2"/>
       <a name="tristate" val="false"/>
