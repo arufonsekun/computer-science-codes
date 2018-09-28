@@ -14,13 +14,10 @@ void push(int value, lifo ** top){
         (*top)->below = NULL;
     }
     else{
-        lifo * toper = *top;
-        while (toper->below != NULL){
-            toper = toper->below;
-        }
-        toper->below = (lifo *) malloc (sizeof(lifo *));
-        toper->below->value = value;
-        toper->below->below = NULL;
+        lifo * new =  (lifo *) malloc (sizeof(lifo *));
+        new->value = value;
+        new->below = *top;
+        *top = new;
     }
 }
 
@@ -32,11 +29,13 @@ void print(lifo * top){
 }
 
 void pop(lifo ** top){
-    if (top == NULL)
+    if (*top == NULL)
         printf("Stack is empty\n");
-    lifo * topper = *top;
-    *top = (*top)->below;
-    free(topper);
+    else{
+        lifo * topper = *top;
+        *top = (*top)->below;
+        free(topper);
+    }
 }
 
 int main(){
@@ -68,4 +67,3 @@ int main(){
 
     return 0;
 }
-
