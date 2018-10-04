@@ -24,64 +24,48 @@ void insertRec(tree ** parent, int value){
     }
 }
 
-/*void push(tree ** parent, int value){
-     if (*parent == NULL){
-         (*parent) = (tree *) malloc(sizeof(tree *));
-         (*parent)->value = value;
-         (*parent)->left = NULL;
-         (*parent)->right = NULL;
-     }
-     else{
-         printf("opa\n");
-         tree * aux = *parent;
-         tree * behind;
-         while (aux != NULL){
-             behind = aux;
-             if (aux->value <= value){
-                 aux = aux->right;
-             }
-             else{
-                 aux = aux->left;
-             }
-         }
- 
-         tree * new = (tree *) malloc(sizeof(tree *));
-         new->value = value;
-         new->right = NULL;
-         new->left = NULL;
-         
-         if (value >= behind->value){
-             behind->right = new;
-         }
-         else{
-             behind->left = new;
-         }
-     }
- }
- */
+void printSorted(tree * head){
+    //just in case whether head is null
+    if (head == NULL)
+        return;
+    
+    if ((head->left == NULL) & (head->right == NULL))
+        printf("%d ", head->value);
+    
+    else if ((head->left == NULL) & (head->right != NULL)){
+        printf("%d ", head->value);
+        printSorted(head->right);
+    }
+    
+    else{
+        printSorted(head->left);
+        printf("%d ", head->value);
+        printSorted(head->right);
+    }
 
+}
 
 int main(){
-    tree * treee, * parent;
-    parent = NULL;
+    tree * tree;
+    tree = NULL;
     int input;
 
     printf("Type a value: ");
     scanf("%d", &input);
     
     while (input != 0){
-        if (parent == NULL){
-            printf("entro\n");
-            insertRec(&parent, input);
+        if (tree == NULL){
+            insertRec(&tree, input);
         }
 
         else{
-            insertRec(&parent, input);
+            insertRec(&tree, input);
         }
         printf("Type a value: ");
         scanf("%d", &input);
     }
 
-    printf("%d\n", parent->right->value);
+    printSorted(tree);
+    printf("\n");
     return 0;
 }
