@@ -48,13 +48,23 @@ void printSorted(tree * head){
 
 }
 
+void printDecreasing(tree * head){
+    if (head == NULL)
+        return;
+    else{
+        printSorted(head->right);
+        printf("%d ", head->value);
+        printSorted(head->left);
+    }
+}
+
 int search(tree * head, int value){
     if (head == NULL)
-        return -6666;
+        return -999999;
     if (head->value == value)
         return head->value;
     else{
-        if (value < head->value)
+        if ((value < head->value) & (head->left != NULL))
             return search(head->left, value);
         else
             return search(head->right, value);
@@ -87,11 +97,11 @@ tree * fill(tree * head){
 }
 
 int main(){
-    tree * tree, * find;
+    tree * tree;
     tree = NULL;
     int input, operation;
 
-    printf("0-leave 1-insert 2-Print Sorted 3-Search 4-clear 5-fill\n");
+    printf("0-leave 1-insert 2-Print Increasing Order \n3- Print Decreasing Order 4-Search 5-clear 6-fill 7-clear terminal\n");
     printf("Type the operation code: ");
     scanf("%d", &operation);
     
@@ -113,21 +123,29 @@ int main(){
             printf("\n");
         }
         else if (operation == 3){
-            clock_t begin = clock();
-            //printf("Type a value to search: ");
-            //scanf("%d", &input);    
-            printf("The value is %d\n", search(tree, rand() % 100));
-            clock_t end = clock();
-            int time_spent = (double) (end - begin) / CLOCKS_PER_SEC;
-            printf("Time spent in searching %4.3f\n", time_spent);
+            printDecreasing(tree);
+            printf("\n");
         }
         else if (operation == 4){
+            printf("Type a value to search: ");
+            scanf("%d", &input);
+            clock_t begin = clock();
+            int value  = search(tree, input);
+            clock_t end = clock();
+            printf("The value is %d (-999999 means not found)\n", value);
+            double time_spent = (double) (end - begin);
+            printf("Time spent in searching %4.3lf\n", time_spent);
+        }
+        else if (operation == 5){
             clear(tree);
             printf("The tree is clear\n");
             tree = NULL;
         }
-        else{
+        else if (operation == 6){
             tree = fill(tree);
+        }
+        else{
+            system("clear");
         }
         printf("Type the operation code: ");
         scanf("%d", &operation);
