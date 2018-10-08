@@ -48,6 +48,17 @@ void sortInsertion(int *v, int index, int value){
     }
 }
 
+int binarySearch(int * v, int index, int value){
+    if (v[index] == value)
+        return v[index];
+    else if (v[index] < value){
+        return binarySearch(v , index/2, value);
+    }
+    else{
+        return binarySearch(v , index/2 + index/2, value);
+    }
+}
+
 int main(){
     clock_t end, begin;
     int v[10], size = 0, input;
@@ -73,11 +84,13 @@ int main(){
     time_spent=(double)(end-begin)/CLOCKS_PER_SEC;
     printf("\nExecution time for search (in s): %5.2f\n",time_spent);*/
 
-    for (int i = 0; i < 2; i++){
+    for (int i = 0; i < 10; i++){
         //scanf("%d", &input);
         sortInsertion(v, i, rand() % 100);
         size++;
     }
     print(v, size); 
+
+    printf("%d\n", binarySearch(v, size / 2, rand() % 100));
     return 0;
 }
