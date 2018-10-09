@@ -3,8 +3,6 @@
 #include <time.h>
 
 #define SIZE 500000
-//TODO : insertVector(int *v, size, value)
-//searchVal()
 
 void insertVector(int *v, int pos, int value){
     v[pos] = value;
@@ -48,21 +46,26 @@ void sortInsertion(int *v, int index, int value){
     }
 }
 
-int binarySearch(int * v, int index, int value){
-    if (v[index] == value)
-        return v[index];
-    else if (v[index] < value){
-        return binarySearch(v , index/2, value);
+int binarySearch(int * v, int value, int l, int r){
+    int middle = (l + r) / 2;
+    if (v[middle] == value)
+        return v[middle];
+    if (l >= r){
+        //finds anything
+        return -1;
     }
     else{
-        return binarySearch(v , index/2 + index/2, value);
+        if (v[middle] < value)
+            return binarySearch(v , value, middle + 1, r);
+        else
+            return binarySearch(v, value, l, middle - 1);
     }
 }
 
 int main(){
-    clock_t end, begin;
+   // clock_t end, begin;
     int v[10], size = 0, input;
-    double time_spent;
+   // double time_spent;
 
     /*begin=clock();
     for (int i=0;i<=SIZE;i++)
@@ -91,6 +94,6 @@ int main(){
     }
     print(v, size); 
 
-    printf("%d\n", binarySearch(v, size / 2, rand() % 100));
+    printf("%d\n", binarySearch(v, 15, 0, size-1));
     return 0;
 }
