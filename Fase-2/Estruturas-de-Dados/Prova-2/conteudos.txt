@@ -1,8 +1,8 @@
 Prova 2: 14/10/2018
-   - Listas duplamente encadeadas;
-   - Listas simplesmente encadeadas;
-   - Sort Insertion;
-   - Árvore Binária;
-   - Busca binária;
+   - Listas duplamente encadeadas; done
+   - Listas simplesmente encadeadas; done
+   - Sort Insertion; done
+   - Árvore Binária; done
+   - Busca binária; done ?
    - Fila e Pilha;
    - hashing;

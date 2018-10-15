@@ -49,11 +49,25 @@ tree * search(int value, tree* parent){
     }
 }
 
+void clear(tree* parent){
+    if (parent == NULL)
+        free(parent);
+    else{
+        clear(parent->left);
+        clear(parent->right);
+        free(parent);
+    }
+}
+
+void printMenu(){
+    printf("0-quit\n1-Insert\n2-Search\n3-List Sorted\n4-Clear Memory\nType the operation code\n>> ");
+}
+
 int main(){
     tree * parent = NULL;
     int input, operation;
     
-    printf("0-quit\n1-Insert\n2-Search\n3-List Sorted\nType the operation code\n>> ");
+    printMenu();
     scanf("%d", &operation);
     while (operation != 0){
         if (operation == 1){
@@ -71,9 +85,17 @@ int main(){
             listSorted(parent);
             printf("\n");
         }
-        printf("Type the operation code:\n>> ");
+        else if (operation == 4){
+            clear(parent);
+            printf("Memory is clear!\n");
+            parent = NULL;
+        }
+        else{
+            system("clear");
+            printMenu();
+        }
         scanf("%d", &operation);
     }
-    printf("%d\n", parent->left->value); 
+     
     return 0;
 }
