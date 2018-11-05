@@ -53,16 +53,36 @@ int lenght(Node * tree){
     }
 }
 
+void BFS(Node * parent, int height){
+    if (parent == NULL)
+        return;
+    if (height == 0)
+        printf("\t%d ", parent->value);
+    else{
+        BFS(parent->left, height-1);
+        BFS(parent->right, height-1);
+    }
+}
+
+void BreadthFirstSearch(Node * parent){
+       int h = height(parent);
+       
+       for (int i = 0; i < h; i++){
+           BFS(parent, i);
+           printf("\n");
+       }
+}
+
 int main(){
     Node * tree = NULL; Node * new = NULL;
     unsigned size;
     int value;
 
-    printf("Type the tree size: ");
+    //printf("Type the tree size: ");
     scanf("%u", &size);
 
     for (int i = 0; i < size; i++){
-        printf("Type the node value: ");
+        //printf("Type the node value: ");
         scanf("%d", &value);
         //value = rand() % 100;
         if (new == NULL){
@@ -73,9 +93,11 @@ int main(){
             include(&new, value);
         }
     }
-    printInOrder(tree);
-    printf("\n");
-    printf("Tree height: %d\n", height(tree));
-    printf("Tree lenght %d\n", lenght(tree));
+    //printInOrder(tree);
+    //printf("\n");
+    //printf("Tree height: %d\n", height(tree));
+    //printf("Tree lenght %d\n", lenght(tree));
+    BreadthFirstSearch(tree);
+    //printf("\n");
     return 0;
 }
