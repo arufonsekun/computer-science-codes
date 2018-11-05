@@ -1,115 +1,81 @@
-
-//TODO: imlementar a nao insercao de nos repetidos
-//TODO: insertBST:
-//TODO: implementar as duas funcoes q faltam
-#include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
-#include "BST.h"
+#include <stdio.h>
+
+struct node {
+    int value;
+    struct node * left;
+    struct node * right;
+};
+
+typedef struct node Node;
 
 int max(int a, int b){
-    return (a > b ? a : b);    
+    return (a > b ? a : b);
 }
 
-TTree *getMem()
-{
-	TTree *new=(TTree *)malloc(sizeof(TTree));
-	if (new==NULL)
-	{
-		printf("FATAL ERROR! NO MEMORY AVAILABLE!\n");
-		return NULL;
-	}
-	new->right=NULL;
-	new->left=NULL;
-	return new;
-}
-// Insert following Binary Search Tree rules
-TTree *insertBST(TTree *r, int vl)
-{
-    if (r==NULL)
-    {
-		TTree *new=getMem();
-		new->value=vl;
-		return new;
-	}
-    else if (r->value != vl){
-	    if (vl>=r->value)
-	    {
-		    if (r->right==NULL)
-		    {
-  		        TTree *new=getMem();
-		        new->value=vl;
-			    r->right=new;
-			    return new;
-		    }
-		    return insertBST(r->right,vl);
-	    } else
-	    {
-		    if (r->left==NULL)
-		    {
-  		        TTree *new=getMem();
-		        new->value=vl;
-			    r->left=new;
-			    return new;
-		    }
-		    return insertBST(r->left,vl);
-	    }
+void include (Node** parent, int value){
+    if (*parent == NULL){
+        *parent = (Node*)  malloc(sizeof(Node *));
+        (*parent)->left = NULL;
+        (*parent)->right = NULL;
+        (*parent)->value = value;
+        return;
+    }
+    else if (value < (*parent)->value){
+        return include(&(*parent)->left, value);
+    }
+    else{
+        return include(&(*parent)->right, value);
     }
 }
-// Search for a value in the tree from address pointed by r 
-TTree *searchSBT(TTree *r, int vl)
-{
-	if (r==NULL) return NULL;
-	if (r->value==vl) return r;
-	if (vl>=r->value) return searchSBT(r->right,vl);
-	else              return searchSBT(r->left,vl);
+
+void printInOrder(Node* parent){
+    if (parent == NULL)
+       return;
+    printInOrder(parent->left);
+    printf("%d ", parent->value);
+    printInOrder(parent->right);
 }
-//  Impressões ordenada
-void PrintInOrder(TTree *r)
-{
-	if (r==NULL) return;
-	PrintInOrder(r->left);
-	printf("%d ",r->value);
-	PrintInOrder(r->right);
+
+int height(Node * parent){
+    if (parent == NULL)
+        return 0;
+    int left = height(parent->left) + 1;
+    int right = height(parent->right) +1;
+    return max(left, right);
 }
-//
-void PrintPreOrder(TTree *r)
-{
-	if (r==NULL) return;
-	printf("%d ",r->value);
-	PrintPreOrder(r->left);
-	PrintPreOrder(r->right);
+
+int lenght(Node * tree){
+    if (tree == NULL)
+        return 0;
+    else{
+        return lenght(tree->right) + lenght(tree->left) +1;
+    }
 }
-//
-void PrintPosOrder(TTree *r)
-{
-	if (r==NULL) return;
-	PrintPosOrder(r->left);
-	PrintPosOrder(r->right);
-	printf("%d ",r->value);
-}
-//
-// free up the allocated spaces
-void cleanTree(TTree *r)
-{
-	if (r==NULL) return;
-	cleanTree(r->left);
-	cleanTree(r->right);
-    free(r);
-}	
-//
-int treeHeight(TTree *n)
-{
-	int lh, rh;
-	if (n== NULL) return 0;
-	lh=treeHeight(n->left);
-	rh=treeHeight(n->right);
-	if (lh > rh) return lh+1;
-	else return rh+1;	
-}
-//
-int numberOfNodes(TTree *n)
-{
-   	if (n == NULL) return 0;
-	return numberOfNodes(n->left) + numberOfNodes(n->right) +1;
+
+int main(){
+    Node * tree = NULL; Node * new = NULL;
+    unsigned size;
+    int value;
+
+    printf("Type the tree size: ");
+    scanf("%u", &size);
+
+    for (int i = 0; i < size; i++){
+        printf("Type the node value: ");
+        scanf("%d", &value);
+        //value = rand() % 100;
+        if (new == NULL){
+            include(&new, value);
+            tree = new;
+        }
+        else{
+            include(&new, value);
+        }
+    }
+    printInOrder(tree);
+    printf("\n");
+    printf("Tree height: %d\n", height(tree));
+    printf("Tree lenght %d\n", lenght(tree));
+    return 0;
 }
