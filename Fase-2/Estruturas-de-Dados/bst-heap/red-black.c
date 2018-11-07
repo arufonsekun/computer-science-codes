@@ -6,7 +6,6 @@ struct node {
     int key;
     struct node * left;
     struct node * right;
-    struct node * parent;
     char c;
 };
 
@@ -29,7 +28,7 @@ void BFS(Node * parent, int height){
     if (parent == NULL)
         return;
     if (height == 0)
-        printf("\t%d ", parent->key);
+        printf("%c ", parent->c);
     else{
         BFS(parent->left, height-1);
         BFS(parent->right, height-1);
@@ -46,62 +45,97 @@ void BreadthFirstSearch(Node * parent){
 
 }
 
-//a function to set the node attrs
-Node* setNode(Node* parent, int value){
-    Node* new = (Node *) malloc(sizeof(16));
+//given a node this function return his parent
+Node* getParent(Node* root, Node* node){
+    if (root == node)
+        return NULL;
+    else if(root->left == node || root->right == node)
+        return root;
+    else if (node->key < root->key)
+        return getParent(root->left, node);
+    else
+        return getParent(root->right, node);
+}
+
+//function to set the node attrs
+Node* setNode(int value){
+    Node* new = (Node *) malloc(sizeof(Node*));
     new->key = value;
-    new->parent = parent;
     new->left = NULL;
     new->right = NULL;
     new->c = 'R';
     return new;
 }
 
-Node* insert(Node* node, Node* parent, int key){
-    //check if node is root
-    if (node == NULL){
-        //printf("%d\n", key);
-        node = setNode(parent, key);
-        //root node is always black
-        //printf("%d\n", key);
-        node->c = 'B';
-        return node;
+Node* getNode(Node* root, int key){
+    if (root->key == key)
+        return root;
+    return (root->key > key ? getNode(root->left, key) : getNode(root->right, key));
+}
+
+Node* insert(Node* node, int key){
+    if(node == NULL){
+        Node* new = setNode(key);
+        return new;
     }
-
-    if (key < node->key){
-        printf("entro aqui\n");
-        return insert(node->left, node, key);
+    if (key > node->key){
+        if (node->right == NULL){
+            Node * new = setNode(key);
+            node->right = new;
+            return new;
+        }
+        return insert(node->right, key);
     }
+    else{
+        if(node->left == NULL){
+            Node * new = setNode(key);
+            node->left = new;
+            return new;
+        }
+        return insert(node->left, key);
+    }
+}
 
-    else
-        return insert(node->right, node, key);
+void insertFixUp(Node* root, int value){
+    //if value == root->key
+    if (getParent(root, getNode(root, value)) == NULL)
+        return;
 
+    if (getParent(root, getNode(root, value))->c == 'B')
+        return;
+
+    //root node always black
+    root->c = 'B';
 }
 
 int main(){
-    Node* parent = NULL;
-    Node* new = NULL;
+    Node* root = NULL, *new = NULL;
     int value, size;
 
     printf("Type the tree size: ");
     scanf("%d", &size);
 
     for (int i = 0; i < size; i++){
-        printf("Type the value to insert: ");
+        //printf("Type the value to insert: ");
         scanf("%d", &value);
-        //printf("%ld\n", sizeof(new));
-        if (parent == NULL){
-            //second paremeter is NULL because root node is orphan(He has no parent ;( )
-            parent = insert(new, NULL, value);
-            //parent = new;
-        }
-        else{
-            //printf("%ld\n", sizeof(new));
-            insert(parent, NULL, value);
-        }
+        new = insert(root, value);
+        if(root == NULL) root = new;
+        //insertFixUp(root, value);
     }
+
     //this statement should print the root node value
-    printf("%d\n", parent->left->parent->key);
-    //BreadthFirstSearch(parent);
+    BreadthFirstSearch(root);
+    /*Node* birl = getNode(root, 7);
+    printf("%d\n", birl->key);*/
     return 0;
 }
+
+//Casos da Red Black Tree
+//1° O no inserido e raiz (pinta de preto);
+//2° O pai do no e preto (gg easy, fica como ta)
+//3° O pai e tio sao vermelhos (tio e pai tornam-se pretos e o avo vermelho)
+//4º O pai(filho a esquerda) e vermelho e o tio preto(rotacionar ) alem do no
+//a ser inserido ser filho a direita. Rotacionar para a esquerda o novo no e seu pai.
+//Ainda ta dando merda, resolver no caso 5.
+//5º Novo e filho a esquerda e o pai tmb, rotacionar para a direita (o pai vira raiz, 
+//o avo vira filho do pai e torna-se vermelho) 
