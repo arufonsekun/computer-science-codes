@@ -4,9 +4,9 @@
 //"node" because a tree is made of nodes
 struct node {
     int key;
+    char c;
     struct node * left;
     struct node * right;
-    char c;
 };
 
 typedef struct node Node;
@@ -28,7 +28,7 @@ void BFS(Node * parent, int height){
     if (parent == NULL)
         return;
     if (height == 0)
-        printf("%c ", parent->c);
+        printf("%c", parent->c);
     else{
         BFS(parent->left, height-1);
         BFS(parent->right, height-1);
@@ -61,9 +61,9 @@ Node* getParent(Node* root, Node* node){
 Node* setNode(int value){
     Node* new = (Node *) malloc(sizeof(Node*));
     new->key = value;
+    new->c = 'R';
     new->left = NULL;
     new->right = NULL;
-    new->c = 'R';
     return new;
 }
 
@@ -73,39 +73,56 @@ Node* getNode(Node* root, int key){
     return (root->key > key ? getNode(root->left, key) : getNode(root->right, key));
 }
 
-Node* insert(Node* node, int key){
-    if(node == NULL){
-        Node* new = setNode(key);
-        return new;
+Node* getUncle(Node* root, int key){
+    Node* node = getNode(root, key);
+    Node * parent = getParent(root, node);
+    Node* grandParent = getParent(root, parent);
+    if (grandParent == NULL)
+        return NULL;
+    else
+        return (grandParent->left == parent ? grandParent->right : grandParent->left);
+}
+
+void insert(Node** node, int key){
+    if (*node == NULL){
+        *node = setNode(key);
+        return;
     }
-    if (key > node->key){
-        if (node->right == NULL){
-            Node * new = setNode(key);
-            node->right = new;
-            return new;
-        }
-        return insert(node->right, key);
-    }
-    else{
-        if(node->left == NULL){
-            Node * new = setNode(key);
-            node->left = new;
-            return new;
-        }
-        return insert(node->left, key);
-    }
+    if (key < (*node)->key)
+        insert(&(*node)->left, key);
+    else
+        insert(&(*node)->right, key);
+
 }
 
 void insertFixUp(Node* root, int value){
+    Node* node = getNode(root, value);
+    Node* parent = getParent(root, node);
     //if value == root->key
-    if (getParent(root, getNode(root, value)) == NULL)
+    if (parent == NULL){
+        root->c = 'B';
         return;
+    }
+    else if (parent->c == 'B')
+        return;
+    else{
+        Node* uncle = getUncle(root, value);
+        printf("Parent: %d Uncle: %d", parent->key, uncle->key);
+        
+        if (parent->c == 'R' && (uncle != NULL && uncle->c == 'R')){
+            getParent(root, parent)->c = 'R';
+            parent->c = 'B';
+            uncle->c = 'B';
+        }
 
-    if (getParent(root, getNode(root, value))->c == 'B')
-        return;
+        else if (parent->c == 'R' && (uncle == NULL || uncle->c == 'B')){
+            
+        }
+    }
 
     //root node always black
     root->c = 'B';
+    return;
 }
 
 int main(){
@@ -118,14 +135,16 @@ int main(){
     for (int i = 0; i < size; i++){
         //printf("Type the value to insert: ");
         scanf("%d", &value);
-        new = insert(root, value);
+        insert(&new, value);
         if(root == NULL) root = new;
-        //insertFixUp(root, value);
+        insertFixUp(root, value);
     }
 
     //this statement should print the root node value
     BreadthFirstSearch(root);
-    /*Node* birl = getNode(root, 7);
+    /*Node * uncle = getUncle(root, 11);
+    printf("%p\n", uncle);
+    Node* birl = getNode(root, 7);
     printf("%d\n", birl->key);*/
     return 0;
 }
