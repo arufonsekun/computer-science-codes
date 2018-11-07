@@ -1,2 +1,0 @@
-gcc -c treeMain.c
-gcc -o run BST.o treeMain.o
