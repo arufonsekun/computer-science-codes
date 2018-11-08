@@ -95,34 +95,67 @@ void insert(Node** node, int key){
 
 }
 
-void insertFixUp(Node* root, int value){
-    Node* node = getNode(root, value);
-    Node* parent = getParent(root, node);
-    //if value == root->key
-    if (parent == NULL){
-        root->c = 'B';
-        return;
+void leftRotate(Node* root, Node* x){
+    Node * y = x->right;
+    x->right = y->left;
+
+    if (y->left != NULL){
+        getParent(root, y->left) = x;
     }
-    else if (parent->c == 'B')
-        return;
+    getParent(root, y) = getParent(root, x);
+    if (getParent(root, x) == NULL){
+        root = y;
+    }
+    else if(x == getParent(root, x)->left){
+        getParent(root, x)->left = y; 
+    } 
     else{
-        Node* uncle = getUncle(root, value);
-        printf("Parent: %d Uncle: %d", parent->key, uncle->key);
-        
-        if (parent->c == 'R' && (uncle != NULL && uncle->c == 'R')){
-            getParent(root, parent)->c = 'R';
-            parent->c = 'B';
-            uncle->c = 'B';
-        }
+        getParent(root, x)->right = y;
+    }
+    y->left = x;
+    getparent(root, x) = y;
+}
 
-        else if (parent->c == 'R' && (uncle == NULL || uncle->c == 'B')){
-            
+void insertFixUp(Node* root, int value){
+    Node* new = getNode(root, value);
+    Node* parent = getParent(root, new);
+    Node* grandParent = getParent(root, parent);
+
+    while (parent->c == 'R'){
+        if (parent == grandParent->left){
+            Node * aux = grandParent->right;
+            if (aux->c == 'R'){
+                parent->c = 'B';
+                aux->c = 'B';
+                grandParent->c = 'R';
+            }
+            else if (grandParent == getParent(root, grandParent)->right){
+                grandParent = getParent(root, grandParent);
+                leftRotate(root, grandParent);
+            }
+            grandParent->c ='B';
+            aux = getParent(root, grandParent);
+            aux->c = 'V';
+            rightRotate(root, aux);
+        }
+        else{
+            Node * aux = grandParent->left;
+            if (aux->c == 'R'){
+                parent->c = 'B';
+                aux->c = 'B';
+                grandParent->c = 'R';
+            }
+            else if (grandParent == getParent(root, grandParent)->left){
+                grandParent = getParent(root, grandParent);
+                rightRotate(root, grandParent);
+            }
+            grandParent->c ='B';
+            aux = getParent(root, grandParent);
+            aux->c = 'V';
+            rightRotate(root, aux);
         }
     }
-
-    //root node always black
     root->c = 'B';
-    return;
 }
 
 int main(){
