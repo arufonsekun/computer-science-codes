@@ -28,7 +28,7 @@ void BFS(Node * parent, int height){
     if (parent == NULL)
         return;
     if (height == 0)
-        printf("%c", parent->key);
+        printf("%d:%c  ", parent->key, parent->c);
     else{
         BFS(parent->left, height-1);
         BFS(parent->right, height-1);
@@ -55,31 +55,34 @@ Node* setNode(Node* parent, int key){
     return new;
 }
 
-void insert(Node** root, Node* parent, int key){
+Node* insert(Node** root, Node* parent, int key){
     if (*root == NULL){
         *root = setNode(parent, key);
-        return;
+        if (parent == NULL){
+            (*root)->parent = (Node*) malloc(sizeof(Node));
+            (*root)->parent->c = 'B';
+            (*root)->parent->left = NULL;
+            (*root)->parent->right = NULL;
+        }
+        return *root;
     }
     if (key < (*root)->key)
-        insert(&(*root)->left, *root, key);
+        return insert(&(*root)->left, *root, key);
     else
-        insert(&(*root)->right, *root, key);
+        return insert(&(*root)->right, *root, key);
 }
 
-void leftRotate(Node* root, Node* x){
-    Node* y = x->right;
-    x->right = y->left;
+void leftRotate(Node* new, Node* parent){
+    new->parent = parent->parent;
+    
+    parent->right = new->left;
+    
+    new->left->parent = parent;
 
-    if (y->left == NULL) y->left->parent = x;
-    y->parent = x->parent;
+    parent->parent->left = new;
 
-    if (x->parent == NULL) root = y;
+    new->left = parent;
 
-    else if (x == x->parent->left) x->parent->left = y;
-
-    else x->parent->right = y;
-    y->left = x;
-    x->parent = y;
 }
 
 void rightRotate(Node* root, Node* x){
@@ -89,7 +92,10 @@ void rightRotate(Node* root, Node* x){
     if (y->right == NULL) y->right->parent = x;
     y->parent = x->parent;
 
-    if (x->parent == NULL) root = y;
+    if (x->parent == NULL){
+        y->parent->key= 0;
+        root = y;
+    }
 
     else if (x == x->parent->right) x->parent->right = y;
 
@@ -99,38 +105,42 @@ void rightRotate(Node* root, Node* x){
 }
 
 Node* fixUpInsertion(Node* root, Node* new){
+    //printf("%c", new->c);i
+    root->c = 'B';
     while (new->parent->c == 'R'){
+        //printf("%d == %d", new->parent->key, new->parent->parent->left->key);
         if (new->parent == new->parent->parent->left){
-            Node* aux = new->parent->parent->right;
-            if (aux->c == 'R'){
+            Node* uncle = new->parent->parent->right;
+            
+            //null means a black node
+            if (uncle != NULL && uncle->c == 'R'){
+                printf("Opa");
                 new->parent->c = 'B';
-                aux->c = 'B';
+                uncle->c = 'B';
                 new->parent->parent->c = 'R';
                 new = new->parent->parent;
             }
-            else if (new == new->parent->right){
-                new = new->parent;
-                leftRotate(root, new);
-                new->parent->c = 'B';
-                new->parent->parent->c = 'R';
-                rightRotate(root, new->parent->parent);
+            else{
+                printf("birl\n");
+                leftRotate(new, new->parent);
+                //rightRotate();
             }
         }
+        
         else{
-            Node* aux = new->parent->parent->left;
-            if (aux->c == 'R'){
+            Node* uncle = new->parent->parent->left;
+            if (uncle != NULL && uncle->c == 'R'){
                 new->parent->c = 'B';
-                aux->c = 'B';
+                uncle->c = 'B';
                 new->parent->parent->c = 'R';
                 new = new->parent->parent;
             }
-            else if(new == new->parent->left){
-                new = new->parent;
-                rightRotate(root, new);
+            else{
+                printf("Birl do else");
+                rightRotate(new, new->parent);
+                leftRotate(new, new->parent);
             }
-            new->parent->c = 'B';
-            new->parent->parent->c = 'R';
-            leftRotate(root, new->parent->parent);
+
         }
     }
     root->c = 'B';
@@ -140,20 +150,26 @@ Node* fixUpInsertion(Node* root, Node* new){
 Node* getNode(Node* root, int key){
     if (root->key == key)
         return root;
-    return (root->key > key ? getNode(root->left, key) : getNode(root->right, key));
+    if (key < root->key)
+        return getNode(root->left, key);
+    else
+        return getNode(root->right, key);
 }
 
 int main(){
-    Node* root = NULL;
+    Node* root = NULL, *new = NULL;
+    
     int value, size;
 
     scanf("%d", &size);
     for (int i = 0; i < size; i++){
         scanf("%d", &value);
-        insert(&root, NULL, value);
-        root = fixUpInsertion(root, getNode(root, value));
+        new = insert(&root , NULL, value);
+        printf("%d\n", new->key);
+        fixUpInsertion(root, new);
     }
-    //BreadthFirstSearch(root);
-    printf("%d", root->key);
+    //Node* c = getNode(root, 5);
+    //printf("%d\n", c->parent->key);
+    BreadthFirstSearch(root);
     return 0;
 }
