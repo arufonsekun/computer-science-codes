@@ -89,7 +89,14 @@ void leftRotate(Node* new, Node* parent){
 }
 
 void rightRotate(Node* new, Node* parent){
-    printf("%d\n", new->parent);
+    new->parent = parent->parent;
+    
+    parent->left = new->right;
+
+    parent->parent->left = new;
+    parent->parent = new;
+    new->right = parent;
+
 }
 
 Node* fixUpInsertion(Node* root, Node* new){
@@ -102,7 +109,7 @@ Node* fixUpInsertion(Node* root, Node* new){
             
             //null means a black node
             if (uncle != NULL && uncle->c == 'R'){
-                printf("Opa");
+                printf("Passou a cor do avo aos pais\n");
                 new->parent->c = 'B';
                 uncle->c = 'B';
                 new->parent->parent->c = 'R';
@@ -110,12 +117,18 @@ Node* fixUpInsertion(Node* root, Node* new){
             }
             // wheater the new node is right-child
             else if (new->parent->right == new){                
-                //printf("Entrou\n");
+                printf("Caso left-right: parent is black and uncle is red\n");
                 leftRotate(new, new->parent);
                 rightRotate(new, new->parent);
             }
             else{
-            
+                printf("Caso left-left: parent is black and uncle is red\n");
+                new->left = new->parent;
+                new->parent = new->parent->parent;
+                new->parent->parent->left = new;
+                new->left->parent = new;
+                //new->left->left
+                rightRotate(new, new->parent);
             }
         }
         
@@ -127,11 +140,13 @@ Node* fixUpInsertion(Node* root, Node* new){
                 new->parent->parent->c = 'R';
                 new = new->parent->parent;
             }
-            else{
+            else if(new->parent->right == new){
                 printf("Birl do else");
-                rightRotate(new, new->parent);
                 leftRotate(new, new->parent);
+                rightRotate(new, new->parent);
             }
+            else
+                rightRotate(new, new->parent);
 
         }
     }
