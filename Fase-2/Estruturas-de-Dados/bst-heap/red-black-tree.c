@@ -77,31 +77,19 @@ void leftRotate(Node* new, Node* parent){
     
     parent->right = new->left;
     
-    new->left->parent = parent;
+    if (new->left != NULL)
+        new->left->parent = parent;
 
     parent->parent->left = new;
-
+    
+    parent->parent = new;
     new->left = parent;
+    
 
 }
 
-void rightRotate(Node* root, Node* x){
-    Node* y = x->left;
-    x->left = y->right;
-
-    if (y->right == NULL) y->right->parent = x;
-    y->parent = x->parent;
-
-    if (x->parent == NULL){
-        y->parent->key= 0;
-        root = y;
-    }
-
-    else if (x == x->parent->right) x->parent->right = y;
-
-    else x->parent->left = y;
-    y->right = x;
-    x->parent = y;
+void rightRotate(Node* new, Node* parent){
+    printf("%d\n", new->parent);
 }
 
 Node* fixUpInsertion(Node* root, Node* new){
@@ -120,10 +108,14 @@ Node* fixUpInsertion(Node* root, Node* new){
                 new->parent->parent->c = 'R';
                 new = new->parent->parent;
             }
-            else{
-                printf("birl\n");
+            // wheater the new node is right-child
+            else if (new->parent->right == new){                
+                //printf("Entrou\n");
                 leftRotate(new, new->parent);
-                //rightRotate();
+                rightRotate(new, new->parent);
+            }
+            else{
+            
             }
         }
         
@@ -165,7 +157,7 @@ int main(){
     for (int i = 0; i < size; i++){
         scanf("%d", &value);
         new = insert(&root , NULL, value);
-        printf("%d\n", new->key);
+        //printf("%d\n", new->key);
         fixUpInsertion(root, new);
     }
     //Node* c = getNode(root, 5);
