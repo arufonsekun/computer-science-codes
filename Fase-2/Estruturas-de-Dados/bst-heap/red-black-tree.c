@@ -198,7 +198,7 @@ int main(){
     printf("Teste do parent: %d\n", root->left->right->parent->key);
     printf("%p\n", root->right->left);*/
     //printf("%d\n", root->right->right->key);
-
     printf("\t");BreadthFirstSearch(root);
+    printf("left-tree height: %d  right-tree height: %d\n", height(root->left), height(root->right));
     return 0;
 }
