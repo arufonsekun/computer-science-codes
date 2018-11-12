@@ -116,8 +116,8 @@ Node* fixUpInsertion(Node* root, Node* new){
                 new->parent->c = 'B';
                 uncle->c = 'B';
                 new->parent->parent->c = 'R';
-                //new = new->parent;
             }
+
             // left-right case
             else if (new->parent->right == new){
                 printf("Caso left-right!\n");
@@ -135,7 +135,6 @@ Node* fixUpInsertion(Node* root, Node* new){
                 new = new->parent;
                 if (new->parent->parent == NULL) root = new;
             }
-            //new = new->parent;
         }
 
         else{
@@ -168,15 +167,6 @@ Node* fixUpInsertion(Node* root, Node* new){
     }
     root->c = 'B';
     return root;
-}
-
-Node* getNode(Node* root, int key){
-    if (root->key == key)
-        return root;
-    if (key < root->key)
-        return getNode(root->left, key);
-    else
-        return getNode(root->right, key);
 }
 
 int main(){
