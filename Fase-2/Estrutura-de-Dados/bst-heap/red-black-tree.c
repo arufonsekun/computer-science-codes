@@ -117,13 +117,6 @@ Node* rightRotate(Node* new, Node* parent){
 
 Node* fixUpInsertion(Node* root, Node* new){
     //printf("Key: %d Parent: %d\n", new->key, new->parent->key);
-    if (new->key == 26){
-        printf("%c\n", new->parent->parent->left->c);
-        printf("parent value: %d\n", new->parent->key);
-        printf("uncle value: %d\n", new->parent->parent->left->key);
-        printf("Granpa value: %d\n", new->parent->parent->key);
-    }
-    else{
     while (new->parent != NULL && new->parent->c == 'R'){
         //printf("%d == %d", new->parent->key, new->parent->parent->left->key);
         Node* grandparent = new->parent->parent;
@@ -189,14 +182,12 @@ Node* fixUpInsertion(Node* root, Node* new){
             //when new become the root
         }
     }
-}
     root->c = 'B';
     return root;
 }
 
 int main(){
     Node* root = NULL, *new = NULL;
-
     int value, size;
 
     scanf("%d", &size);
@@ -206,16 +197,8 @@ int main(){
         new = insert(&root , NULL, value);
         //printf("%d\n", new->key);
         root = fixUpInsertion(root, new);
-        BreadthFirstSearch(root);
     }
-    /*Node* c = getNode(root, 5);
-    printf("Debbuging motherfucker!!\n");
-    printf("%d\n", root->left->key);
-    printf("%d\n", root->left->parent->key);
-    printf("Teste do parent: %d\n", root->left->right->parent->key);
-    printf("%p\n", root->right->left);*/
-    //printf("%d\n", root->right->right->key);
+
     printf("\t");BreadthFirstSearch(root);
-    // printf("left-tree height: %d  right-tree height: %d\n", height(root->left), height(root->right));
     return 0;
 }

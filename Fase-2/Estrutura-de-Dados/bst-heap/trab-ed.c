@@ -21,11 +21,15 @@ Node* setNode(Node* parent, int key);
 Node* fixUpInsertion(Node* root, Node* new);
 Node* rightRotate(Node* new, Node* parent);
 Node* leftRotate(Node* new, Node* parent);
-void breadthFirstSearch(Node * parent);
+void breadthFirstSearch(Node * root);
 void BFS(Node * parent, int height);
-int height(Node * parent);
+int height(Node * root);
 int max(int a, int b);
 void inOrder(Node* root);
+void preOrder(Node* root);
+void posOrder(Node* root);
+Node* deleteNode(Node* root, int key);
+void clearTree(Node* root);
 
 int main(){
     Node* root = NULL, *new = NULL;
@@ -35,16 +39,48 @@ int main(){
     printf("Type the operation: ");
     scanf("%d", &operation);
 
-    while(operation != 8){
+    while(operation != 9){
         if (operation == 1){
             printf("Type the tree size: ");
             scanf("%d", &size);
-            root = generateNodes(root, size);
+            if (root != NULL) clearTree(root);
+            else root = generateNodes(root, size);
         }
 
-        if (operation == 3){
+        else if (operation == 2){
+            printf("Type the node to remove: ");
+            scanf("%d", &size);//reusing vars
+            deleteNode(root, size);
+        }
+
+        else if (operation == 3){
             if (root == NULL) printf("Tree is empty!\n");
-            inOrder(root);
+            else { inOrder(root); printf("\n");}
+        }
+
+        else if (operation == 4){
+            if (root == NULL) printf("Tree is empty!\n");
+            else{ preOrder(root); printf("\n");}
+        }
+
+        else if (operation == 5){
+            if (root == NULL) printf("Tree is empty!\n");
+            else { posOrder(root); printf("\n");}
+        }
+
+        else if (operation == 6){
+            printf("\t");
+            breadthFirstSearch(root);
+        }
+
+        else if (operation == 7){
+            printf("\t");
+            clearTree(root);
+        }
+
+        else if(operation == 8) {
+            system("clear");
+            menu();
         }
 
         printf("Type the operation: ");
@@ -53,7 +89,6 @@ int main(){
         // new = insert(&root , NULL, value);
         // root = fixUpInsertion(root, new);
     }
-    printf("\t");breadthFirstSearch(root);
     return 0;
 }
 
@@ -65,7 +100,6 @@ Node* generateNodes(Node* root, int treeSize){
     for (int i = 0; i < treeSize; i++){
         newKey  = rand() % 100;
         new = insert(&root, NULL, newKey);
-        (new == NULL ? printf("é null\n") : printf("n é\n"));
         root = fixUpInsertion(root, new);
     }
     return root;
@@ -102,13 +136,22 @@ Node* insert(Node** root, Node* parent, int key){
         return insert(&(*root)->right, *root, key);
 }
 
+Node* deleteNode(Node* root, int key){
+    return root;
+}
+
 Node* leftRotate(Node* new, Node* parent){
     new->c = 'B';
     parent->c = 'R';
     new->parent = parent->parent;
     parent->right = new->left;
     new->left = parent;
-    parent->parent->right = new;
+
+    if (parent->parent->left == parent)
+        parent->parent->left = new;
+    else
+        parent->parent->right = new;
+
     parent->parent = new;
 
     if (new->left->right != NULL)
@@ -123,7 +166,12 @@ Node* rightRotate(Node* new, Node* parent){
     new->parent = parent->parent;
     parent->left = new->right;
     new->right = parent;
-    parent->parent->left = new;
+
+    if (parent->parent->left == parent)
+        parent->parent->left = new;
+    else
+        parent->parent->right = new;
+
     parent->parent = new;
 
     if (new->right->left != NULL)
@@ -232,8 +280,31 @@ void BFS(Node * parent, int height){
 void inOrder(Node* root){
     if (root == NULL)return;
     inOrder(root->left);
-    printf("%d", root->key);
+    printf("%d ", root->key);
     inOrder(root->right);
+}
+
+void preOrder(Node* root){
+    if (root == NULL)
+        return;
+    printf("%d ", root->key);
+    preOrder(root->left);
+    preOrder(root->right);
+}
+
+void posOrder(Node* root){
+    if (root == NULL)
+        return;
+    posOrder(root->left);
+    posOrder(root->right);
+    printf("%d ", root->key);
+}
+
+void clearTree(Node* root){
+    if (root == NULL) return;
+    clearTree(root->left);
+    clearTree(root->right);
+    free(root);
 }
 
 void menu(){
@@ -241,11 +312,12 @@ void menu(){
     printf("\t| 1. Insert         |\n");
     printf("\t| 2. Delete node    |\n");
     printf("\t| 3. Print in-order |\n");
-    printf("\t| 4. Print pos-order|\n");
-    printf("\t| 5. Print pre-order|\n");
+    printf("\t| 4. Print pre-order|\n");
+    printf("\t| 5. Print pos-order|\n");
     printf("\t| 6. Print BFS      |\n");
-    printf("\t| 7. Clear terminal |\n");
-    printf("\t| 8. Exit           |\n");
+    printf("\t| 7. Clear tree     |\n");
+    printf("\t| 8. Clear terminal |\n");
+    printf("\t| 9. Exit           |\n");
     printf("\t---------------------\n");
     return;
 }
