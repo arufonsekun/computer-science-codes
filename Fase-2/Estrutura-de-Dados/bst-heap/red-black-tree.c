@@ -78,7 +78,12 @@ Node* leftRotate(Node* new, Node* parent){
     new->parent = parent->parent;
     parent->right = new->left;
     new->left = parent;
-    parent->parent->right = new;
+
+    if (parent->parent->left == parent)
+        parent->parent->left = new;
+    else
+        parent->parent->right = new;
+
     parent->parent = new;
 
     if (new->left->right != NULL)
@@ -91,10 +96,15 @@ Node* rightRotate(Node* new, Node* parent){
     new->c = 'B';
     parent->c = 'R';
     new->parent = parent->parent;
-    //here us the problem I guess
-    parent->right = new->right;
+    parent->left = new->right;
+
     new->right = parent;
-    parent->parent->left = new;
+
+    if (parent->parent->left == parent)
+        parent->parent->left = new;
+    else
+        parent->parent->right = new;
+
     parent->parent = new;
 
     if (new->right->left != NULL){
