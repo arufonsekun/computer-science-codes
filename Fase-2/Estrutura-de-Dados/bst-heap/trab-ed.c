@@ -6,6 +6,7 @@
 
 #define RED "\033[31;1m%d \033[0m\t"
 #define WHITE "\033[37;1m %d \033[0m\t"
+#define WHITE_STRING "\033[37;1m%s\033[0m"
 
 struct Node {
      int key;
@@ -34,6 +35,9 @@ void preOrder(Node* root);
 void posOrder(Node* root);
 Node* deleteNode(Node* root, int key);
 void clearTree(Node* root);
+Node* getNode(Node* root, int key);
+Node* successor(Node* n);
+Node* predecessor(Node* n);
 
 int main(){
     Node* root = NULL;
@@ -42,12 +46,15 @@ int main(){
     menu();//show menu
     printf("Type the operation: ");
     scanf("%d", &operation);
-    while(operation != 11){
+    while(operation != 13){
         if (operation == 1){
             printf("Type the tree size: ");
             scanf("%d", &size);
             if (root != NULL) {clearTree(root); root = NULL;};
-            root = generateNodes(root, size);
+            if (size != 0) {
+                root = generateNodes(root, size);
+                printf(WHITE_STRING, "Done!\n"); 
+            }
         }
 
         else if (operation == 2){
@@ -58,43 +65,88 @@ int main(){
 
         else if (operation == 3){
             if (root == NULL) printf("Tree is empty!\n");
-            else { inOrder(root); printf("\n");}
+            else {
+                printf(WHITE_STRING, "In-order\n → ");
+                inOrder(root); 
+                printf("\n");
+            }
         }
 
         else if (operation == 4){
             if (root == NULL) printf("Tree is empty!\n");
-            else{ preOrder(root); printf("\n");}
+            else{ 
+                printf(WHITE_STRING, "Pre-order\n → ");
+                preOrder(root); printf("\n");}
         }
 
         else if (operation == 5){
-            if (root == NULL) printf("Tree is empty!\n");
-            else { posOrder(root); printf("\n");}
+            if (root == NULL) printf(WHITE_STRING, "Tree is empty!\n");
+            else {
+                printf(WHITE_STRING, "Pos-order\n → "); 
+                posOrder(root); 
+                printf("\n");}
         }
 
         else if (operation == 6){
-            printf("   ");
+            printf("    \n");
             breadthFirstSearch(root);
         }
 
         else if(operation == 7){
-            printf("Tree number of nodes is %d\n", treeSize(root));
+            printf(WHITE_STRING, "Tree number of nodes is ");
+            printf("%d\n", treeSize(root));
         }
 
         else if (operation == 8){
-            printf("Tree height is %d\n", height(root));
+            printf(WHITE_STRING, "Tree height is ");
+            printf("%d\n", height(root));
         }
-
+        
         else if (operation == 9){
-            clearTree(root);
-            printf("Tree memory is clear!\n");
+            printf("Type the node key: ");
+            scanf("%d", &size);//reusing variables
+            Node* s = getNode(root, size);
+            
+            if (s == NULL) printf(WHITE_STRING, "The inputted key doesn't exists\n");
+            else{
+                s = successor(s);
+                if (s->parent != NULL){
+                    printf(WHITE_STRING, "\nSUCCESSSOR\n");
+                    printf(" → Sucessor key: %d\n", s->key);
+                    s->parent->parent != NULL ? printf(" → Successor's parent-key: %d\n", s->parent->key) : printf(" → Successor s no parent\n");
+                    s->left != NULL ? printf(" → Successor left-child key: %d\n", s->left->key) : printf(" → Successor's left-child is null\n");
+                    s->right != NULL ? printf(" → Successor's right-child key: %d\n", s->right->key) : printf(" → Successor's right-child is null\n");
+                    printf("\n");
+                }
+                else{
+                    printf(WHITE_STRING, "Sucessor doesn't exist\n");
+                }
+            }
         }
 
-        else if(operation == 10) {
+        else if (operation == 10){
+            printf("Type the node key: ");
+            scanf("%d", &size);//reusing variables
+            Node* p = getNode(root, size);
+            if (p == NULL) printf(WHITE_STRING, "The inputted key doesn't exists\n");
+            else{
+                p = predecessor(p);
+                printf(WHITE_STRING, "\nPREDECESSOR\n");
+                printf(" → Predecessor key: %d\n", p->key);
+            }
+        }
+
+        else if (operation == 11){
+            clearTree(root);
+            printf(WHITE_STRING, "Tree memory is clear!\n");
+        }
+
+        else if(operation == 12) {
             system("clear");
             menu();
         }
 
-        printf("Altura da sub arvore da esq.: %d e da direita %d\n", height(root->left), height(root->right));
+        //printf("Altura da sub arvore da esq.: %d e da direita %d\n", height(root->left), height(root->right));
         printf("Type the operation: ");
         scanf("%d", &operation);
         // scanf("%d", &value);
@@ -111,7 +163,7 @@ Node* generateNodes(Node* root, int treeSize){
     int newKey = 0;
     for (int i = 0; i < treeSize; i++){
         newKey  = rand() % 100;
-        printf("%d\n", newKey);
+        //printf("%d\n", newKey);
         new = insert(&root, NULL, newKey);
         root = fixUpInsertion(root, new);
     }
@@ -342,19 +394,58 @@ void clearTree(Node* root){
     free(root);
 }
 
+Node* successor(Node* n){
+    if (n->right != NULL){
+        Node* s = n->right;
+        while (s->left != NULL) s = s->left;
+        return s;
+    }
+    else{
+        Node* P = n->parent;
+        while (P != NULL && n == P->right){ 
+            n = P;
+            P = P->parent;
+        }
+        return P;
+    }
+}
+
+Node* predecessor(Node* n){
+    if (n->left != NULL){
+        Node* p = n->left;
+        while (p->right != NULL) p = p->right;
+        return p;
+    }
+    else{
+        Node* p = n->parent;
+        if (p->left == NULL) return p; 
+        while (p->right != NULL)p = p->right;
+        return p;
+    }
+}
+
+Node* getNode(Node* root, int key){
+    if (root == NULL) return NULL;
+    if (root->key == key) return root;
+    if (key < root->key) return getNode(root->left, key);
+    else return getNode(root->right, key);
+}
+
 void menu(){
-    printf("\t_____________________\n");
-    printf("\t| 1. Insert         |\n");
-    printf("\t| 2. Delete node    |\n");
-    printf("\t| 3. Print in-order |\n");
-    printf("\t| 4. Print pre-order|\n");
-    printf("\t| 5. Print pos-order|\n");
-    printf("\t| 6. Print BFS      |\n");
-    printf("\t| 7. Number of nodes|\n");
-    printf("\t| 8. Tree height    |\n");
-    printf("\t| 9. Clear tree     |\n");
-    printf("\t| 10. Clear terminal|\n");
-    printf("\t| 11. Exit          |\n");
-    printf("\t---------------------\n");
+    printf("\t______________________\n");
+    printf("\t| 1. Insert          |\n");
+    printf("\t| 2. Delete node     |\n");
+    printf("\t| 3. Print in-order  |\n");
+    printf("\t| 4. Print pre-order |\n");
+    printf("\t| 5. Print pos-order |\n");
+    printf("\t| 6. Print BFS       |\n");
+    printf("\t| 7. Number of nodes |\n");
+    printf("\t| 8. Tree height     |\n");
+    printf("\t| 9. Get sucessor    |\n");
+    printf("\t| 10. Get Predecessor|\n");
+    printf("\t| 11. Clear tree     |\n");
+    printf("\t| 12. Clear terminal |\n");
+    printf("\t| 13. Exit           |\n");
+    printf("\t----------------------\n");
     return;
 }
