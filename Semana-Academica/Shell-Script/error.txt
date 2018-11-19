@@ -1,0 +1,1 @@
+descritores.sh: linha 4: cd: /home/aluno-uffs/testes: Arquivo ou diretório não encontrado
