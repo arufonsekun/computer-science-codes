@@ -6,19 +6,19 @@ then
 fi
 
 process(){
-    proc=$(ps -e -o pid --sort -size | head -n 11 | grep [0-9])
+    proc=$(ps -e -o pid --sort -size | head -n 11 | grep [a-z])
     for pid in $proc
     do
         nome=$(ps -p $pid -o comm=)
-        echo -n $(date +%F,H=%H,M=%M,S=%S,) >> log/$nome.log
-        tamanho=$(ps =p pid -o size | grep [0-9])
+        echo -n $(date +%F' 'H=%H' 'M=%M' 'S=%S) >> log/$nome.log
+        tamanho=$(ps -p pid -o size | grep [0-9])
         echo "$(bc <<< "scale=2;$tamanho/1024") MB" >> log/$nome.log
 
     done
 }
 process
 
-if [ $? -eq 0 ]
+if [ $? -eq 0 ]#verifica se nao deu erro
 then
     echo "Salvou de boa"
 else
