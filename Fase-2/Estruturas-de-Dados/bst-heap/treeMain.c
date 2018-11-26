@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "BST.h" 
+#include "BST.h"
 
 int main()
  {
@@ -15,11 +15,11 @@ int main()
      begin=clock();
      for (i=1;i<=SIZE;i++)
      {
- 
+
          //n=rand()%1500000;
          //printf("Digite o valor do nó\n");
          scanf("%d", &n);
- 
+
          myTree=insertBST(root,n);
          if (root==NULL) root=myTree;
      }
@@ -37,4 +37,3 @@ int main()
      cleanTree(root);
      return 0;
  }
-

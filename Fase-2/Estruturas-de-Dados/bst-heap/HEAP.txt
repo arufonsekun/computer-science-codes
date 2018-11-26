@@ -5,7 +5,7 @@ binaria - arvore head{
          - algoritmo de ordenação;
          - left <- k*2;
          - right <- k*2+1;
-         - parent floor(k/2);
+         - parent <- floor(k/2);
          - [0|1|2|3|4|5|6];
 }
 
