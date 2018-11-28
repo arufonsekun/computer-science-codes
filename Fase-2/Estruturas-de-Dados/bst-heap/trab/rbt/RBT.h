@@ -26,7 +26,7 @@ int max(int a, int b);
 void inOrder(Node* root);
 void preOrder(Node* root);
 void posOrder(Node* root);
-Node* deleteNode(Node* root, int key);
+Node* deleteNode(Node* root, Node* rNode);
 void destroy(Node* root);
 Node* getNode(Node* root, int key);
 Node* successor(Node* n);

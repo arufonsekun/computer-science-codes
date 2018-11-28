@@ -29,7 +29,8 @@ int main(){
         else if (operation == 2){
             printf("Type the node to remove: ");
             scanf("%d", &size);//reusing vars
-            deleteNode(root, size);
+            Node* rNode = getNode(root, size);
+            root = deleteNode(root, rNode);
         }
 
         else if (operation == 3){

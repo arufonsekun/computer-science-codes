@@ -46,10 +46,6 @@ Node* insert(Node** root, Node* parent, int key){
         return insert(&(*root)->left, *root, key);
 }
 
-Node* deleteNode(Node* root, int key){
-    return root;
-}
-
 Node* leftRotate(Node* new, Node* parent){
     new->c = 'B';
     parent->c = 'R';
@@ -200,7 +196,6 @@ void printSpaces(int spaces, int height){
     }
 }
 
-
 void BFS(Node * parent, int h){
     if (parent == NULL){
         printf("  ");
@@ -224,7 +219,6 @@ void breadthFirstSearch(Node * parent){
         printf("\n");
     }
 }
-
 
 void inOrder(Node* root){
     if (root == NULL)return;
@@ -292,6 +286,45 @@ Node* getNode(Node* root, int key){
     if (root->key == key) return root;
     if (key < root->key) return getNode(root->left, key);
     else return getNode(root->right, key);
+}
+
+Node* transplant(Node* root, Node* u, Node* v){
+    if (u->parent->parent == NULL){
+        root = v;
+        root->parent->parent = NULL;
+    }
+
+    else if (u == u->parent->left){
+        u->parent->left = v;
+    }
+
+    else u->parent->right = v;
+    v->parent = u->parent;
+    return root;
+}
+
+Node* deleteNode(Node* root, Node* rNode){
+    Node* y = rNode;
+    Node* x = NULL;
+    char yColor = y->c;
+
+    if (rNode->left == NULL){
+        x = rNode->right;
+        root = transplant(root, rNode, x);
+        printf("Left eh nulo\n");
+    }
+
+    else if (rNode->right == NULL){
+        x = rNode->left;
+        root = transplant(root, rNode, x);
+        printf("Right eh nulo\n");
+    }
+
+    else{
+        printf("N entrou em nenhum dos casos 'triviais' \n");
+    }
+    printf("so pro compiler n chora: %c\n", y->c);
+    return root;
 }
 
 void menu(){
