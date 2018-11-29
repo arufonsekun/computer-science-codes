@@ -288,23 +288,34 @@ Node* getNode(Node* root, int key){
     else return getNode(root->right, key);
 }
 
-Node* fixUpDeletion(Node* root, Node* x){
-    printf("Chamou fixUpDeletion\n");
-    return root;
+Node* rotateLeft(Node* root, x){
+    x->parent = x->right;
+    x->right = x->right->left;
+    x->parent->left = x;
+    return x->right;
 }
 
-Node* transplant(Node* root, Node* u, Node* v){
-    if (u->parent->parent == NULL){
-        root = v;
-        root->parent->parent = NULL;
+Node* fixUpDeletion(Node* root, Node* x){
+    while (x != root && x->c == 'B'){
+        if (x == x->parent->left){
+            Node* w = x->parent->right;
+
+            if (w->c == 'R'){
+                w->c = 'B';
+                x->parent->c = 'R';
+                w = rotateLeft(root, x->parent);
+            }
+
+            if (w->left->c == 'B' && w->right->c == 'B'){
+                w->c = 'R';
+                w = rotateLeft(root, x->parent);
+                x = x->parent;
+            }
+
+            else if ()
+        }
     }
 
-    else if (u == u->parent->left){
-        u->parent->left = v;
-    }
-
-    else u->parent->right = v;
-    v->parent = u->parent;
     return root;
 }
 
@@ -320,28 +331,45 @@ Node* deleteNode(Node* root, Node* rNode){
     }
 
     else if (rNode->left == NULL && rNode->right != NULL){
+        yColor = rNode->right->c;
         //left-child
-        if (rNode == rNode->parent->left) rNode->parent->left = rNode->right;
-        else rNode->parent->right = rNode->right;
+        if (rNode == rNode->parent->left){
+            rNode->parent->left = rNode->right;
+            rNode->parent->left->c = rNode->c;
+        }
+        else {
+            rNode->parent->right = rNode->right;
+            rNode->parent->right->c = rNode->c;
+        }
         rNode->right->parent = rNode->parent;
         printf("Left eh nulo\n");
     }
 
     else if (rNode->left != NULL && rNode->right == NULL){
-        if (rNode == rNode->parent->left) rNode->parent->left = rNode->left;
-        else rNode->parent->right = rNode->left;
+        yColor = rNode->left->c;
+
+        if (rNode == rNode->parent->left) {
+            rNode->parent->left = rNode->left;
+            rNode->parent->left->c = rNode->c;
+        }
+        else {
+            rNode->parent->right = rNode->left;
+            rNode->parent->right->c = rNode->c;
+        }
         rNode->left->parent = rNode->parent;
     }
 
     else{
-        y = predecessor(rNode->right);
+        y = predecessor(rNode);
+        yColor = y->c;
+        y->c = rNode->c;
         printf("Entrou aqui\n");
         printf("replace node key: %d\n", y->key);
 
         //set the predecessor node to null
-        y->parent->left = NULL;
-        yColor = y->c;
-        x = y->right;
+        //y->parent->left = NULL;
+        // yColor = y->c;
+        //x = y->right;
 
         rNode->left->parent = y;
         rNode->right->parent = y;
@@ -356,6 +384,12 @@ Node* deleteNode(Node* root, Node* rNode){
             rNode->parent->right = y;
         }
 
+        if (y->parent->left == y){
+            y->parent->left = NULL;
+        }
+        else{
+            y->parent->right = NULL;
+        }
         //printf("N entrou em nenhum dos casos 'triviais' \n");
     }
 

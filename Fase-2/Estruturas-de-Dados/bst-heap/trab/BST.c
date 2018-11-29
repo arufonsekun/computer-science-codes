@@ -19,7 +19,7 @@ typedef struct Node Node;
 //Functions prototypes
 void menu();
 Node* generateNodes(Node* root, int treeSize);
-void insert(Node** root, Node* parent, int key);
+int insert(Node** root, Node* parent, int key);
 Node* setNode(Node* parent, int key);
 Node* fixUpInsertion(Node* root, Node* new);
 Node* rightRotate(Node* new, Node* parent);
@@ -32,11 +32,11 @@ int max(int a, int b);
 void inOrder(Node* root);
 void preOrder(Node* root);
 void posOrder(Node* root);
-void deleteNode(Node* root, int key);
+Node* deleteNode(Node* root, int key);
 void clearTree(Node* root);
 Node* getNode(Node* root, int key);
 Node* successor(Node* n);
-Node* predecessor(Node* root, Node* pre, Node* suc, int key);
+Node* predecessor(Node* root, Node* find);
 //Node* predecessor(Node* n);
 
 int main(){
@@ -60,7 +60,7 @@ int main(){
         else if (operation == 2){
             printf("Type the node to remove: ");
             scanf("%d", &size);//reusing vars
-
+            root = deleteNode(root, size);
         }
 
         else if (operation == 3){
@@ -112,8 +112,8 @@ int main(){
                 s = successor(s);
                 if (s->parent != NULL){
                     printf(WHITE_STRING, "\nSUCCESSSOR\n");
-                    printf(" → Sucessor key: %d\n", s->key);
-                    s->parent->parent != NULL ? printf(" → Successor's parent-key: %d\n", s->parent->key) : printf(" → Successor s no parent\n");
+                    printf(" → Successor key: %d\n", s->key);
+                    s->parent->parent != NULL ? printf(" → Successor's parent-key: %d\n", s->parent->key) : printf(" → Successor has no parent\n");
                     s->left != NULL ? printf(" → Successor left-child key: %d\n", s->left->key) : printf(" → Successor's left-child is null\n");
                     s->right != NULL ? printf(" → Successor's right-child key: %d\n", s->right->key) : printf(" → Successor's right-child is null\n");
                     printf("\n");
@@ -128,12 +128,19 @@ int main(){
             printf("Type the node key: ");
             scanf("%d", &size);//reusing variables
             Node* p = getNode(root, size);
-            //printf("%d\n", p->key);
+            p = predecessor(root, p);
+
             if (p == NULL) printf(WHITE_STRING, "The inputted key doesn't exists\n");
-            else{
-                p = predecessor(root, NULL, NULL, size);
+            if (p->parent != NULL){
                 printf(WHITE_STRING, "\nPREDECESSOR\n");
                 printf(" → Predecessor key: %d\n", p->key);
+                p->parent->parent != NULL ? printf(" → Predecessor's parent-key: %d\n", p->parent->key) : printf(" → Predecessor has no parent\n");
+                p->left != NULL ? printf(" → Predecessor left-child key: %d\n", p->left->key) : printf(" → Predecessor's left-child is null\n");
+                p->right != NULL ? printf(" → Predecessor's right-child key: %d\n", p->right->key) : printf(" → Predecessor's right-child is null\n");
+                printf("\n");
+            }
+            else{
+                printf(WHITE_STRING, "Predecessor doesn't exist\n");
             }
         }
 
@@ -147,22 +154,26 @@ int main(){
             menu();
         }
 
-        //printf("Altura da sub arvore da esq.: %d e da direita %d\n", height(root->left), height(root->right));
+        else{
+            printf("Don't get it!\n");
+        }
+
         printf("Type the operation: ");
         scanf("%d", &operation);
-        // scanf("%d", &value);
-        // new = insert(&root , NULL, value);
-        // root = fixUpInsertion(root, new);
     }
     return 0;
 }
 
 Node* generateNodes(Node* root, int treeSize){
     int newKey = 0;
+    int generate;
     for (int i = 0; i < treeSize; i++){
         newKey = rand() % 100;
         printf("%d\n", newKey);
-        insert(&root, NULL, newKey);
+        generate = insert(&root, NULL, newKey);
+        if (generate == 0){
+            i--;
+        }
     }
     return root;
 }
@@ -176,7 +187,7 @@ Node* setNode(Node* parent, int key){
     return new;
 }
 
-void insert(Node** root, Node* parent, int key){
+int insert(Node** root, Node* parent, int key){
     if (*root == NULL){
         *root = setNode(parent, key);
         if (parent == NULL){
@@ -185,20 +196,11 @@ void insert(Node** root, Node* parent, int key){
             (*root)->parent->right = NULL;
             (*root)->parent->parent = NULL;
         }
-        return;
+        return 1;
     }
-    if (key >= (*root)->key){
-        insert(&(*root)->right, *root, key);
-        return;
-    }
-    else{
-        insert(&(*root)->left, *root, key);
-        return;
-    }
-}
-
-void deleteNode(Node* root, int key){
-    return;
+    if (key > (*root)->key) return insert(&(*root)->right, *root, key);
+    else if (key == (*root)->key) return 0; //ignore repeated key
+    else return insert(&(*root)->left, *root, key);
 }
 
 int max(int a, int b){
@@ -293,34 +295,70 @@ Node* successor(Node* n){
     }
 }
 
-
-Node* predecessor(Node* root, Node* pre, Node* suc, int key){
-    if (root == NULL) return NULL;
-    if (root->left != NULL && root->left->key == key) {
-        // the maximum value in left subtree is predecessor
-        if (root->left != NULL) {
-            Node* tmp = root->left;
-            while (tmp->right)
-                tmp = tmp->right;
-            return tmp;
-        }
-        return ro
-    }
-
-    if (root->key > key) {
-        return predecessor(root->left, pre, root, key) ;
+Node* predecessor(Node* root, Node* find){
+    if (find->left){
+        find = find->left;
+        while (find->right != NULL)
+            find = find->right;
+        return find;
     }
     else{
-        return predecessor(root->right, root, suc, key) ;
+        Node* y = find->parent;
+        while (y != NULL && find == y->left){
+            find = y;
+            y = y->parent;
+        }
+        return y;
     }
 }
-
 
 Node* getNode(Node* root, int key){
     if (root == NULL) return NULL;
     if (root->key == key) return root;
     if (key < root->key) return getNode(root->left, key);
     else return getNode(root->right, key);
+}
+
+Node* deleteNode(Node* root, int key){
+    Node* n = getNode(root, key);
+    // n is a leaf
+    printf("%d\n", n->key);
+    if (n->left == NULL && n->right == NULL){
+        if (n == n->parent->left) n->parent->left = NULL;
+        else n->parent->right == NULL;
+        free(n);
+    }
+    // n has a left-child
+    else if (n->left != NULL && n->right == NULL){
+        n->left->parent = n->parent;
+        if (n == n->parent->left) n->parent->left = n->left;
+        else n->parent->right = n->left;
+        free(n);
+    }
+    //n has a right-child
+    else if (n->left == NULL && n->right != NULL){
+        n->right->parent = n->parent;
+        if (n == n->parent->left) n->parent->left = n->right;
+        else n->parent->right = n->right;
+        free(n);
+    }
+    //n has two childrens
+    else{
+        Node* s = predecessor(n);
+        s->parent = n->parent;
+        if (s->right){
+            s->parent->left = s->right;
+            s->right->parent = s->parent;
+        }
+
+        if (n == n->parent->left) n->parent->left = s;
+        else n->parent->right = s;
+
+        //s->left = n->left;
+        //n->left->parent = s;
+
+    }
+    return root;
 }
 
 void menu(){
