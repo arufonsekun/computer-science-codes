@@ -296,7 +296,7 @@ Node* successor(Node* n){
 }
 
 Node* predecessor(Node* root, Node* find){
-    if (find->left){
+    if (find->leftz){
         find = find->left;
         while (find->right != NULL)
             find = find->right;
