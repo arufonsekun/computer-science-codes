@@ -1,0 +1,2 @@
+a) não funciona por que o objeto c não está instanciado
+b) 
