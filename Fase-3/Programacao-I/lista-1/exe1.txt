@@ -1,2 +1,12 @@
 a) não funciona por que o objeto c não está instanciado
-b) 
+b) não funciona pq haverá a perda de precição do float na converção de float para int (). Error: "possible lossy conversion from float to int"
+c) não funciona , não é possivel converter int para string. Error: "incompatible types: int cannot be converted to String"
+d) não funciona por que não existe construtor para essa assinatura de método. Error: "constructor BlurayDisc in class            BlurayDisc cannot be applied to given types"
+e) não funciona por que o atributo rótulo está marcado com um atributo privado. Error: "error: rotulo has private access in BlurayDisc"
+f) funciona
+g) funciona pois o atributo densidade é 0 e protected que um acesso semelhante a publico.
+h) nao funciona pois o getter de rótulo é privado (não faz sentido criar um getter privado).
+i) Funciona pois a chamada do construtor está de acordo com a assinatura do mesmo.
+j) não funciona pois não é possivel atribuir uma string para char.
+
+
