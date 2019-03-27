@@ -2,6 +2,11 @@ class Post{
     private Autor autor;
     private String texto;
 
+    public void Post(Autor a , String t){
+        this.setAutor(a);
+        this.setTexto(t);
+    }
+    
     public void setAutor(Autor a){
         this.autor = a;
     }
