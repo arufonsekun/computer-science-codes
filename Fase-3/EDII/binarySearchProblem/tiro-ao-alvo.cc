@@ -1,40 +1,36 @@
 #include <iostream>
-#include <vector>
 #include <cmath>
 
 using namespace std;
 
-vector<long long int> vR;
-long long int r = 0;
-
-long long int search(long long int b, long long int e, long double k){
-    if (b == e+1){//avoid out_of_range error
-        return b;
-    }
-    long long int mid = b + (e - b) / 2;
-    if (vR[mid] == k) return mid;
-    if (vR[mid] > k) return search(b, mid-1, k);
-    return search(mid+1, e, k);
+int search(int vR[], int b, int e, float n){
+  if (b == e) return (n > vR[e] ? e+1 : e);
+  int m = (b+e)/2;
+  if (vR[m] == n) return m;
+  if (n > vR[m]) return search(vR, m+1, e, n);
+  return search(vR, b, m-1, n);
 }
 
 int main() {
-  long long int s = 0, r = 0, x = 0;
-  long long int y = 0, rVal = 0, p = 0;
-  long double d = 0.0;
+  int r, s, x, y, rVal, p = 0;
+  float d = 0.0;
 
-  scanf("%lld %lld", &r, &s);
+  cin >> r >> s;
 
-  for (long long int i = 0; i < r; i++){
-    scanf("%lld", &rVal);
-    vR.push_back(rVal);
+  int vR[r];
+
+  for (int i = 0; i < r; i++){
+    scanf("%d", &rVal);
+    vR[i] = rVal;
   }
 
-  for (long int i = 0; i < s; i++){
-    scanf("%lld %lld", &x, &y);
+  for (int i = 0; i < s; i++){
+    scanf("%d %d", &x, &y);
     d = sqrt(x*x + y*y);
-    p += r - search(0, r-1, d);
+    p += search(vR, 0, r-1, d);
   }
-  printf("%lld\n", p);
+
+  cout <<  (r*s) - p << endl;
 
   return 0;
 }
