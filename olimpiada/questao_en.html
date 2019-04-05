@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>URI A - Tokens frequency</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="author" content="URI Online Judge; www.urionlinejudge.edu.br" />
+		<meta name="description" content="URI Online Judge - Problema E - Contador de tokens" />
+
+		<link href="https://fonts.googleapis.com/css?family=Ubuntu:400,700" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" type="text/css" href="https://urionlinejudge.r.worldssl.net/repository/contest.css" />
+		<script type="text/javascript" src="https://urionlinejudge.r.worldssl.net/judge/js/math-jax/MathJax.js?config=TeX-MML-AM_CHTML"> </script>
+	</head>
+	<body>
+		<div class="header">
+			<span>URI Online Judge | A</span>
+			<h1>Tokens frequency</h1>
+			<div>
+				<p>Por Guilherme Dal Bianco, UFFS <img src='https://urionlinejudge.r.worldssl.net/gallery/images/flags/br.gif' alt='BR' /> Brazil</p>
+			</div>
+			<strong>Timelimit: 1</strong>
+		</div>
+
+		<div class="problem">
+
+			<div class="description">
+				<p>A hospital aims at migrating the patient system to a new one. However, it is observed that the client table has a problem with the duplicate register. The same patient can be stored in the database in two different ways, i.e., “ketlyn da Silva” or “ketlin da Silva”.
+
+To mitigate it,  the number of common tokens can be computed by splitting the string into segments (tokens) with defined size. For example, the tokens with size three for the string “ketlyn” are represented as: “ket”,”etl”, ”tly” e “lyn”; already the string “ketlin”  produces the tokens: “ket”, “etl”, “tli”,”lin”. Observe that the token generation is produced by sliding windows approach, sliding one character at each time. In the end, it is computed the number of common tokens.
+
+The task here is to produce and identify the token with size two (2) more frequent in a given string. When to token frequency is equal, the first token in alphabetic order should be outputted. The string must be converted to lower case. </p>
+
+
+
+
+			</div>
+			<h2>Input</h2>
+
+			<div class="input">
+<p>One input line composed of a string S representing the text.  </p>
+
+			</div>
+
+			<h2>Output</h2>
+
+			<div class="output">
+<p>
+The more frequent token in the string S defining a token size of two (2) followed by the frequency number is printed.
+</p></div>
+
+			<div class="both"></div>
+
+			<table>
+				<thead>
+					<tr>
+						<td>Input Samples</td>
+						<td>Output Samples</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class="division">
+							<p> casa carro casa</p>
+
+						</td>
+						<td>
+							<p>ca:3</p>
+
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		<div class="both"></div>
+
+    <table>
+        <thead>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="division">
+                    <p>casa</p>
+                </td>
+                <td>
+                    <p>as:1</p>
+
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="both"></div>
+
+    <table>
+        <thead>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="division">
+                    <p>ewrwsffdes</p>
+
+                </td>
+                <td>
+                    <p>de:1</p>
+
+                </td>
+            </tr>
+        </tbody>
+    </table>
+			<p class="footer">
+				
+			</p>
+		</div>
+	</body>
+</html>
+
