@@ -1,0 +1,58 @@
+-- Code your design here
+library IEEE;
+use IEEE.std_logic_1164.all;
+USE ieee.numeric_std.ALL;
+use ieee.std_logic_unsigned.all;
+
+entity bitToBCD is
+port(
+	input : in std_logic_vector(9 downto 0);--valor decimal em binario
+    output : out std_logic_vector(15 downto 0)
+);
+end bitToBCD;
+
+architecture converter of bitToBCD is
+begin
+
+	bcd : process(input)
+    variable z : std_logic_vector(25 downto 0);
+    variable shifts : integer := 0;
+    variable pos : integer := 10;
+    
+    begin
+      --setar as posições pra 0
+      for i in 0 to 25 loop
+          z(i) := '0';
+      end loop;
+
+      z(9 downto 0) := input;
+
+      
+      while  (shifts < 10) loop
+          if to_integer(signed(z(13 downto 10))) > 4 then
+              z(13 downto 10) := z(13 downto 10) + "11";
+              z(pos downto 0) := z(pos-1 downto 0);--shift nas posições
+          end if;
+
+          if to_integer(signed(z(17 downto 14))) > 4 then
+              z(17 downto 14) := z(17 downto 14) + "11";
+              z(pos downto 0) := z(pos-1 downto 0);
+          end if;
+
+          if to_integer(signed(z(21 downto 18))) > 4 then
+              z(21 downto 18) := z(21 downto 18) + "11";
+              z(pos downto 0) := z(pos-1 downto 0);
+          end if;
+
+          if to_integer(signed(z(25 downto 22))) > 4 then
+              z(25 downto 22) := z(25 downto 22) + "11";
+          	  z(pos downto 0) := z(pos-1 downto 0);
+          end if;
+
+          shifts := shifts + 1;
+          pos := pos + 1;
+          
+      end loop;
+      output(15 downto 0) <= z(25 downto 10);
+    end process;
+end converter;
