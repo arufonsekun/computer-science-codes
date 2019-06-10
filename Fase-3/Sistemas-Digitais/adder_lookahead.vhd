@@ -19,12 +19,12 @@ architecture behaviour of adder_lookahead is
     
 begin
     
-	 a7 <= '0';
-	 a6 <= '1';
-	 a5 <= '1';
+	 a7 <= '0'; -- MAIS SIGNIFICATIVO
+	 a6 <= '0';
+	 a5 <= '0';
 	 a4 <= '0';
-	 a3 <= '1';
-	 a2 <= '1';
+	 a3 <= '0';
+	 a2 <= '0';
 	 a1 <= '0';
 	 a0 <= '1';
 	 
@@ -64,7 +64,7 @@ begin
 	 s4 <= p(4) XOR c(3);
 	 s5 <= p(5) XOR c(4);
 	 s6 <= p(6) XOR c(5);
-	 s7 <= p(7) XOR c(6);
+	 s7 <= p(7) XOR c(6); -- MAIS SIGNIFICATIVO DA SAIDA
     
     cout <= c(7);
 
