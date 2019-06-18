@@ -27,18 +27,18 @@ architecture behavior of fsm is
       begin
 		
 		if reset = '0' then
-          estado <= tem0;
-			 stack(0) <= "00000000"; stack(1) <= "00000000"; stack(2) <= "00000000"; stack(3) <= "00000000";
-			 stack(4) <= "00000000"; stack(5) <= "00000000"; stack(6) <= "00000000"; stack(7) <= "00000000"; 
+		estado <= tem0;
+		stack(0) <= "00000000"; stack(1) <= "00000000"; stack(2) <= "00000000"; stack(3) <= "00000000";
+		stack(4) <= "00000000"; stack(5) <= "00000000"; stack(6) <= "00000000"; stack(7) <= "00000000"; 
 
 		
-      elsif (vai = '0') then
+      elsif (vai'EVENT and vai = '1') then
           case estado is
           	when tem0 => 
             	if op1 = '0' and op0 = '1' then
-						stack(0)(7) <= i7; stack(0)(6) <= i6; stack(0)(5) <= i5; stack(0)(4) <= i4;
-						stack(0)(3) <= i3; stack(0)(2) <= i2; stack(0)(1) <= i1; stack(0)(0) <= i0;
-                	estado <= tem1;
+					stack(0)(7) <= i7; stack(0)(6) <= i6; stack(0)(5) <= i5; stack(0)(4) <= i4;
+					stack(0)(3) <= i3; stack(0)(2) <= i2; stack(0)(1) <= i1; stack(0)(0) <= i0;
+					estado <= tem1;
 					end if;	
                 if op1 = '1' and op0 = '0' then
                 	estado <= tem0;
@@ -49,17 +49,17 @@ architecture behavior of fsm is
                 	stack(1) <= stack(0);
 						stack(0)(7) <= i7; stack(0)(6) <= i6; stack(0)(5) <= i5; stack(0)(4) <= i4;
 						stack(0)(3) <= i3; stack(0)(2) <= i2; stack(0)(1) <= i1; stack(0)(0) <= i0;
-                	estado <= tem2;
+						estado <= tem2;
 						end if;
                 if op1 = '1' and op0 = '0' then
-						stack(0) <= "00000000";
-                	estado <= tem0;
+					 stack(0) <= "00000000";
+					 estado <= tem0;
                 end if;
                 
            when tem2 =>
            		if op1 = '0' and op0 = '1' then
                 	stack(2)<= stack(1);
-                	stack(1) <= stack(0);
+						stack(1) <= stack(0);
 						stack(0)(7) <= i7; stack(0)(6) <= i6; stack(0)(5) <= i5; stack(0)(4) <= i4;
 						stack(0)(3) <= i3; stack(0)(2) <= i2; stack(0)(1) <= i1; stack(0)(0) <= i0;
                 	estado <= tem3;
@@ -73,19 +73,19 @@ architecture behavior of fsm is
            when tem3 =>
            		if op1 = '0' and op0 = '1' then
                 	stack(3)<= stack(2);
-                	stack(2)<= stack(1);
-                	stack(1) <= stack(0);
+						stack(2)<= stack(1);
+						stack(1) <= stack(0);
 						stack(0)(7) <= i7; stack(0)(6) <= i6; stack(0)(5) <= i5; stack(0)(4) <= i4;
 						stack(0)(3) <= i3; stack(0)(2) <= i2; stack(0)(1) <= i1; stack(0)(0) <= i0;
                 	estado <= tem4;
 					end if;
                 if op1 = '1' and op0 = '0' then
 					 estado <= tem2;
-						stack(0)(7) <= stack(1)(7); stack(0)(6) <= stack(1)(6); stack(0)(5) <= stack(1)(5); stack(0)(4) <= stack(1)(4);
-						stack(0)(3) <= stack(1)(3); stack(0)(2) <= stack(1)(2); stack(0)(1) <= stack(1)(1); stack(0)(0) <= stack(1)(0);				
-						stack(1) <= stack(2);
-						stack(2) <= stack(3);
-						stack(3) <= "00000000";
+					 stack(0)(7) <= stack(1)(7); stack(0)(6) <= stack(1)(6); stack(0)(5) <= stack(1)(5); stack(0)(4) <= stack(1)(4);
+					 stack(0)(3) <= stack(1)(3); stack(0)(2) <= stack(1)(2); stack(0)(1) <= stack(1)(1); stack(0)(0) <= stack(1)(0);				
+					 stack(1) <= stack(2);
+					 stack(2) <= stack(3);
+					 stack(3) <= "00000000";
                 	
                 end if;
                 
