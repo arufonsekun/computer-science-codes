@@ -6,7 +6,7 @@ use IEEE.STD_LOGIC_unsigned.all;
 
 entity divisor is
 	port(
-		  i0 : in std_logic;
+		i0 : in std_logic;
         i1 : in std_logic;
         i2 : in std_logic;
         i3 : in std_logic;
@@ -14,7 +14,7 @@ entity divisor is
         i5 : in std_logic;
         i6 : in std_logic;
         i7 : in std_logic;
-		  
+
         o0 : out std_logic;
         o1 : out std_logic;
         o2 : out std_logic;
@@ -32,11 +32,11 @@ architecture div84 of divisor is
       numer : in std_logic_vector(7 downto 0);
       denom : in std_logic_vector(3 downto 0);
       quotient : out std_logic_vector(3 downto 0);
-      remainder : out std_logic_vector(3 downto 0)) is 
-      
+      remainder : out std_logic_vector(3 downto 0)) is
+
   variable d, n1 : std_logic_vector(4 downto 0);
   variable n2 : std_logic_vector(3 downto 0);
-  
+
   begin
       d := '0' & denom;
       n2 := numer(3 downto 0);
@@ -51,16 +51,16 @@ architecture div84 of divisor is
       end loop;
       quotient := n2;
       remainder := n1(3 downto 0);
-      
+
   end procedure;
-    
-    begin 
+
+    begin
     	process (i0,i1,i2,i3,i4,i5,i6,i7)
         variable remH, remL, quotH, quotL : std_logic_vector(3 downto 0);
         begin
         	div4("0000" & i7 & i6 & i5 & i4, "0011", quotH, remH);
             div4(remH & i3 & i2 & i1 & i0, "0011", quotL, remL);
-				
+
 				 o0 <= quotL(0);
 				 o1 <= quotL(1);
 				 o2 <= quotL(2);
@@ -70,7 +70,6 @@ architecture div84 of divisor is
 				 o6 <= quotH(2);
 				 o7 <= quotH(3);
 
-    end process;
-    
-end div84;
+    	end process;
 
+end div84;
