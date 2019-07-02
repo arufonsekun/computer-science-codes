@@ -15,6 +15,9 @@ end fsm;
 
 architecture behavior of fsm is
 
+	-- 01 push
+	-- 10 pop
+
 	TYPE state_type is (tem0, tem1, tem2, tem3, tem4, tem5, tem6, tem7, tem8);
     signal estado : state_type;
     
@@ -32,7 +35,7 @@ architecture behavior of fsm is
 			stack(4) <= "00000000"; stack(5) <= "00000000"; stack(6) <= "00000000"; stack(7) <= "00000000"; 
 
 		
-      elsif (vai'EVENT and vai='0') then
+      elsif (vai'EVENT and vai='0  ') then
           case estado is
           	when tem0 => 
             	if op1 = '0' and op0 = '1' then
