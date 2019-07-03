@@ -41,7 +41,7 @@ architecture behavior of multiplicador is
     
     	variable number : unsigned (15 downto 0) := (others => '0');
     	variable cons : std_logic_vector(7 downto 0) := b7 & b6 & b5 & b4 & b3 & b2 & b1 & b0;
-        variable output : unsigned (15 downto 0) := (others => '0');
+      variable output : unsigned (15 downto 0) := (others => '0');
    		
         begin
         
@@ -50,8 +50,8 @@ architecture behavior of multiplicador is
           number(0) := a0; number(1) := a1; number(2) := a2;
           number(3) := a3; number(4) := a4; number(5) := a5;
           number(6) := a6; number(7) := a7; number(8) := '0';
-          number(9) := '0';number(10) := '0';number(11) := '0';
-          number(12) := '0';number(13) := '0';number(14) := '0';
+          number(9) := '0'; number(10) := '0'; number(11) := '0';
+          number(12) := '0'; number(13) := '0'; number(14) := '0';
           number(15) := '0';
 	
     	  --report std_logic'image(number(0));

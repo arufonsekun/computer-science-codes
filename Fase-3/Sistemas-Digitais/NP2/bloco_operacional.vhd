@@ -3,8 +3,10 @@ use IEEE.std_logic_1164.all;
 
 entity bloco_operacional is
 	port(
-		i0,i1,i2,i3,i4,i5,i6,i7 : in std_logic;
-		comando_pop,comando_push : in std_logic_vector(2 downto 0);
+		a0, a1, a2, a3, a4, a5, a6, a7 : in std_logic;
+		b0, b1, b2, b3, b4, b5, b6, b7 : in std_logic;
+		arith1, arith0 : in std_logic;
+		reset : in std_logic;
 		o0,o1,o2,o3,o4,o5,o6,o7 : out std_logic
 	);
 	
@@ -12,264 +14,112 @@ end bloco_operacional;
 
 architecture behavior of bloco_operacional is
 	
-	TYPE state_type is (tem0, tem1, tem2, tem3, tem4, tem5, tem6, tem7, tem8);
-	signal state : state_type;
-	
-	TYPE memory is array (0 to 7) of std_logic_vector(7 downto 0);
-   signal stack : memory := (others => (others => '0'));
-	
-	signal val0, val1, res : std_logic_vector(7 downto 0) := "00000000";	
+	signal res : std_logic_vector(7 downto 0) := "00000000";	
 	signal op : std_logic_vector(1 downto 0);
 		
-begin
+	signal out_sum  : std_logic_vector(7 downto 0);
+	signal out_sub  : std_logic_vector(7 downto 0);
+	signal out_div  : std_logic_vector(7 downto 0);
+	signal out_mult : std_logic_vector(7 downto 0);
 	
-	CALC : entity work.arithmetic port map(
-		a0 => val0(0), a1 => val0(1), a2 => val0(2), a3 => val0(3), a4 => val0(4), a5 => val0(5), a6 => val0(6), a7 => val0(7), 
-		b0 => val1(0), b1 => val1(1), b2 => val1(2), b3 => val1(3), b4 => val1(4), b5 => val1(5), b6 => val1(6), b7 => val1(7),
-		op0 => op(0), op1 => op(1),
-		o0 => res(0), o1 => res(1), o2 => res(2), o3 => res(3), o4 => res(4), o5 => res(5), o6 => res(6), o7 => res(7)
+	
+	signal cout : std_logic;
+		
+begin	
+	
+	SUM  : entity work.adder_subtractor_8 port map(
+		a0 => a0, a1 => a1, a2 => a2, a3 => a3, a4 => a4, a5 => a5, a6 => a6, a7 => a7,
+		b0 => b0, b1 => b1, b2 => b2, b3 => b3, b4 => b4, b5 => b5, b6 => b6, b7 => b7,
+		o0 => out_sum(0), o1 => out_sum(1), o2 => out_sum(2), o3 => out_sum(3), o4 => out_sum(4), o5 => out_sum(5), o6 => out_sum(6), o7 => out_sum(7),
+		op => '0', cout => cout
 	);
 	
-	process(comando_pop, comando_push)
+	SUB  : entity work.adder_subtractor_8 port map(
+		a0 => a0, a1 => a1, a2 => a2, a3 => a3, a4 => a4, a5 => a5, a6 => a6, a7 => a7,
+		b0 => b0, b1 => b1, b2 => b2, b3 => b3, b4 => b4, b5 => b5, b6 => b6, b7 => b7,
+		o0 => out_sub(0), o1 => out_sub(1), o2 => out_sub(2), o3 => out_sub(3), o4 => out_sub(4), o5 => out_sub(5), o6 => out_sub(6), o7 => out_sub(7),
+		op => '1', cout => cout
+	);
+	
+	DIV  : entity work.divisor port map(
+  		a0 => a0, a1 => a1, a2 => a2, a3 => a3, a4 => a4, a5 => a5, a6 => a6, a7 => a7,
+		b0 => b0, b1 => b1, b2 => b2, b3 => b3, b4 => b4, b5 => b5, b6 => b6, b7 => b7,
+		o0 => out_div(0), o1 => out_div(1), o2 => out_div(2), o3 => out_div(3), o4 => out_div(4), o5 => out_div(5), o6 => out_div(6), o7 => out_div(7)
+	);
+	
+	MULT : entity work.multiplicador port map(
+		a0 => a0, a1 => a1, a2 => a2, a3 => a3, a4 => a4, a5 => a5, a6 => a6, a7 => a7,
+		b0 => b0, b1 => b1, b2 => b2, b3 => b3, b4 => b4, b5 => b5, b6 => b6, b7 => b7,
+		o0 => out_mult(0), o1 => out_mult(1), o2 => out_mult(2), o3 => out_mult(3), o4 => out_mult(4), o5 => out_mult(5), o6 => out_mult(6), o7 => out_mult(7)
+	);
+	
+	process(arith0, arith1) --a0,a1,a2,a3,a4,a5,a6,a7,b0,b1,b2,b3,b4,b5,b6,b7
 	
 	begin
+		
+		if reset = '0' then
+			o0 <= '0';
+			o1 <= '0';
+			o2 <= '0';
+			o3 <= '0';
+			o4 <= '0';
+			o5 <= '0';
+			o6 <= '0';
+			o7 <= '0';
+		end if;		
+		
+		if (arith1 = '0' and arith0 = '0') then
+			o0 <= out_sum(0);
+         o1 <= out_sum(1);
+         o2 <= out_sum(2);
+         o3 <= out_sum(3);
+         o4 <= out_sum(4);
+         o5 <= out_sum(5);
+         o6 <= out_sum(6);
+         o7 <= out_sum(7);
+		
+		elsif (arith1 = '0' and arith0 = '1') then
+			o0 <= out_sub(0);
+         o1 <= out_sub(1);
+         o2 <= out_sub(2);
+         o3 <= out_sub(3);
+         o4 <= out_sub(4);
+         o5 <= out_sub(5);
+         o6 <= out_sub(6);
+         o7 <= out_sub(7);		
+		
+		elsif (arith1 = '1' and arith0 = '1') then
+			o0 <= out_div(0);
+         o1 <= out_div(1);
+         o2 <= out_div(2);
+         o3 <= out_div(3);
+         o4 <= out_div(4);
+         o5 <= out_div(5);
+         o6 <= out_div(6);
+         o7 <= out_div(7);		
+		
+		elsif (arith1 = '1' and arith0 = '0') then
+			o0 <= out_mult(0);
+         o1 <= out_mult(1);
+         o2 <= out_mult(2);
+         o3 <= out_mult(3);
+         o4 <= out_mult(4);
+         o5 <= out_mult(5);
+         o6 <= out_mult(6);
+         o7 <= out_mult(7);		
+			
+		else
+			o0 <= '0';
+			o1 <= '0';
+			o2 <= '0';
+			o3 <= '0';
+			o4 <= '0';
+			o5 <= '0';
+			o6 <= '0';
+			o7 <= '0';
+		
+		end if;
 	
-		case state is
-		
-			when tem0 =>
-				-- POP com operação
-				if (comando_pop(2) = '0') then
-					state <= tem0;
-					
-				-- PUSH
-				elsif (comando_push = "100") then
-					stack(0)(7) <= i7; stack(0)(6) <= i6; stack(0)(5) <= i5; stack(0)(4) <= i4;
-					stack(0)(3) <= i3; stack(0)(2) <= i2; stack(0)(1) <= i1; stack(0)(0) <= i0;
-					state <= tem1;
-		
-				end if;
-				
-			when tem1 =>
-				-- POP com operação
-				if (comando_pop(2) = '0') then
-					state <= tem1;
-				
-				-- PUSH
-				elsif (comando_push = "100") then
-					stack(1) <= stack(0);
-					
-					stack(0)(7) <= i7; stack(0)(6) <= i6; stack(0)(5) <= i5; stack(0)(4) <= i4;
-					stack(0)(3) <= i3; stack(0)(2) <= i2; stack(0)(1) <= i1; stack(0)(0) <= i0;
-					
-					state <= tem2;
-		
-				end if;
-				
-			when tem2 =>
-				-- POP com operação
-				if (comando_pop(2) = '0') then
-				
-					val0 <= stack(0);
-					val1 <= stack(1);
-					stack(0) <= res;
-					stack(1) <= "00000000";
-					
-					op <= comando_pop(1 downto 0);
-					
-					state <= tem1;
-				
-				-- PUSH
-				elsif (comando_push = "100") then
-					stack(2) <= stack(1);
-					stack(1) <= stack(0);
-					
-					stack(0)(7) <= i7; stack(0)(6) <= i6; stack(0)(5) <= i5; stack(0)(4) <= i4;
-					stack(0)(3) <= i3; stack(0)(2) <= i2; stack(0)(1) <= i1; stack(0)(0) <= i0;
-					
-					state <= tem3;
-		
-				end if;
-				
-			when tem3 =>
-				-- POP com operação
-				if (comando_pop(2) = '0') then
-					val0 <= stack(0);
-					val1 <= stack(1);
-					
-					stack(0) <= res;
-					stack(1) <= stack(2);
-					stack(2) <= "00000000";
-					
-					op <= comando_pop(1 downto 0);
-					
-					state <= tem2;
-				
-				-- PUSH
-				elsif (comando_push = "100") then
-					stack(3) <= stack(2);
-					stack(2) <= stack(1);
-					stack(1) <= stack(0);
-					
-					stack(0)(7) <= i7; stack(0)(6) <= i6; stack(0)(5) <= i5; stack(0)(4) <= i4;
-					stack(0)(3) <= i3; stack(0)(2) <= i2; stack(0)(1) <= i1; stack(0)(0) <= i0;
-					
-					state <= tem4;
-		
-				end if;
-				
-			when tem4 =>
-				-- POP com operação
-				if (comando_pop(2) = '0') then
-					val0 <= stack(0);
-					val1 <= stack(1);
-					
-					op <= comando_pop(1 downto 0);
-					
-					stack(0) <= res;
-					stack(1) <= stack(2);
-					stack(2) <= stack(3);
-					stack(3) <= "00000000";
-					
-					state <= tem3;
-				
-				-- PUSH
-				elsif (comando_push = "100") then
-					stack(4) <= stack(3);
-					stack(3) <= stack(2);
-					stack(2) <= stack(1);
-					stack(1) <= stack(0);
-					
-					stack(0)(7) <= i7; stack(0)(6) <= i6; stack(0)(5) <= i5; stack(0)(4) <= i4;
-					stack(0)(3) <= i3; stack(0)(2) <= i2; stack(0)(1) <= i1; stack(0)(0) <= i0;
-					
-					state <= tem5;
-		
-				end if;
-				
-			when tem5 =>
-				-- POP com operação
-				if (comando_pop(2) = '0') then
-					val0 <= stack(0);
-					val1 <= stack(1);
-					op <= comando_pop(1 downto 0);
-					
-					stack(0) <= res;
-					stack(1) <= stack(2);
-					stack(2) <= stack(3);
-					stack(3) <= stack(4);
-					stack(4) <= "00000000";
-					
-					state <= tem4;
-				
-				-- PUSH
-				elsif (comando_push = "100") then
-					stack(5) <= stack(4);
-					stack(4) <= stack(3);
-					stack(3) <= stack(2);
-					stack(2) <= stack(1);
-					stack(1) <= stack(0);
-					
-					stack(0)(7) <= i7; stack(0)(6) <= i6; stack(0)(5) <= i5; stack(0)(4) <= i4;
-					stack(0)(3) <= i3; stack(0)(2) <= i2; stack(0)(1) <= i1; stack(0)(0) <= i0;
-					
-					state <= tem6;
-		
-				end if;
-				
-			when tem6 =>
-				-- POP com operação
-				if (comando_pop(2) = '0') then
-					val0 <= stack(0);
-					val1 <= stack(1);
-					op <= comando_pop(1 downto 0);
-					
-					stack(0) <= res;
-					stack(1) <= stack(2);
-					stack(2) <= stack(3);
-					stack(3) <= stack(4);
-					stack(4) <= stack(5);
-					stack(5) <= "00000000";
-					
-					state <= tem5;
-				
-				-- PUSH
-				elsif (comando_push = "100") then
-					stack(6) <= stack(5);
-					stack(5) <= stack(4);
-					stack(4) <= stack(3);
-					stack(3) <= stack(2);
-					stack(2) <= stack(1);
-					stack(1) <= stack(0);
-					
-					stack(0)(7) <= i7; stack(0)(6) <= i6; stack(0)(5) <= i5; stack(0)(4) <= i4;
-					stack(0)(3) <= i3; stack(0)(2) <= i2; stack(0)(1) <= i1; stack(0)(0) <= i0;
-					
-					state <= tem7;
-		
-				end if;
-				
-			when tem7 =>
-				-- POP com operação
-				if (comando_pop(2) = '0') then
-					val0 <= stack(0);
-					val1 <= stack(1);
-					op <= comando_pop(1 downto 0);
-					
-					stack(0) <= res;
-					stack(1) <= stack(2);
-					stack(2) <= stack(3);
-					stack(3) <= stack(4);
-					stack(4) <= stack(5);
-					stack(5) <= stack(6);
-					stack(6) <= "00000000";
-					
-					state <= tem6;
-				
-				-- PUSH
-				elsif (comando_push = "100") then
-					stack(7) <= stack(6);
-					stack(6) <= stack(5);
-					stack(5) <= stack(4);
-					stack(4) <= stack(3);
-					stack(3) <= stack(2);
-					stack(2) <= stack(1);
-					stack(1) <= stack(0);
-					
-					stack(0)(7) <= i7; stack(0)(6) <= i6; stack(0)(5) <= i5; stack(0)(4) <= i4;
-					stack(0)(3) <= i3; stack(0)(2) <= i2; stack(0)(1) <= i1; stack(0)(0) <= i0;
-					
-					state <= tem8;
-		
-				end if;
-				
-			when tem8 =>
-				-- POP com operação
-				if (comando_pop(2) = '0') then
-					val0 <= stack(0);
-					val1 <= stack(1);
-					op <= comando_pop(1 downto 0);
-					
-					stack(0) <= res;
-					stack(1) <= stack(2);
-					stack(2) <= stack(3);
-					stack(3) <= stack(4);
-					stack(4) <= stack(5);
-					stack(5) <= stack(6);
-					stack(6) <= stack(7);
-					stack(7) <= "00000000";
-					
-					state <= tem7;
-				
-				-- PUSH
-				elsif (comando_push = "100") then
-					state <= tem8;
-				end if;
-		
-		end case;
-		
-			o0 <= stack(0)(0); o1 <= stack(0)(1); o2 <= stack(0)(2); o3 <= stack(0)(3);
-			o4 <= stack(0)(4); o5 <= stack(0)(5); o6 <= stack(0)(6); o7 <= stack(0)(7);
-				
-	end process;	
-
+	end process;
+	
 end behavior;

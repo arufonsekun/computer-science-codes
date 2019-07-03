@@ -5,14 +5,23 @@ use IEEE.STD_LOGIC_unsigned.all;
 
 entity divisor is
 	port(
-		  i0 : in std_logic;
-        i1 : in std_logic;
-        i2 : in std_logic;
-        i3 : in std_logic;
-        i4 : in std_logic;
-        i5 : in std_logic;
-        i6 : in std_logic;
-        i7 : in std_logic;
+		  a0 : in std_logic;
+        a1 : in std_logic;
+        a2 : in std_logic;
+        a3 : in std_logic;
+        a4 : in std_logic;
+        a5 : in std_logic;
+        a6 : in std_logic;
+        a7 : in std_logic;
+		  
+		  b0 : in std_logic;
+        b1 : in std_logic;
+        b2 : in std_logic;
+        b3 : in std_logic;
+        b4 : in std_logic;
+        b5 : in std_logic;
+        b6 : in std_logic;
+        b7 : in std_logic;
 		  
         o0 : out std_logic;
         o1 : out std_logic;
@@ -27,48 +36,37 @@ end divisor;
 
 architecture div84 of divisor is
 
-  procedure div4(
-      numer : in std_logic_vector(7 downto 0);
-      denom : in std_logic_vector(3 downto 0);
-      quotient : out std_logic_vector(3 downto 0);
-      remainder : out std_logic_vector(3 downto 0)) is 
-      
-  variable d, n1 : std_logic_vector(4 downto 0);
-  variable n2 : std_logic_vector(3 downto 0);
-  
-  begin
-      d := '0' & denom;
-      n2 := numer(3 downto 0);
-      n1 := '0' & numer(7 downto 4);
-      for i in 0 to 3 loop
-          n1 := n1(3 downto 0) & n2(3);
-          n2 := n2(2 downto 0) & '0';
-          if n1 >= d then
-              n1 := n1 - d;
-              n2(0) := '1';
-          end if;
-      end loop;
-      quotient := n2;
-      remainder := n1(3 downto 0);
-      
-  end procedure;
-    
-    begin 
-    	process (i0,i1,i2,i3,i4,i5,i6,i7)
-        variable remH, remL, quotH, quotL : std_logic_vector(3 downto 0);
-        begin
-        	div4("0000" & i7 & i6 & i5 & i4, "0011", quotH, remH);
-            div4(remH & i3 & i2 & i1 & i0, "0011", quotL, remL);
-				
-				 o0 <= quotL(0);
-				 o1 <= quotL(1);
-				 o2 <= quotL(2);
-				 o3 <= quotL(3);
-				 o4 <= quotH(0);
-				 o5 <= quotH(1);
-				 o6 <= quotH(2);
-				 o7 <= quotH(3);
+  procedure div8(
+        numer : in std_logic_vector(7 downto 0);
+        denom : in std_logic_vector(7 downto 0);
+        quotient : out std_logic_vector(7 downto 0)) is
 
-    end process;
-    
+    variable d, n1 : std_logic_vector(8 downto 0);
+    variable n2 : std_logic_vector(7 downto 0);
+
+    begin
+        d := '0' & denom;
+        n2 := numer;
+        n1 := "000000000";
+        for i in 0 to 7 loop
+            n1 := n1(7 downto 0) & n2(7);
+            n2 := n2(6 downto 0) & '0';
+
+            if n1 >= d then
+                n1 := n1 - d;
+                n2(0) := '1';
+            end if;
+        end loop;
+        quotient := n2;
+    end procedure;
+
+    begin --architecture
+
+        process(a0,a1,a2,a3,a4,a5,a6,a7,b0,b1,b2,b3,b4,b5,b6,b7)
+            variable output : std_logic_vector(7 downto 0);
+            begin
+                div8(a7 & a6 & a5 & a4 & a3 & a2 & a1 & a0, b7 & b6 & b5 & b4 & b3 & b2 & b1 & b0, output);
+                o7 <= output(7); o6 <= output(6); o5 <= output(5); o4 <= output(4);
+                o3 <= output(3); o2 <= output(2); o1 <= output(1); o0 <= output(0);
+        end process;
 end div84;

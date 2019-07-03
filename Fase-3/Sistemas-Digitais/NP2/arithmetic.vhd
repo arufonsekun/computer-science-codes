@@ -83,14 +83,14 @@ begin
 	begin
 		
 		if (op1 = '0' and op0 = '0') then
-			o0 <= '0';--out_sum(0);
-         o1 <= '1';--out_sum(1);
-         o2 <= '0';--out_sum(2);
-         o3 <= '1';--out_sum(3);
-         o4 <= '0';--out_sum(4);
-         o5 <= '1';--out_sum(5);
-         o6 <= '0';--out_sum(6);
-         o7 <= '1';--out_sum(7);
+			o0 <= out_sum(0);
+         o1 <= out_sum(1);
+         o2 <= out_sum(2);
+         o3 <= out_sum(3);
+         o4 <= out_sum(4);
+         o5 <= out_sum(5);
+         o6 <= out_sum(6);
+         o7 <= out_sum(7);
 		
 		elsif (op1 = '0' and op0 = '1') then
 			o0 <= out_sub(0);
