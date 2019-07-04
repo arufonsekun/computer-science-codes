@@ -13,9 +13,6 @@ entity bloco_controle is
 		pop  : in std_logic; -- KEY[1]
 		reset: in std_logic; -- KEY[2]
 		gambi: in std_logic; -- KEY[3]
-		
-		-- inputs vindos do bloco operativo
-		--status : in std_logic;
 				
 		-- saidas do bloco de controle que n vai pro bloco operativo
 		o0,o1,o2,o3,o4,o5,o6,o7 : out std_logic
@@ -31,28 +28,45 @@ architecture behavior of bloco_controle is
 	TYPE memory is array (0 to 7) of std_logic_vector(7 downto 0);
    signal stack : memory;
 	
-	signal val0, val1, res : std_logic_vector(7 downto 0) := "00000000";
-	signal arith0, arith1 : std_logic;
-	signal reset_output : std_logic := '0';
+	signal cout : std_logic;
+	signal val0, val1, out_sum, out_sub, out_div, out_mult : std_logic_vector(7 downto 0) := "00000000";
 
 begin
 	
-	BO : entity work.bloco_operacional port map(
+	SUM  : entity work.adder_subtractor_8 port map(
 		a0 => val0(0), a1 => val0(1), a2 => val0(2), a3 => val0(3), a4 => val0(4), a5 => val0(5), a6 => val0(6), a7 => val0(7),
 		b0 => val1(0), b1 => val1(1), b2 => val1(2), b3 => val1(3), b4 => val1(4), b5 => val1(5), b6 => val1(6), b7 => val1(7),
-		arith1 => arith1, arith0 => arith0, reset => reset_output,
-		o0 => res(0), o1 => res(1), o2 => res(2), o3 => res(3), o4 => res(4), o5 => res(5), o6 => res(6), o7 => res(7)
+		o0 => out_sum(0), o1 => out_sum(1), o2 => out_sum(2), o3 => out_sum(3), o4 => out_sum(4), o5 => out_sum(5), o6 => out_sum(6), o7 => out_sum(7),
+		op => '0', cout => cout
+	);
+	
+	SUB  : entity work.adder_subtractor_8 port map(
+		a0 => val0(0), a1 => val0(1), a2 => val0(2), a3 => val0(3), a4 => val0(4), a5 => val0(5), a6 => val0(6), a7 => val0(7),
+		b0 => val1(0), b1 => val1(1), b2 => val1(2), b3 => val1(3), b4 => val1(4), b5 => val1(5), b6 => val1(6), b7 => val1(7),
+		o0 => out_sub(0), o1 => out_sub(1), o2 => out_sub(2), o3 => out_sub(3), o4 => out_sub(4), o5 => out_sub(5), o6 => out_sub(6), o7 => out_sub(7),
+		op => '1', cout => cout
+	);
+	
+	DIV  : entity work.divisor port map(
+  		a0 => val0(0), a1 => val0(1), a2 => val0(2), a3 => val0(3), a4 => val0(4), a5 => val0(5), a6 => val0(6), a7 => val0(7),
+		b0 => val1(0), b1 => val1(1), b2 => val1(2), b3 => val1(3), b4 => val1(4), b5 => val1(5), b6 => val1(6), b7 => val1(7),
+		o0 => out_div(0), o1 => out_div(1), o2 => out_div(2), o3 => out_div(3), o4 => out_div(4), o5 => out_div(5), o6 => out_div(6), o7 => out_div(7)
+	);
+	
+	MULT : entity work.multiplicador port map(
+		a0 => val0(0), a1 => val0(1), a2 => val0(2), a3 => val0(3), a4 => val0(4), a5 => val0(5), a6 => val0(6), a7 => val0(7),
+		b0 => val1(0), b1 => val1(1), b2 => val1(2), b3 => val1(3), b4 => val1(4), b5 => val1(5), b6 => val1(6), b7 => val1(7),
+		o0 => out_mult(0), o1 => out_mult(1), o2 => out_mult(2), o3 => out_mult(3), o4 => out_mult(4), o5 => out_mult(5), o6 => out_mult(6), o7 => out_mult(7)
 	);
 	
 	process(gambi)
 	
 	begin
 	
-		if (gambi'Event and gambi = '0') then
+		if (gambi = '0') then
 			
 			if reset = '0' then
 				state <= tem0;
-				reset_output <= '1';
 				stack(0) <= "00000000"; stack(1) <= "00000000"; stack(2) <= "00000000"; stack(3) <= "00000000";
 				stack(4) <= "00000000"; stack(5) <= "00000000"; stack(6) <= "00000000"; stack(7) <= "00000000";
 			else
@@ -90,14 +104,18 @@ begin
 						-- POP com operação
 						if (pop = '0') then
 							state <= tem1;
-							--op <= comando_pop(1 downto 0);
 							val0 <= stack(0);
 							val1 <= stack(1);
 							stack(1) <= "00000000";
-							
-							arith1 <= op1; arith0 <= op0; -- isso vai acionar o processa no bloco_operacional
-							
-							stack(0) <= res;
+							if op1 = '0' and op0 = '0' then
+								stack(0) <= out_sum;
+							elsif op1 = '0' and op0 = '1' then
+								stack(0) <= out_sub;
+							elsif op1 = '1' and op0 = '0' then
+								stack(0) <= out_mult;
+							elsif op1 = '1' and op0 = '1' then
+								stack(0) <= out_div;
+							end if;
 						
 						-- PUSH
 						elsif (push = '0') then
@@ -120,10 +138,7 @@ begin
 							
 							stack(1) <= stack(2);
 							stack(2) <= "00000000";
-							
-							arith1 <= op1; arith0 <= op0; -- isso vai acionar o processa no bloco_operacional
-							
-							stack(0) <= res;
+							--stack(0) <= res;
 						
 						-- PUSH
 						elsif (push = '0') then
@@ -147,10 +162,7 @@ begin
 							stack(1) <= stack(2);
 							stack(2) <= stack(3);
 							stack(3) <= "00000000";
-							
-							arith1 <= op1; arith0 <= op0; -- isso vai acionar o processa no bloco_operacional
-							
-							stack(0) <= res;
+							--stack(0) <= res;
 						
 						-- PUSH
 						elsif (push = '0') then
@@ -177,10 +189,7 @@ begin
 							stack(3) <= stack(4);
 							stack(4) <= "00000000";
 							
-							arith1 <= op1; arith0 <= op0; -- isso vai acionar o processa no bloco_operacional
-							--op <= op1&op0;
-							
-							stack(0) <= res;					
+							--stack(0) <= res;					
 						
 						-- PUSH
 						elsif (push = '0') then
@@ -209,10 +218,7 @@ begin
 							stack(4) <= stack(5);
 							stack(5) <= "00000000";
 							
-							arith1 <= op1; arith0 <= op0; -- isso vai acionar o processa no bloco_operacional
-							--op <= op1&op0;
-							
-							stack(0) <= res;
+							--stack(0) <= res;
 						
 						-- PUSH
 						elsif (push = '0') then
@@ -244,9 +250,7 @@ begin
 							stack(5) <= stack(6);
 							stack(6) <= "00000000";
 							
-							arith1 <= op1; arith0 <= op0; -- isso vai acionar o processa no bloco_operacional
-							
-							stack(0) <= res;
+							--stack(0) <= res;
 						
 						-- PUSH
 						elsif (push = '0') then
@@ -278,26 +282,21 @@ begin
 							stack(5) <= stack(6);
 							stack(6) <= stack(7);
 							stack(7) <= "00000000";
-							
-							arith1 <= op1; arith0 <= op0; -- isso vai acionar o processa no bloco_operacional
 					
-							stack(0) <= res;
+							--stack(0) <= res;
 							
 						
 						-- PUSH
 						elsif (push = '0') then
 							state <= tem8;
 						end if;
-				
-				
 				end case;
 				
 			end if;
-			
-		end if; -- gambi 
-		o0 <= stack(0)(0); o1 <= stack(0)(1); o2 <= stack(0)(2); o3 <= stack(0)(3);
-		o4 <= stack(0)(4); o5 <= stack(0)(5); o6 <= stack(0)(6); o7 <= stack(0)(7);
-				
+			o0 <= stack(0)(0); o1 <= stack(0)(1); o2 <= stack(0)(2); o3 <= stack(0)(3);
+			o4 <= stack(0)(4); o5 <= stack(0)(5); o6 <= stack(0)(6); o7 <= stack(0)(7);
+		end if; 		
+		
 	end process;
 
 end behavior;
