@@ -34,9 +34,9 @@ int main() {
 
             total+=w;
 
-            weight_vertex.first = w;
-            weight_vertex.second = v1;
-            priority_queue.insert(weight_vertex);
+            //weight_vertex.first = w;
+            //weight_vertex.second = v1;
+            //priority_queue.insert(weight_vertex);
 
 //	    weight_vertex.clean();
 
@@ -44,6 +44,10 @@ int main() {
             //weight_vertex.second = v2;
             //priority_queue.insert(weight_vertex);
         }
+
+	weight_vertex.first = 0;
+	weight_vertex.second = 0;
+	priority_queue.insert(weight_vertex);
 
         while (!priority_queue.empty()) {
 
@@ -60,7 +64,7 @@ int main() {
 
       	    res += w;
 
-	    cout << "peso : " << w << endl;
+//	    cout << "peso : " << w << endl;
 
             for (int i = 0; i < v; i++){
               if (graph[u][i] != -1){
