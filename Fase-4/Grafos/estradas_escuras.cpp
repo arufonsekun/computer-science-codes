@@ -1,10 +1,9 @@
-
 #include <iostream>
 #include <set>
 
 using namespace std;
 
-int PRIM(int visited[], set<pair<int, int>> priority_queue, int v, int graph[v][v]) {
+int PRIM(int visited[], set<pair<int, int>> priority_queue, int v, int graph[][]) {
     return 0;
 }
 
@@ -12,8 +11,8 @@ int main() {
 
     set<pair<int, int>> priority_queue;
     
-    int v=1, e=1, v1, v2, w, total;
-    pair<int, int> weight_vertex;
+    int v=1, e=1, v1, v2, w, total, res=0;
+    pair<int, int> weight_vertex, pop_vertex;
 
     while (v or e) {
         
@@ -41,7 +40,11 @@ int main() {
             priority_queue.insert(weight_vertex);
             weight_vertex.second = v2;
             priority_queue.insert(weight_vertex);
-        }
+        }	
+
+	while (!priority_queue.empty()){
+	     pop_vertex = priority_queue.pop();
+	}
 
 	cout << total - PRIM(visited, priority_queue, v, graph) << endl;
 
