@@ -1,4 +1,7 @@
 # Computer-Science-Codes
 
-<p>The repository is structured by the semesters of the graduation and subjects per semesters.</p>
+<p>
+    The repository is divided by semesters and subjects per semester.
+    The mess you gonna find in here is huge.
+</p>
 
