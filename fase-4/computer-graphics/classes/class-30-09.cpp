@@ -16,11 +16,11 @@ const int HEIGHT = 800;
 
 // Define how many frames per seconds we want our
 // applications to run.
-const unsigned int FRAMES_PER_SECOND = 80;
+const unsigned int FRAMES_PER_SECOND = 40;
 const unsigned int UPDATE_INTERVAL_MS = 1000 / FRAMES_PER_SECOND;
 
 // Control the angle to rotate the red square
-float angle = 0, x1 = 0.0f,y1 = 0.0f, z1 = 0.0f;
+float angle = 0, x1 = 0.0f,y1 = 0.0f, z1 = 0.0f, size = 1.0f, depth = size*1.1f;
 
 void renderCoordinateAxis()
 {
@@ -49,36 +49,36 @@ void renderCoordinateAxis()
 	glEnd();
 }
 
-void drawWiredCube(float size){
-	size=/2;
+void drawWiredCube(){
 	glBegin(GL_LINES);
-		glVertex3f(-size, 0.0f, 0.0f);
-		glVertex3f(size, 0.0f, 0.0f);
-		glVertex3f(size, 0.0f, 0.0f);
-		glVertex3f(size,size,0.0f);
-		glVertex3f(size,size,0.0f);
-		glVertex3f(0.0f,size,0.0f);
-		glVertex3f(0.0f,size,0.0f);
-		glVertex3f(0.0f, 0.0f, 0.0f);
-
-		glVertex3f(0, 0.0f, size);
-		glVertex3f(size, 0.0f, size);
-		glVertex3f(size, 0.0f, size);
-		glVertex3f(size,size,size);
-		glVertex3f(size,size,size);
-		glVertex3f(0.0f,size,size);
-		glVertex3f(0.0f,size,size);
-		glVertex3f(0.0f, 0.0f, size);
-
-		glVertex3f(0, 0.0f, 0.0f);
-		glVertex3f(0, 0.0f, size);
-		glVertex3f(size, 0.0f, 0.0f);
-		glVertex3f(size, 0.0f, size);
-		glVertex3f(size,size,0.0f);
-		glVertex3f(size,size,size);
-		glVertex3f(0.0f,size,0.0f);
-		glVertex3f(0.0f,size,size);
-
+		glVertex3f(-size, -size, -depth);
+		glVertex3f(size, -size, -depth);
+		glVertex3f(size, -size, -depth);
+		glVertex3f(size,size, -depth);
+		glVertex3f(size,size, -depth);
+		glVertex3f(-size,size, -depth);
+		glVertex3f(-size,size, -depth);
+		glVertex3f(-size, -size, -depth);
+	glEnd();
+	glBegin(GL_LINES);
+		glVertex3f(-size, -size, depth);
+		glVertex3f(size, -size, depth);
+		glVertex3f(size, -size, depth);
+		glVertex3f(size, size, depth);
+		glVertex3f(size, size, depth);
+		glVertex3f(-size, size, depth);
+		glVertex3f(-size, size, depth);
+		glVertex3f(-size, -size, depth);
+	glEnd();
+	glBegin(GL_LINES);
+		glVertex3f(-size, -size, -depth);
+		glVertex3f(-size, -size, depth);
+		glVertex3f(size, -size, -depth);
+		glVertex3f(size, -size, depth);
+		glVertex3f(size,size, -depth);
+		glVertex3f(size,size, depth);
+		glVertex3f(-size,size, -depth);
+		glVertex3f(-size,size, depth);
 	glEnd();
 }
 
@@ -100,7 +100,7 @@ void display()
 	renderCoordinateAxis();
 
 	// Rotate the red square by "angle" degrees.
-	glRotatef(angle, 0.0f, 1.0f, 0.0f);
+	glRotatef(angle, 1.0f, 0.0f, 0.0f);
 	//glRotatef(angle, x1, y1, z1);
 	
 	// Render a red square
@@ -109,7 +109,7 @@ void display()
 	//        x1    y1    x2     y2
 	//glRectf(-1.0f, 1.0f, 1.0f, -1.0f);
 	//glutWireTeapot(2.0);
-	drawWiredCube(2.0f);
+	drawWiredCube();
 	//glutWireCube(3.0);
 
 	// Start the rendering on a new frame
@@ -129,31 +129,26 @@ void update(int value)
 	glutTimerFunc(UPDATE_INTERVAL_MS, update, 0);
 }
 
+
 void keyboard(unsigned char key, int x, int y)
 {
+	std::cout << "miaau" << std::endl;
 	if (key == 27) {
 		// ESC key
 		exit(0);
 	}
 
-	if (key == 'w'){
-		angle += 1.0f;
-		//x1 = 1.0f;
-		//y1=0.0f;
-		//z1=0.0f;
+	if (key == GLUT_KEY_UP){
+		std::cout << "up" << std::endl;
 	}
-	if (key == 'a'){
-		y1=1.0f;
-		x1=0.0f;
-		z1=0.0f;
+	if (key == GLUT_KEY_DOWN){
+		std::cout << "down" << std::endl;
 	}
-	if (key == 's'){
-		z1 = 1.0f;
-		y1=0.0f;
-		x1=0.0f;
+	if (key == GLUT_KEY_LEFT){
+		std::cout << "left" << std::endl;
 	}
-	if (key == 'd'){
-
+	if (key == GLUT_KEY_RIGHT){
+		std::cout << "right" << std::endl;
 	}
 		
 }
