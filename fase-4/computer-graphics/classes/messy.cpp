@@ -32,7 +32,7 @@ point tr1 = { tl1.x + SIDE_SIZE, tl1.y, 0.0f };
 point bl1 = { tl1.x, tl1.y - SIDE_SIZE, 0.0f };
 point br1 = { tr1.x, tr1.y - SIDE_SIZE, 0.0f };
 
-point t1 = { 0.0f, 0.0f, 0.0f }
+point t1 = { 0.0f, 0.0f, 0.0f };
 
 int main() {
 	GLFWwindow* window;
