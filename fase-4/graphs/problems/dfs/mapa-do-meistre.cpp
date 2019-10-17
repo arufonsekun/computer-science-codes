@@ -1,10 +1,13 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <tuple>
 
 using namespace std;
 
-int[2] goAhead(int i, int y) {
+int width, height;
+
+tuple<int, int> goAhead(char currentNode, int i, int j) {
 	if (currentNode == '>')
 		j++;
 	else if (currentNode == 'v')
@@ -14,19 +17,25 @@ int[2] goAhead(int i, int y) {
 	else if (currentNode == '^')
 		i--;
 	
-	int[2] pos = {i, j};
+	tuple<int, int> pos = make_tuple(i, j);
 	return pos;
 }
 
-int[2] goBack(int i, int j) {
-	
+bool canGoAhead(char currentNode, int i, int j) {
+	if (currentNode == '>')
+		return j < width-1 and currentNode != '<';
+	else if (currentNode == '<')
+		return j > 0 and currentNode != '>';
+	else if (currentNode == 'v')
+		return i < height-1 and currentNode != '^';
+	else
+		return i > 0 and currentNode != 'v'; 
 }
 
 int main(){
-	int width, height;
 	string line;
 	vector<string> input;
-	vector<vector<int> visited;
+	vector<vector<int>> visited;
 	vector<int> row;
 	scanf("%d %d", &width, &height);
 	
@@ -37,19 +46,15 @@ int main(){
 		visited.push_back(row);
 	}
 
-	/*for (int i=0; i < height; i++) {
-		cout << input.at(i) << endl;
-	}*/
-
 	bool findACycle = false;
 	char currentNode = '.';
 	int i = 0, j = 0;
-	int[2] pos = {0, 0};
+	tuple<int, int> pos;
 
 	while (!findACycle) {
 		if (input.at(i).at(j) != '.'){
 			if (visited.at(i).at(j) == 1){
-				cout  << "!" << endl;
+				cout << "!" << endl;
 				findACycle = true;
 			}
 			else {
@@ -58,15 +63,21 @@ int main(){
 			}
 		}
 
-		if (i < height && j < width)
-			pos = goAhead();
-		else
-			pos = goBack();
+		if(currentNode == '*') {
+			cout << '*' << endl;
+			findACycle = true;	
+		}
 
-		i  = pos[0];
-		j = pos[1];
-		
-		
+		else if (canGoAhead(currentNode, i, j)) {
+			pos = goAhead(currentNode, i, j);
+			i  = get<0>(pos);
+			j = get<1>(pos);
+		}
+
+		else if (!findACycle){
+			cout << "!" << endl;
+			break;
+		}
 
 	}
 	return 0; 

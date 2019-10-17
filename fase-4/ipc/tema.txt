@@ -1,0 +1,2 @@
+Tema: Detecção de emoções baseadas em expressões faciais fazendo o uso de técnicas de visão computacional.
+Emotion detection based on facial landmarks and computer vision techniques.
