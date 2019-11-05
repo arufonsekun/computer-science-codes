@@ -1,0 +1,10 @@
+3D Facial Landmarking under Expression, Pose, and Occlusion Variations
+    - Existe dois tipos de detecção de pontos de interesse (landmarks/features points)
+    para imagens de rostos que são: coarse e fine.
+    Coarse landmarking objetiva a detecção aproximada de pontos de interesse enquanto
+    fine landmarking objetiva encontrar os pontos com maior precisão.
+    - Automatic Landmark localization: heuristics
+        Métodos estatísticos se saem muito bem em situações em que as informações daquele
+        ponto de interesse é suficiente. Porém eles não lidam muito bem em situações onde ocorrem
+        severas mudanças de pose, obstrução do rosto, etc.
+    
