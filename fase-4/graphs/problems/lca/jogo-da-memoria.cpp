@@ -4,6 +4,8 @@
 
 using namespace std;
 
+int n_cards;
+
 pair<int, int> card_pos(int n1, vector<int> card_pos) {
 
     pair<int, int> pos (0,0);
@@ -30,13 +32,19 @@ void print(vector<vector<int> > tree) {
     }
 }
 
-int solve(vector<vector<int> > tree, int s, int d, vector<int> visited) {
+int solve(vector<vector<int> > tree, int s, int d) {
+    
+    int current = s, previous, score;
+    vector<int> visited;
+    visited.assign(n_cards, 0);
 
-    visited.at(s) = 1;
 
-    for (unsigned i=0; i < tree.at(s).size(); i++) {
-        if (!visited.at(tree.at(s).at(i))) {
+    for (unsigned i=0; i < tree.at(current).size(); i++) {
+        
+        visited.at(current - 1) = 1;
 
+        if (!visited.at(tree.at(s - 1).at(i))) {
+            
         }
     }
 }
@@ -44,7 +52,7 @@ int solve(vector<vector<int> > tree, int s, int d, vector<int> visited) {
 int main(){
     
     vector<int> card_pos;
-    int n_cards, card_number, card_number_1;
+    int card_number, card_number_1;
     vector<vector<int> > tree;
     vector<int> row;
 
