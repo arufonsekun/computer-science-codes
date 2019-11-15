@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
-#include <map>
+#include <utility>
+#include <unordered_map>
+#include <iterator>
 
 using namespace std;
 
@@ -10,6 +12,11 @@ struct node {
     struct node * left;
     struct node * right;
 };
+
+struct position {
+    int pos[2];
+};
+
 vector<node *> card_pos;
 
 void inOrder(node * root) {
@@ -66,34 +73,18 @@ int findLCA(node *root, int n1, int n2)
     return path1[i-1];
 }
 
-pair<int, int> getCardPos(int card_number) {
-
-    int p1 = -1, p2 = -1;
-
-    for (int i=0; i < card_pos.size(); i++) {
-        if (card_pos.at(i)->card_number == card_number) {
-            if (p1 == -1)
-                p1 = i;
-            else
-            {
-                p2 = i;
-                return pair<int, int>(p1, p2);
-            }
-        }
-    }
-}
-
 int main(){
 
     node * no = NULL;
     int n_cards, card_number, c1, c2, c3=0;
     pair<int, int> pos_card (0,0);
-    map<int, pair<int, int> > card_number_pos;
+    unordered_map<int, pair<int, int> > card_number_pos;
 
     scanf("%d", &n_cards);
     for (int i=0; i < n_cards; i++)
     {
-        scanf("%d", &card_number);
+        cin >> card_number;
+
         no = (node*) malloc(sizeof(node));
         no->card_number = card_number;
         no->height = 0;
@@ -102,15 +93,18 @@ int main(){
         no->right = NULL;
         no->left = NULL;
         card_pos.push_back(no);
-        if (card_number_pos.find(card_number) == card_number_pos.end())
-            card_number_pos.insert(card_number_pos, pair<int,int>(i, 0));
-        else
-            card_number_pos.at(card_number)->second = i;
+        
+        if (card_number_pos.find(card_number) == card_number_pos.end() ) {
+            card_number_pos[card_number] = {i, 0};
+        } else {
+          card_number_pos[card_number].second = i;
+        }
+
     }
 
     for (int i=0; i < n_cards -1 ; i++) {
         cin >> c1 >> c2;
-        c1--; c2--;1
+        c1--; c2--;
 
         if (card_pos.at(c2)->parent != NULL) {
             c3 = c2;
@@ -130,14 +124,15 @@ int main(){
 
     computeHeight(card_pos.at(0));
     int total_score = 0, Hn1=0, Hn2=0, lca_index=0;
-    map<int, pair<int, int> >::iterator it;
-    for (it=card_number_pos.begin(); it != card_number_pos.end(); ++it)
+    
+    for (auto value : card_number_pos)
     {
-        pos_card = getCardPos(i);
-        Hn1 = card_pos.at(it.second->first)-> height;
-        Hn2 = card_pos.at(it.second->second)-> height;
-        lca_index = findLCA(card_pos.at(0),pos_card.first, pos_card.second);
+        Hn1 = card_pos.at(value.second.first)-> height;
+        Hn2 = card_pos.at(value.second.second)-> height;
+        lca_index = findLCA(card_pos.at(0),value.second.first, value.second.second);
         total_score += Hn1 + Hn2 - card_pos.at(lca_index)->height * 2;
+
+        //cout << value.first << " : " << value.second.first << " : " << value.second.second << endl;
     }
 
     // inOrder(card_pos.at(0));
