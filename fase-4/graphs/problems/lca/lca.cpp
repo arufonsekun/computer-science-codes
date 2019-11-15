@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <map>
 
 using namespace std;
 
@@ -9,6 +10,7 @@ struct node {
     struct node * left;
     struct node * right;
 };
+vector<node *> card_pos;
 
 void inOrder(node * root) {
     if (root == NULL) return;
@@ -17,74 +19,76 @@ void inOrder(node * root) {
     inOrder(root->right);
 }
 
-void computeHeight(struct node* node) 
-{ 
-    if (node == NULL) 
-        return; 
-  
-    if (node->parent == NULL){
+void computeHeight(struct node* node)
+{
+    if (node == NULL)
+        return;
+
+    if (node->parent == NULL) {
         node->height = 1;
-    }else{
+    }
+    else {
         node->height = node->parent->height + 1;
     }
-  
-    /* then recur on left sutree */
-    computeHeight(node->left);  
-  
-    /* now recur on right subtree */
-    computeHeight(node->right); 
+
+    computeHeight(node->left);
+    computeHeight(node->right);
 }
 
+bool findPath(node *root, vector<int> &path, int k)
+{
+    if (root == NULL) return false;
 
- //https://www.geeksforgeeks.org/lowest-common-ancestor-binary-tree-set-1/
+    path.push_back(root->id);
 
-bool findPath(node *root, vector<int> &path, int k) 
-{ 
-    // base case 
-    if (root == NULL) return false; 
-  
-    // Store this node in path vector. The node will be removed if 
-    // not in path from root to k 
-    path.push_back(root->id); 
-  
-    // See if the k is same as root's key 
-    if (root->id == k) 
-        return true; 
-  
-    // Check if k is found in left or right sub-tree 
-    if ( (root->left && findPath(root->left, path, k)) || 
-         (root->right && findPath(root->right, path, k)) ) 
-        return true; 
-  
-    // If not present in subtree rooted with root, remove root from 
-    // path[] and return false 
-    path.pop_back(); 
+    if (root->id == k)
+        return true;
+
+    if ( (root->left && findPath(root->left, path, k)) ||
+         (root->right && findPath(root->right, path, k)) )
+        return true;
+
+    path.pop_back();
     return false;
-} 
+}
 
-int findLCA(node *root, int n1, int n2) 
-{ 
-    // to store paths to n1 and n2 from the root 
-    vector<int> path1, path2; 
-  
-    // Find paths from root to n1 and root to n1. If either n1 or n2 
-    // is not present, return -1 
-    if ( !findPath(root, path1, n1) || !findPath(root, path2, n2)) 
-          return -1; 
-  
-    /* Compare the paths to get the first different value */
-    int i; 
-    for (i = 0; i < path1.size() && i < path2.size() ; i++) 
-        if (path1[i] != path2[i]) 
-            break; 
-    return path1[i-1]; 
-}    
+int findLCA(node *root, int n1, int n2)
+{
+    vector<int> path1, path2;
+
+    if (!findPath(root, path1, n1) || !findPath(root, path2, n2))
+          return -1;
+
+    int i;
+    for (i = 0; i < path1.size() && i < path2.size() ; i++)
+        if (path1[i] != path2[i])
+            break;
+    return path1[i-1];
+}
+
+pair<int, int> getCardPos(int card_number) {
+
+    int p1 = -1, p2 = -1;
+
+    for (int i=0; i < card_pos.size(); i++) {
+        if (card_pos.at(i)->card_number == card_number) {
+            if (p1 == -1)
+                p1 = i;
+            else
+            {
+                p2 = i;
+                return pair<int, int>(p1, p2);
+            }
+        }
+    }
+}
 
 int main(){
 
     node * no = NULL;
-    int n_cards, card_number, c1, c2, c3;
-    vector<node *> card_pos;
+    int n_cards, card_number, c1, c2, c3=0;
+    pair<int, int> pos_card (0,0);
+    map<int, pair<int, int> > card_number_pos;
 
     scanf("%d", &n_cards);
     for (int i=0; i < n_cards; i++)
@@ -98,42 +102,47 @@ int main(){
         no->right = NULL;
         no->left = NULL;
         card_pos.push_back(no);
+        if (card_number_pos.find(card_number) == card_number_pos.end())
+            card_number_pos.insert(card_number_pos, pair<int,int>(i, 0));
+        else
+            card_number_pos.at(card_number)->second = i;
     }
 
-    //bfs para altura
-
-
-
-
-    /*for (int i=0; i < card_pos.size(); i++) {
-        cout << card_pos.at(i)->id << endl;
-    }*/
-
     for (int i=0; i < n_cards -1 ; i++) {
-        scanf("%d %d", &c1, &c2);
+        cin >> c1 >> c2;
+        c1--; c2--;1
 
-        if (card_pos.at(c2-1)->parent != NULL) {
+        if (card_pos.at(c2)->parent != NULL) {
             c3 = c2;
             c2 = c1;
             c1 = c3;
         }
 
-        if (card_pos.at(c1-1)->left == NULL){
-            card_pos.at(c1-1)->left = card_pos.at(c2-1);
-            card_pos.at(c2-1)->parent = card_pos.at(c1-1);
+        if (card_pos.at(c1)->left == NULL){
+            card_pos.at(c1)->left = card_pos.at(c2);
         }
-        else if (card_pos.at(c1-1)->right == NULL) {
-            card_pos.at(c1-1)->right = card_pos.at(c2-1);
-            card_pos.at(c2-1)->parent = card_pos.at(c1-1);
+        else if (card_pos.at(c1)->right == NULL) {
+            card_pos.at(c1)->right = card_pos.at(c2);
         }
+        card_pos.at(c2)->parent = card_pos.at(c1);
 
     }
 
     computeHeight(card_pos.at(0));
+    int total_score = 0, Hn1=0, Hn2=0, lca_index=0;
+    map<int, pair<int, int> >::iterator it;
+    for (it=card_number_pos.begin(); it != card_number_pos.end(); ++it)
+    {
+        pos_card = getCardPos(i);
+        Hn1 = card_pos.at(it.second->first)-> height;
+        Hn2 = card_pos.at(it.second->second)-> height;
+        lca_index = findLCA(card_pos.at(0),pos_card.first, pos_card.second);
+        total_score += Hn1 + Hn2 - card_pos.at(lca_index)->height * 2;
+    }
 
-    inOrder(card_pos.at(0));
+    // inOrder(card_pos.at(0));
 
-    printf("%d\n", 1 + findLCA(card_pos.at(0),2,3));
+    cout << total_score << endl;
 
     return 0;
 }
