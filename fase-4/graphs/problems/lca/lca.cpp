@@ -13,18 +13,7 @@ struct node {
     struct node * right;
 };
 
-struct position {
-    int pos[2];
-};
-
 vector<node *> card_pos;
-
-void inOrder(node * root) {
-    if (root == NULL) return;
-    inOrder(root->left);
-    printf("%d : %d : %d\n", root->id+1, root->card_number, root->height);
-    inOrder(root->right);
-}
 
 void computeHeight(struct node* node)
 {
@@ -59,14 +48,21 @@ bool findPath(node *root, vector<int> &path, int k)
     return false;
 }
 
+void inOrder(node * root) {
+    if (root == NULL) return;
+    inOrder(root->left);
+    printf("%d : %d : %d\n", root->id+1, root->card_number, root->height);
+    inOrder(root->right);
+}
+
 int findLCA(node *root, int n1, int n2)
 {
     vector<int> path1, path2;
 
     if (!findPath(root, path1, n1) || !findPath(root, path2, n2))
           return -1;
-
-    int i;
+   
+    int i; 
     for (i = 0; i < path1.size() && i < path2.size() ; i++)
         if (path1[i] != path2[i])
             break;
@@ -78,7 +74,8 @@ int main(){
     node * no = NULL;
     int n_cards, card_number, c1, c2, c3=0;
     pair<int, int> pos_card (0,0);
-    unordered_map<int, pair<int, int> > card_number_pos;
+    unordered_map<int, int> card_number_pos_1;
+    unordered_map<int, int > card_number_pos_2;
 
     scanf("%d", &n_cards);
     for (int i=0; i < n_cards; i++)
@@ -94,11 +91,11 @@ int main(){
         no->left = NULL;
         card_pos.push_back(no);
         
-        if (card_number_pos.find(card_number) == card_number_pos.end() ) {
-            card_number_pos[card_number] = {i, 0};
+        if (card_number_pos_1.find(card_number) == card_number_pos_1.end()) {
+            card_number_pos_1[card_number] = i;
         } else {
-          card_number_pos[card_number].second = i;
-        }
+            card_number_pos_2[card_number] = i;
+        } 
 
     }
 
@@ -125,19 +122,19 @@ int main(){
     computeHeight(card_pos.at(0));
     int total_score = 0, Hn1=0, Hn2=0, lca_index=0;
     
-    for (auto value : card_number_pos)
+    for (auto value : card_number_pos_1)
     {
-        Hn1 = card_pos.at(value.second.first)-> height;
-        Hn2 = card_pos.at(value.second.second)-> height;
-        lca_index = findLCA(card_pos.at(0),value.second.first, value.second.second);
-        total_score += Hn1 + Hn2 - card_pos.at(lca_index)->height * 2;
-
+        //Hn1 = card_pos.at(value.second.first)-> height;
+        //Hn2 = card_pos.at(value.second.second)-> height;
+        //lca_index = findLCA(card_pos.at(0),value.second.first, value.second.second);
+        //total_score += Hn1 + Hn2 - card_pos.at(lca_index)->height * 2;
+        cout << value.first << endl;
         //cout << value.first << " : " << value.second.first << " : " << value.second.second << endl;
     }
 
-    // inOrder(card_pos.at(0));
+    //inOrder(card_pos.at(0));
 
-    cout << total_score << endl;
+    //cout << total_score << endl;
 
     return 0;
 }
