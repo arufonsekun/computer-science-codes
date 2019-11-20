@@ -47,7 +47,7 @@ bool findPath(node *root, vector<int> &path, int k)
     return false;
 }
 
-void inOrder(node * root) {
+void inOrder(node * root){
     if (root == NULL) return;
     inOrder(root->left);
     printf("%d : %d : %d\n", root->id+1, root->card_number, root->height);
@@ -59,9 +59,9 @@ int findLCA(node *root, int n1, int n2)
     vector<int> path1, path2;
 
     if (!findPath(root, path1, n1) || !findPath(root, path2, n2))
-          return -1;
-   
-    int i = 0; 
+      return -1;
+
+    int i = 0;
     for (i = 0; i < path1.size() && i < path2.size() ; i++)
         if (path1.at(i) != path2.at(i))
             break;
@@ -88,13 +88,13 @@ int main(){
         no->right = NULL;
         no->left = NULL;
         card_pos.push_back(no);
-        
+
         auto it = card_number_pos.find(card_number);
         if (it == card_number_pos.end()) {
             card_number_pos[card_number] = make_pair(i, 0);
         } else {
             it->second.second = i;
-        } 
+        }
 
     }
 
@@ -120,20 +120,20 @@ int main(){
 
     computeHeight(card_pos.at(0));
     int total_score, Hn1, Hn2, lca_index=0, pos1, pos2 = 0;
-    
+
     for (auto value : card_number_pos)
     {
         pos1 = value.second.first;
         Hn1 = card_pos.at(pos1)->height;
-        
+
         pos2 =  value.second.second;
         Hn2 = card_pos.at(pos2)->height;
-        
+
         //cout << pos1 << " " << pos2 << endl;
-        
+
         lca_index = findLCA(card_pos.at(0),pos1, pos2);
         //cout << lca_index << endl;
-        
+
         if (lca_index != -1)
             total_score += Hn1 + Hn2 - card_pos[lca_index]->height * 2;
         //cout << value.first << endl;
