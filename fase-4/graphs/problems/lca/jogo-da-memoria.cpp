@@ -52,23 +52,22 @@ int solve(vector<vector<int> > tree, int s, int d) {
 int main(){
     
     vector<int> card_pos;
-    int card_number, card_number_1;
-    vector<vector<int> > tree;
-    vector<int> row;
+    int v1, v2, card_number;
 
     cin >> n_cards;
+    
+    vector<vector<int>> tree(n_cards);
 
     for (int i=0; i < n_cards; i++) {
 	    cin >> card_number;
     	card_pos.push_back(card_number);
-        tree.push_back(row);
     }
 
 
     for(int i=0; i < n_cards-1; i++) {
-	    cin >> card_number >> card_number_1;
-	    tree.at(card_number - 1).push_back(card_number_1);
-	    tree.at(card_number_1 - 1).push_back(card_number);
+	    cin >> v1 >> v2;
+	    tree[v1-1].push_back(v2);
+	    tree.at[v2-1].push_back(v1);
     }
 
     
