@@ -2,7 +2,8 @@
 #include <vector>
 #include <utility>
 #include <tuple>
-
+#include <cmath>
+#include <algorithm>
 
 using namespace std;
 
@@ -56,14 +57,19 @@ void euler_tour(vector<vector<int>> tree, int parent, int current) {
     }
 }
 
-/*int fill_seg_tree(int left, int right, int i = 1) {
+int fill_seg_tree(int left, int right, int i = 1) {
     get<0>(segment_tree[i]) = left;
     get<1>(segment_tree[i]) = right;
 
-    if (left == right)
-        return get<2>(segment_tree) = euler_tour_vertices(left);
-    return get<2>(segment_tree[i]) = min( fill_seg_tree(left, (left + right) / 2, i*2), fill_seg_tree((left + right) / 2 + 1, right, i*2+1) );
-}*/
+    if (left == right) {
+        //cout << "index : " << left << " : height :"<< euler_tour_dist[left] << endl;
+        return get<2>(segment_tree[i]) = left;
+    }
+
+    int half_1 = fill_seg_tree(left, (left + right) / 2, i*2);
+    int half_2 = fill_seg_tree(((left + right) / 2) + 1, right, (i*2)+1);
+    return get<2>(segment_tree[i]) = euler_tour_dist[half_1] < euler_tour_dist[half_2] ? half_1 : half_2;
+}
 
 /*
 void dfs(vector<vector<int>> tree, int parent) {
@@ -99,13 +105,6 @@ int main(){
 	    tree[v2].push_back(v1);
     }
 
-    /*
-        DFS
-        visited.assign(n_cards, false);
-        cout << "Node: " << card_order.at(0) << " Height: " << height.at(0) << endl;
-        dfs(tree, 0);
-    */
-
     visited.assign(n_cards, false);
     height.at(0) = 0;
     computeHeight(tree, 0);
@@ -114,26 +113,31 @@ int main(){
     visited.at(0) = true;
     euler_tour(tree, 0, 0);
 
-    int size = euler_tour_vertices.size() * 2;
+    int size = euler_tour_vertices.size();
+    int seg_tree_size = pow(2, *max_element(begin(height), end(height)) + 1);
+    segment_tree.assign( seg_tree_size, seg);
+    euler_tour_dist.insert(euler_tour_dist.begin(), 0);
+    fill_seg_tree(1, size);
 
-    segment_tree.assign(size, seg);
+    cout << seg_tree_size << endl;
 
-    cout << "Nodes: ";
-    for (int vertex : euler_tour_vertices) {
-        cout << vertex + 1 << " ";
-    }
-    cout << "\nhaght: ";
-    for (int height : euler_tour_dist) {
-        cout << height << " ";
-    }
-
-    cout << endl;
+    for (int i=1; i < segment_tree.size(); i++)
+    {
+        cout << "[" << get<0>(segment_tree[i]) << ","
+         << get<1>(segment_tree[i])        << "] = "
+         << euler_tour_dist.at(get<2>(segment_tree[i])) << endl;
+     }
     /*for (int i=0; i < tree.size(); i++) {
         for (int j=0; j < tree[i].size(); j++)
         cout << tree[i][j] << " ";
         cout << endl;
     }
     */
+
+    /*for (int i=0; i < euler_tour_vertices.size(); i++)
+    {
+        cout << euler_tour_vertices.at(i) << " : " << euler_tour_dist.at(i) << endl;
+    }*/
 
     return 0;
 }
