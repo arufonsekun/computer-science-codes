@@ -16,6 +16,7 @@ vector<int> euler_tour_vertices;
 vector<int> euler_tour_dist;
 vector<tiii> segment_tree;
 vector<int> card_order;
+vector<pair<int, int>> card_pos;
 
 void print(vector<vector<int> > tree) {
 
@@ -41,19 +42,15 @@ void computeHeight(vector<vector<int>> tree, int parent) {
 void euler_tour(vector<vector<int>> tree, int parent, int current) {
 
     visited.at(current) = true;
-    euler_tour_dist.push_back(height[current]);
-    euler_tour_vertices.push_back(current);
+    if (find(euler_tour_vertices.begin(), euler_tour_vertices.end(), current) == euler_tour_vertices.end()){
+        euler_tour_dist.push_back(height[current]);
+        euler_tour_vertices.push_back(current);
+    }
 
     for (int adj_vertex :  tree.at(current)) {
         if (!visited.at(adj_vertex)) {
             euler_tour(tree, current, adj_vertex);
         }
-    }
-
-    if (parent != current) {
-        visited.at(parent) = true;
-        euler_tour_dist.push_back(height[parent]);
-        euler_tour_vertices.push_back(parent);
     }
 }
 
@@ -72,11 +69,11 @@ int fill_seg_tree(int left, int right, int i = 1) {
 }
 
 int query_lca(int b, int e, int i = 1) {
-    
+
     if (b == e) return get<2>(segment_tree[i]);
     if (get<0>(segment_tree[i]) == get<1>(segment_tree[i])) return get<2>(segment_tree[i]);
     if (b == get<0>(segment_tree[i]) && e == get<1>(segment_tree[i])) return get<2>(segment_tree[i]);
-    
+
     int mid = (get<0>(segment_tree[i]) + get<1>(segment_tree[i])) / 2;
 
     if (b <= mid && e > mid)
@@ -86,7 +83,6 @@ int query_lca(int b, int e, int i = 1) {
         return query_lca(b, e, i*2);
     else
         return query_lca(b, e, (i*2)+1);
-    return INF;
 }
 
 /*
@@ -107,6 +103,7 @@ int main(){
     tiii seg = {0, 0, 0};
 
     cin >> n_cards;
+    card_pos.assign(n_cards/2 + 1, {-1,-1});
 
     height.assign(n_cards, 0);
     vector<vector<int>> tree(n_cards);
@@ -134,35 +131,15 @@ int main(){
     int size = euler_tour_vertices.size();
     int seg_tree_size = pow(2, *max_element(begin(height), end(height)));
     segment_tree.assign( seg_tree_size, seg);
-    //euler_tour_dist.insert(euler_tour_dist.begin(), 0);
     fill_seg_tree(0, size-1);
 
-    cout << seg_tree_size << endl;
+    for(int i=0;i<euler_tour_vertices.size();i++)
+        cout << euler_tour_vertices[i] << " : " << euler_tour_dist.at(i) << endl;
 
-    /*for (int i=1; i < segment_tree.size(); i++)
-    {
-        cout << "[" << get<0>(segment_tree[i]) << ","
-         << get<1>(segment_tree[i])        << "] = "
-         << euler_tour_dist.at(get<2>(segment_tree[i])) << endl;
-    }*/
-    
-
-    int pos1 = 2, pos2 = 3;
-
-    cout << "LCA("<< card_order[pos1] << "," << card_order[pos2] << ") = " << query_lca(pos1, pos2) << endl;
-    
-    /*
-    for (int i=0; i < tree.size(); i++) {
-        for (int j=0; j < tree[i].size(); j++)
-        cout << tree[i][j] << " ";
-        cout << endl;
-    }
-    */
-
-    /*for (int i=0; i < euler_tour_vertices.size(); i++)
-    {
-        cout << euler_tour_vertices.at(i) << " : " << euler_tour_dist.at(i) << endl;
-    }*/
+    cout << query_lca(0,6) << endl;
+    cout << query_lca(1,4) << endl;
+    cout << query_lca(2,3) << endl;
+    cout << query_lca(5,7) << endl;
 
     return 0;
 }
