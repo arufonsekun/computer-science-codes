@@ -9,10 +9,11 @@ using namespace std;
 
 typedef tuple<int, int, int> tiii;
 
-int n_cards;
+int n_cards, ind=0;
 vector<int> height;
 vector<bool> visited;
-vector<int> euler_tour_vertices;
+vector<int> visited_nodes;
+vector<int> euler_tour_first_occurence;
 vector<int> euler_tour_dist;
 vector<tiii> segment_tree;
 vector<int> card_order;
@@ -41,16 +42,25 @@ void computeHeight(vector<vector<int>> tree, int parent) {
 
 void euler_tour(vector<vector<int>> tree, int parent, int current) {
 
+    euler_tour_dist.push_back(height[current]);
+    visited_nodes.push_back(card_order[current]);
+    
+    if (!visited.at(current))
+        euler_tour_first_occurence.push_back(ind-1);
+
     visited.at(current) = true;
-    if (find(euler_tour_vertices.begin(), euler_tour_vertices.end(), current) == euler_tour_vertices.end()){
-        euler_tour_dist.push_back(height[current]);
-        euler_tour_vertices.push_back(current);
-    }
+    ind++;
 
     for (int adj_vertex :  tree.at(current)) {
         if (!visited.at(adj_vertex)) {
             euler_tour(tree, current, adj_vertex);
         }
+    }
+    
+    if (parent != current) {
+        visited.at(parent) = true;
+        euler_tour_dist.push_back(height[parent]);
+        visited_nodes.push_back(card_order[parent]);
     }
 }
 
@@ -59,7 +69,6 @@ int fill_seg_tree(int left, int right, int i = 1) {
     get<1>(segment_tree[i]) = right;
 
     if (left == right) {
-        //cout << "index : " << left << " : height :"<< euler_tour_dist[left] << endl;
         return get<2>(segment_tree[i]) = left;
     }
 
@@ -128,18 +137,18 @@ int main(){
     visited.at(0) = true;
     euler_tour(tree, 0, 0);
 
-    int size = euler_tour_vertices.size();
+    /*int size = euler_tour_first_occurence.size();
     int seg_tree_size = pow(2, *max_element(begin(height), end(height)));
     segment_tree.assign( seg_tree_size, seg);
-    fill_seg_tree(0, size-1);
+    fill_seg_tree(0, size-1);*/
 
-    for(int i=0;i<euler_tour_vertices.size();i++)
-        cout << euler_tour_vertices[i] << " : " << euler_tour_dist.at(i) << endl;
-
-    cout << query_lca(0,6) << endl;
+    for(int i=0; i < euler_tour_first_occurence.size();i++)
+        cout << euler_tour_first_occurence.at(i) << " ";
+    cout << endl;
+    /*cout << query_lca(0,6) << endl;
     cout << query_lca(1,4) << endl;
     cout << query_lca(2,3) << endl;
-    cout << query_lca(5,7) << endl;
+    cout << query_lca(5,7) << endl;*/
 
     return 0;
 }
