@@ -71,6 +71,24 @@ int fill_seg_tree(int left, int right, int i = 1) {
     return get<2>(segment_tree[i]) = euler_tour_dist[half_1] < euler_tour_dist[half_2] ? half_1 : half_2;
 }
 
+int query_lca(int b, int e, int i = 1) {
+    
+    if (b == e) return get<2>(segment_tree[i]);
+    if (get<0>(segment_tree[i]) == get<1>(segment_tree[i])) return get<2>(segment_tree[i]);
+    if (b == get<0>(segment_tree[i]) && e == get<1>(segment_tree[i])) return get<2>(segment_tree[i]);
+    
+    int mid = (get<0>(segment_tree[i]) + get<1>(segment_tree[i])) / 2;
+
+    if (b <= mid && e > mid)
+        return min(query_lca(b, e, i*2), query_lca(b, e, (i*2) +1));
+
+    if (e <= mid)
+        return query_lca(b, e, i*2);
+    else
+        return query_lca(b, e, (i*2)+1);
+    return INF;
+}
+
 /*
 void dfs(vector<vector<int>> tree, int parent) {
     visited.at(parent) = true;
@@ -114,20 +132,27 @@ int main(){
     euler_tour(tree, 0, 0);
 
     int size = euler_tour_vertices.size();
-    int seg_tree_size = pow(2, *max_element(begin(height), end(height)) + 1);
+    int seg_tree_size = pow(2, *max_element(begin(height), end(height)));
     segment_tree.assign( seg_tree_size, seg);
-    euler_tour_dist.insert(euler_tour_dist.begin(), 0);
-    fill_seg_tree(1, size);
+    //euler_tour_dist.insert(euler_tour_dist.begin(), 0);
+    fill_seg_tree(0, size-1);
 
     cout << seg_tree_size << endl;
 
-    for (int i=1; i < segment_tree.size(); i++)
+    /*for (int i=1; i < segment_tree.size(); i++)
     {
         cout << "[" << get<0>(segment_tree[i]) << ","
          << get<1>(segment_tree[i])        << "] = "
          << euler_tour_dist.at(get<2>(segment_tree[i])) << endl;
-     }
-    /*for (int i=0; i < tree.size(); i++) {
+    }*/
+    
+
+    int pos1 = 2, pos2 = 3;
+
+    cout << "LCA("<< card_order[pos1] << "," << card_order[pos2] << ") = " << query_lca(pos1, pos2) << endl;
+    
+    /*
+    for (int i=0; i < tree.size(); i++) {
         for (int j=0; j < tree[i].size(); j++)
         cout << tree[i][j] << " ";
         cout << endl;
