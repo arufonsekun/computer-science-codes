@@ -137,14 +137,33 @@ int main(){
     visited.at(0) = true;
     euler_tour(tree, 0, 0);
 
-    /*int size = euler_tour_first_occurence.size();
-    int seg_tree_size = pow(2, *max_element(begin(height), end(height)));
+    int seg_tree_size = pow(2, visited_nodes.size() / 2);
     segment_tree.assign( seg_tree_size, seg);
+    fill_seg_tree(0, visited_nodes.size()-1);
+
+    cout << "Segment three size: " << seg_tree_size << endl;
+
+    /*for (int i=1; i < segment_tree.size(); i++)
+    {
+        cout << "[" << get<0>(segment_tree[i]) << ","
+         << get<1>(segment_tree[i])        << "] = "
+         << euler_tour_dist.at(get<2>(segment_tree[i])) << endl;
+    }*/
+
+    cout << euler_tour_dist[query_lca(5,6)] << endl;
+
+    /*for (int i=0; i< euler_tour_first_occurence.size(); i++)
+        cout << euler_tour_first_occurence.at(i) << endl;*/
+
+    /*for(int i=0; i < visited_nodes.size();i++)
+        cout << visited_nodes.at(i) << " ";
+    cout << endl;
+    for(int i=0; i < euler_tour_dist.size();i++)
+        cout << euler_tour_dist.at(i) << " ";
+    cout << endl;*/
+    /*int size = euler_tour_first_occurence.size();
     fill_seg_tree(0, size-1);*/
 
-    for(int i=0; i < euler_tour_first_occurence.size();i++)
-        cout << euler_tour_first_occurence.at(i) << " ";
-    cout << endl;
     /*cout << query_lca(0,6) << endl;
     cout << query_lca(1,4) << endl;
     cout << query_lca(2,3) << endl;
