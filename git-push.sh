@@ -8,7 +8,7 @@ if [ $yes = "Y" ]; then
     read message
     git commit -m "$message"
     echo "PUSHING TO MASTER"
-    git push
+    git push origin master
 else
     echo "Fuck you!!"
 fi
