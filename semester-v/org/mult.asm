@@ -5,7 +5,7 @@
 .text
 
 	main:
-		addi  a0, zero, 4
+		addi  a0, zero, 6
 		addi a1, zero, 6
 		addi a2, zero, 0
 		addi a3, zero, 0
