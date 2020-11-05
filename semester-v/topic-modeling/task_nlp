@@ -1,0 +1,4 @@
+https://colab.research.google.com/drive/1X9D3_9H0zet1FgyBQMrwsVqyZmj1KNdc?usp=sharing15:05
+https://www.kaggle.com/ryanxjhan/cbc-news-coronavirus-articles-march-26?select=news.csv
+dfcv=pdcovid['title']+' ' +' '+pdcovid['description']+' '+pdcovid['text']
+

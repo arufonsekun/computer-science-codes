@@ -3,6 +3,9 @@
 -- Email:     junior.ramisch@gmail.com
 
 -- DDL statements
+CREATE DATABASE junior_pets;
+\c junior_pets;
+
 CREATE TABLE cliente(
     cpf   INTEGER NOT NULL,
     nome  VARCHAR NOT NULL,
@@ -57,7 +60,7 @@ INSERT INTO pet (codpet, nome, draca, dono) VALUES
 
 INSERT INTO pet (codpet, nome, draca, dono, coment) VALUES
     (2, 'Rin tin tin', 2, 55555, 'Muito dócil'),
-    (3, 'Perdy', 1, 66666, 'Alérgica a sabão')
+    (3, 'Perdy', 1, 66666, 'Alérgica a sabão'),
     (5, 'Boris', 2, 66666, 'Inimigo de banhos');
 
 INSERT INTO historico (idhist, codpet, datahist, medida, valor, unid) VALUES
