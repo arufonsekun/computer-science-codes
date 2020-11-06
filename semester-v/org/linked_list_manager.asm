@@ -1,7 +1,6 @@
 .globl main
 
 .data
-	vector:         .word 0
 	header:         .string "\t+-----------------------------------------------------------------------+\n"
 	welcomessage:   .string "\t|   Bem-vindo ao gerenciador de lista encadeada ultimate v1.0.0         |\n"
 	insert:         .string "\t|   1- Insere um elemento na lista                                      |\n"
@@ -13,6 +12,7 @@
 	inputcode:      .string "\tPor favor, digite o código da operação: "
 	inputnumber:    .string "\tDigite o número a ser inserido: "
 	removeindex:    .string "\tDigite o índice do valor a ser removido: "
+	removevalue:    .string "\tDigite o valor a ser removido\n"
 	exitmessage:    .string "\tNunca é um adeus, espero te-lô satisfeito, não é muito mas é trabalho honesto.\n"
 	breakline:      .string "\n"
 	tab:   		.string "\t"
@@ -20,20 +20,20 @@
 	
 .text
 	main:
-		# la a0, vector
-		# addi a1, zero, 0    # a1 armazena o código da operação
-		# addi a2, zero, 0    # a2 armazena o tamanho da lista
-		                      # Carrega o endereço da 1ª posição da string
-				      # referenciada pela label welcomessage
 
-		addi a0, x0, 4
-		la a1, operationcodes
-		lw a3, 0(a1)           # Codigo para inserir
-		lw a4, 4(a1)           # Remover por índice
-		lw a5, 8(a1)           # Remover por valor
-		lw a6, 16(a1)          # Listar
-		jal print_menu
-		jal input_code
+		la a2, operationcodes
+		
+		lw a3, 0(a2)           # Codigo para inserir
+		lw a4, 4(a2)           # Remover por índice
+		lw a5, 8(a2)           # Remover por valor
+		lw a6, 12(a2)          # Listar
+		
+		addi s1, zero, 0       # Tamanho da lista
+		addi s2, zero, 0       # Quantidade de elemetos adicionados
+		addi s3, zero, 0       # Quantidade de elemetos removidos
+		
+		j print_menu
+		j input_code
 		
 	print_menu:
 	
@@ -78,16 +78,20 @@
 		li a7, 5                 # Input an integer
 		ecall
 		
-		add a2, zero, a0
+		li a7, 1
+		ecall
 		
-		beq a2, a3, insert_value
-		beq a2, a4, remove_by_index
+		add a2, a0, zero
+		
+		beq a3, a2, insert_value
+		beq a4, a2, remove_by_index
+		beq a5, a2, remove_by_value
+		beq a6, a2, list_values
 		beqz a2, terminate
 		
-		j input_code
 		
 	print_value:
-		li a7, 1                 # Print an integer
+		li a7, 1
 		ecall
 		
 	insert_value:
@@ -95,28 +99,53 @@
 		li a7, 4
 		ecall
 	
-		li a7, 5                 # Input an integer
+		li a7, 5
 		ecall
 		
-		# Logica para inserir o valor
+		# Lógica pra inserir o número
 		
-		li a7, 1                 # Print an integer
+		li a7, 1
 		ecall
+		
+		addi s1, zero, 1  # Tamanho da lista
+		addi s2, zero, 1  # Elementos adicionados
+		
+		j input_code
 		
 	remove_by_index:
 		la a0, removeindex
 		li a7, 4
 		ecall
 	
-		li a7, 5                 # Input an integer
+		li a7, 5
 		ecall
 		
+		addi s1, s1, -1  # Decrementa o tamanho da lista
+		addi s3, zero, 1 # Incrementa a quantidade de elementos removidos
+		
+		j input_code
 		# Logica para remover
+		
+	remove_by_value:
+		la a0, removevalue
+		li a7, 4
+		ecall
+	
+		li a7, 5
+		ecall
+		
+		addi s1, s1, -1  # Decrementa o tamanho da lista
+		addi s3, zero, 1 # Incrementa a quantidade de elementos removidos
+		
+		j input_code
+
+	list_values:
+		nop
+		# Mostra os valores
 
 	terminate:
 		la a0, exitmessage
 		li a7, 4
 		ecall
 		ebreak
-		ret	
 		
