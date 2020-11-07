@@ -1,23 +1,24 @@
 .globl main
 
 .data
-	header:         .string "\t+-----------------------------------------------------------------------+\n"
-	welcomessage:   .string "\t|   Bem-vindo ao gerenciador de lista encadeada ultimate v1.0.0         |\n"
-	insert:         .string "\t|   1- Insere um elemento na lista                                      |\n"
-	removebyindex:  .string "\t|   2- Remove um elemento pelo seu índice                               |\n"
-	removebyvalue:  .string "\t|   3- Remove um elemento pelo seu valor                                |\n"
-	listvalues:     .string "\t|   4- Mostra os valores da lista                                       |\n"
-	exit:           .string "\t|   0- Sai do programa e exibe o total de valores inseridos e removidos |\n"
-	footer:         .string "\t+-----------------------------------------------------------------------+\n"
-	inputcode:      .string "\tPor favor, digite o código da operação: "
-	inputnumber:    .string "\tDigite o número a ser inserido: "
-	removeindex:    .string "\tDigite o índice do valor a ser removido: "
-	removevalue:    .string "\tDigite o valor a ser removido\n"
-	exitmessage:    .string "\tNunca é um adeus, espero te-lô satisfeito, não é muito mas é trabalho honesto.\n"
-	breakline:      .string "\n"
-	tab:   		.string "\t"
-	space:          .string " "
-	operationcodes: .word 1, 2, 3, 4
+	header:           .string "\t+-----------------------------------------------------------------------+\n"
+	welcomessage:     .string "\t|   Bem-vindo ao gerenciador de lista encadeada ultimate v1.0.0         |\n"
+	insert:           .string "\t|   1- Insere um elemento na lista                                      |\n"
+	removebyindex:    .string "\t|   2- Remove um elemento pelo seu índice                               |\n"
+	removebyvalue:    .string "\t|   3- Remove um elemento pelo seu valor                                |\n"
+	listvalues:       .string "\t|   4- Mostra os valores da lista                                       |\n"
+	exit:             .string "\t|   0- Sai do programa e exibe o total de valores inseridos e removidos |\n"
+	footer:           .string "\t+-----------------------------------------------------------------------+\n"
+	inputcode:        .string "\tPor favor, digite o código da operação: "
+	inputnumber:      .string "\tDigite o número a ser inserido: "
+	removeindex:      .string "\tDigite o índice do valor a ser removido: "
+	removevalue:      .string "\tDigite o valor a ser removido\n"
+	exitmessage:      .string "\tNunca é um adeus, espero te-lô satisfeito, não é muito mas é trabalho honesto.\n"
+	emptylistmessage: .string "\tNão é possível remover a lista está vazia.\n"
+	breakline:        .string "\n"
+	tab:   		  .string "\t"
+	space:            .string " "
+	operationcodes:   .word 1, 2, 3, 4
 	
 .text
 	main:
@@ -28,8 +29,8 @@
 		lw a5, 8(a2)           # Remover por valor
 		lw a6, 12(a2)          # Listar
 		
-		addi s1, sp, 0      # Salvar ponteiro da pilha
-		addi s2, zero,0    # Salvar endereço do ultimo elemento inserido
+		addi s1, sp, 0         # Salva o valor de Stack Pointer
+		addi s2, zero,0        # Salvar endereço do ultimo elemento inserido
 		
 		addi s3, zero, 0       # Tamanho da lista
 		addi s4, zero, 0       # Quantidade de elemetos adicionados
@@ -82,14 +83,15 @@
 		ecall
 		
 		addi t1, s2, 0          # Endereço do 1º elemento para percorrer a lista
-		add a2, a0, zero
+		addi t2, zero, 0        # Contador para percorrer a lista
+
+		addi a2, a0, 0
 		
+		beqz a2, terminate
 		beq a3, a2, input_value
 		beq a4, a2, remove_by_index
 		beq a5, a2, remove_by_value
 		beq a6, a2, list_values
-		beqz a2, terminate
-		
 		
 	print_value:
 		li a7, 1
@@ -103,7 +105,7 @@
 		li a7, 5
 		ecall
 		
-		bgt s3, zero, insert_sorted    # Faz o desvio caso o tamanho da lista não for 0 
+		bgt s3, zero, insert_value           # Faz o desvio caso o tamanho da lista não for 0 
 		sw a0, 0(sp)                   # Coloca o 1° valor na 1ª posição
 		sw zero, 4(sp)                 # Zera o endereço para o próximo valor
 		addi s2, sp, 0
@@ -116,7 +118,7 @@
 		
 		j input_code
 		
-	insert_sorted:
+	insert_value:
 		
 		sw a0, 0(sp)
 		sw zero,4(sp)
@@ -126,7 +128,23 @@
 		j update
 		
 	remove_by_index:
+
+		beqz s3, empty_list       # Desvia caso a lista for vazia
+		
 		la a0, removeindex
+		li a7, 4
+		ecall
+		
+		addi s1, s1, -1            # Decrementa o tamanho da lista
+		addi s3, zero, 1           # Incrementa a quantidade de elementos removidos
+		
+		j input_code
+		# Logica para remover
+		
+	remove_by_value:
+		beqz s3, empty_list       # Faz o desvio caso a lista for vazia 
+	
+		la a0, removevalue
 		li a7, 4
 		ecall
 	
@@ -137,32 +155,40 @@
 		addi s3, zero, 1           # Incrementa a quantidade de elementos removidos
 		
 		j input_code
-		# Logica para remover
-		
-	remove_by_value:
-		la a0, removevalue
+
+	empty_list:
+		la a0, emptylistmessage
 		li a7, 4
 		ecall
-	
-		li a7, 5
-		ecall
 		
-		addi s1, s1, -1  # Decrementa o tamanho da lista
-		addi s3, zero, 1 # Incrementa a quantidade de elementos removidos
-		
-		j input_code
+		j input_code		
 
 	list_values:
+		la a0, tab
+		li a7, 4
+		ecall
+
+		j continue
+		
+	continue:
 		
 		lw a0, 0(t1)
-		lw t1, -4(t1)
+		lw t1, -4(t1)              # Acessa o endereço do próximo elemento
 
 		li a7, 1
 		ecall
-
-		bgt t1, sp, list_values
-		j input_code
 		
+		la a0, space
+		li a7, 4
+		ecall
+
+		bgt t1, sp, continue
+
+		la a0, breakline
+		li a7, 4
+		ecall
+		
+		j input_code
 
 	terminate:
 		la a0, exitmessage
