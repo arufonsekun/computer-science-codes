@@ -35,10 +35,10 @@
 		
 		addi s1, sp, 0         # Salva o valor de Stack Pointer
 		addi s2, sp,0          # Salva o endereço do 1° elemento da lista
-		addi s3, sp, 0       # Salva o endereço do último elemento adicionado
+		addi s3, sp, 0         # Salva o endereço do último elemento adicionado
 		
 		addi s4, zero, 0       # Tamanho da lista
-		addi s5, zero, 0       # Quantidade de elemetos adicionados
+		addi s5, zero, 0       # Quantidade de elemetos ad icionados
 		addi s6, zero, 0       # Quantidade de elemetos removidos
 		
 		j print_menu
@@ -115,7 +115,6 @@
 		
 	update_insert_stats:
 		                               # Salva o endereço do último valor inserido
-		
 		addi s4, s4, 1                 # Tamanho da lista
 		addi s5, s5, 1                 # Elementos adicionados
 		
@@ -241,7 +240,9 @@
 		li a7, 4
 		ecall
 
-		bge t1, sp, continue_listing
+		addi t2, t2, 1
+
+		blt t2, s4, continue_listing
 
 		la a0, breakline
 		li a7, 4
