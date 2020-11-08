@@ -2,7 +2,7 @@
 
 .data
 	header:           .string "\t+-----------------------------------------------------------------------+\n"
-	welcomessage:     .string "\t|   Bem-vindo ao gerenciador de lista encadeada ultimate v1.0.0         |\n"
+	welcomessage:     .string "\t|   Bem-vindo ao gerenciador de lista encadeada ultimate v1.0.1         |\n"
 	insert:           .string "\t|   1- Insere um elemento na lista                                      |\n"
 	removebyindex:    .string "\t|   2- Remove um elemento pelo seu índice                               |\n"
 	removebyvalue:    .string "\t|   3- Remove um elemento pelo seu valor                                |\n"
@@ -14,11 +14,15 @@
 	removeindex:      .string "\tDigite o índice do valor a ser removido: "
 	removevalue:      .string "\tDigite o valor a ser removido\n"
 	exitmessage:      .string "\tNunca é um adeus, espero te-lô satisfeito, não é muito mas é trabalho honesto.\n"
-	emptylistmessage: .string "\tNão é possível remover a lista está vazia.\n"
+	emptylistmessage: .string "\tNão é possível realizar esta operação, a lista está vazia.\n"
+	amountinserted:   .string "\tQuantidade de elementos inseridos: "
+	amountremoved :   .string "\tQuantidade de elementos excluídos: "
+	length:           .string "\tTamanho da lista:"
 	breakline:        .string "\n"
 	tab:   		  .string "\t"
 	space:            .string " "
 	operationcodes:   .word 1, 2, 3, 4
+	last: .string "\n\tUltimo elemento: "
 	
 .text
 	main:
@@ -30,19 +34,19 @@
 		lw a6, 12(a2)          # Listar
 		
 		addi s1, sp, 0         # Salva o valor de Stack Pointer
-		addi s2, zero,0        # Salvar endereço do ultimo elemento inserido
+		addi s2, sp,0          # Salva o endereço do 1° elemento da lista
+		addi s3, sp, 0       # Salva o endereço do último elemento adicionado
 		
-		addi s3, zero, 0       # Tamanho da lista
-		addi s4, zero, 0       # Quantidade de elemetos adicionados
-		addi s5, zero, 0       # Quantidade de elemetos removidos
+		addi s4, zero, 0       # Tamanho da lista
+		addi s5, zero, 0       # Quantidade de elemetos adicionados
+		addi s6, zero, 0       # Quantidade de elemetos removidos
 		
 		j print_menu
-		j input_code
 		
 	print_menu:
 	
 		la a0, header
-		li a7, 4              # Código 4 escreve uma string na saída padrão ─ STDOUT
+		li a7, 4               # Código 4 escreve uma string na saída padrão ─ STDOUT
 		ecall
 		
 		la a0, welcomessage
@@ -72,18 +76,20 @@
 		la a0, footer
 		li a7, 4
 		ecall
+		
+		j input_code
 
 		
-	input_code:
+	input_code:		
 		la a0, inputcode
 		li a7, 4
 		ecall
 		  
-		li a7, 5                 # Input an integer
+		li a7, 5                      # Input an integer
 		ecall
 		
-		addi t1, s2, 0          # Endereço do 1º elemento para percorrer a lista
-		addi t2, zero, 0        # Contador para percorrer a lista
+		addi t1, s2, 0                # Endereço do 1º elemento para percorrer a lista
+		addi t2, zero, 0              # Contador para percorrer a lista
 
 		addi a2, a0, 0
 		
@@ -93,10 +99,6 @@
 		beq a5, a2, remove_by_value
 		beq a6, a2, list_values
 		
-	print_value:
-		li a7, 1
-		ecall
-		
 	input_value:
 		la a0, inputnumber
 		li a7, 4
@@ -105,44 +107,84 @@
 		li a7, 5
 		ecall
 		
-		bgt s3, zero, insert_value           # Faz o desvio caso o tamanho da lista não for 0 
-		sw a0, 0(sp)                   # Coloca o 1° valor na 1ª posição
-		sw zero, 4(sp)                 # Zera o endereço para o próximo valor
-		addi s2, sp, 0
-		j update
+		bgt s4, zero, insert_value     # Faz o desvio caso o tamanho da lista não for 0 
+		sw a0, 0(s3)                   # Coloca o 1° valor na 1ª posição
+		sw zero, -4(s3)                # Zera o endereço para o próximo valor
+		addi t4, s3, 0
+		j update_insert_stats
 		
-	update:
-		addi sp, sp, -8               # Subtrai 8 do Stack Pointer 		
-		addi s3, s3, 1                # Tamanho da lista
-		addi s4, s4, 1                # Elementos adicionados
+	update_insert_stats:
+		                               # Salva o endereço do último valor inserido
+		
+		addi s4, s4, 1                 # Tamanho da lista
+		addi s5, s5, 1                 # Elementos adicionados
 		
 		j input_code
 		
 	insert_value:
 		
-		sw a0, 0(sp)
-		sw zero,4(sp)
-		addi t0, sp, 0              # Armazena o endereço atual
-		addi t2, sp, 4              # Volta para o valor anterior
-		sw t0, 0(t2)                # Atualiza o endereço para o próximo valor do valor anterior
-		j update
+		addi sp, sp, -8                # Subtrai 8 do Stack Pointer
+		addi s3, sp, 0
+		
+		sw a0, 0(s3)                  # Armazena o valor inserido no endereço 0
+		sw zero, -4(s3)               # Atribui 0 para o endereço do próximo valor
+		
+		sw s3, -4(t4)                 # Atualiza o endereço para o próximo valor do elemento n-1
+		addi t4, s3, 0
+		
+		j update_insert_stats
 		
 	remove_by_index:
 
-		beqz s3, empty_list       # Desvia caso a lista for vazia
+		beqz s4, empty_list           # Desvia caso a lista for vazia
 		
 		la a0, removeindex
 		li a7, 4
 		ecall
 		
-		addi s1, s1, -1            # Decrementa o tamanho da lista
-		addi s3, zero, 1           # Incrementa a quantidade de elementos removidos
+		li a7, 5
+		ecall
 		
+		addi t3, s4, -1              # t3 = Tamanho da lista -1
+		beqz a0, remove_first        # Caso a0 == 0, remove o 1° elemento
+		# beq a0, t3, remove_last      # Caso a0 == tamanho_list-1, remove o último elemento
+		j remove_middle
+	
+	
+	update_remove_stats: 		
+		addi s4, s4, -1              # Tamanho da lista
+		addi s6, s6, 1               # Elementos removidos
 		j input_code
-		# Logica para remover
+	
+	remove_first:
+		lw s2, -4(s2)                # Endereço do próximo elemento
+ 	
+		j update_remove_stats
+
+	# remove_last:
+	##	sw zero, -4(t4)               # Coloca zero no endereço do penúltimo elemento
+#		addi s3, s3, 8		     # Atualiza o valor do último elemento 
+#			
+#		j update_remove_stats
+	
+	remove_middle:
+		beq t2, a0, change_pointers
+		addi t2, t2, 1               # Incrementa o contador caso o índice não tiver sido encontrado
+		addi t3, t1, 0               # Armazena o endereço do valor anterior
+		addi t4, t3, 0
+		lw t1, -4(t1)                # Acessa o endereço do próximo elemento
+		
+		j remove_middle	
+	
+	change_pointers:
+	
+		lw t0, -4(t1)                # Carrega o endereço do próximo elemento
+		sw t0, -4(t3)                # Altera o endereço do elemento anterior ao que será excluído (ver linha 161)
+		addi s3, t3, 0
+		j update_remove_stats
 		
 	remove_by_value:
-		beqz s3, empty_list       # Faz o desvio caso a lista for vazia 
+		beqz s4, empty_list          # Faz o desvio caso a lista for vazia 
 	
 		la a0, removevalue
 		li a7, 4
@@ -152,11 +194,14 @@
 		ecall
 		
 		addi s1, s1, -1            # Decrementa o tamanho da lista
-		addi s3, zero, 1           # Incrementa a quantidade de elementos removidos
+		addi s4, zero, 1           # Incrementa a quantidade de elementos removidos
 		
 		j input_code
 
 	empty_list:
+		addi s2, sp, 0
+		addi s3, sp, 0
+		
 		la a0, emptylistmessage
 		li a7, 4
 		ecall
@@ -164,13 +209,27 @@
 		j input_code		
 
 	list_values:
+		beqz s4, empty_list          # Desvia caso a lista for vazia
+		
+		la a0, length
+		li a7, 4
+		ecall
+		
+		addi a0, s4, 0
+		li a7, 1
+		ecall
+		
+		la a0, breakline
+		li a7, 4
+		ecall
+		
 		la a0, tab
 		li a7, 4
 		ecall
 
-		j continue
+		j continue_listing
 		
-	continue:
+	continue_listing:
 		
 		lw a0, 0(t1)
 		lw t1, -4(t1)              # Acessa o endereço do próximo elemento
@@ -182,7 +241,7 @@
 		li a7, 4
 		ecall
 
-		bgt t1, sp, continue
+		bge t1, sp, continue_listing
 
 		la a0, breakline
 		li a7, 4
@@ -191,6 +250,30 @@
 		j input_code
 
 	terminate:
+		la a0, amountinserted
+		li a7, 4
+		ecall
+		
+		addi a0, s5, 0         # Mostra a quantidade de valores removidos
+		li a7, 1
+		ecall
+		
+		la a0, breakline
+		li a7, 4
+		ecall
+
+		la a0, amountremoved
+		li a7, 4
+		ecall
+		
+		addi a0, s6, 0         # Mostra a quantidade de valores inseridos
+		li a7, 1
+		ecall
+		
+		la a0, breakline
+		li a7, 4
+		ecall
+		
 		la a0, exitmessage
 		li a7, 4
 		ecall
