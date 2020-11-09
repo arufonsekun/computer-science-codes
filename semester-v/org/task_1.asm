@@ -12,9 +12,10 @@
 	inputcode:        .string "\tPor favor, digite o código da operação: "
 	inputnumber:      .string "\tDigite o número a ser inserido: "
 	removeindex:      .string "\tDigite o índice do valor a ser removido: "
-	removevalue:      .string "\tDigite o valor a ser removido\n"
+	removevalue:      .string "\tDigite o valor a ser removido: "
 	exitmessage:      .string "\tNunca é um adeus, espero te-lô satisfeito, não é muito mas é trabalho honesto.\n"
 	emptylistmessage: .string "\tNão é possível realizar esta operação, a lista está vazia.\n"
+	valuenotfound:    .string "\tValor não encontrado.\n"
 	amountinserted:   .string "\tQuantidade de elementos inseridos: "
 	amountremoved :   .string "\tQuantidade de elementos excluídos: "
 	length:           .string "\tTamanho da lista:"
@@ -151,10 +152,10 @@
 	
 	remove_middle:
 		beq t2, a0, change_pointers
-		addi t2, t2, 1               # Incrementa o contador caso o índice não tiver sido encontrado
-		addi t3, t1, 0               # Armazena o endereço do valor anterior
-		addi t4, t3, 0               # Armazena o antepenultimo valor em relação ao indice removido 
-		lw t1, -4(t1)                # Acessa o endereço do próximo elemento
+		addi t2, t2, 1                # Incrementa o contador caso o índice não tiver sido encontrado
+		addi t3, t1, 0                # Armazena o endereço do valor anterior
+		addi t4, t3, 0                # Armazena o antepenultimo valor em relação ao indice removido 
+		lw t1, -4(t1)                 # Acessa o endereço do próximo elemento
 		
 		j remove_middle	
 	
@@ -185,12 +186,53 @@
 		j update_remove_stats
 	
 	remove_by_value:
+	
+		beqz s3, empty_list            # Desvia caso a lista for vazia
+			
+		la a0, removevalue
+		li a7, 4
+		ecall                          # Pede o indíce que será removido
 		
-		lw t0, -4(t1)                # Carrega o endereço do próximo elemento
-		sw t0, -4(t3)                # Altera o endereço do elemento anterior ao que será excluído (ver linha 161)
-		addi s3, t3, 0
+		li a7, 5
+		ecall                          # Lê o índice
+
+		lw t0, 0(t1)
+		beq a0, t0, remove_first
+		addi t2, zero, 0
+		j remove_middle_value 	
+		
+	remove_middle_value:
+		
+		beq a0, t0, change_value_pointers
+		bge t2, s3, value_not_found    # Se o contador for maior que o tamanho da lista o valor inserido não existe
+
+		
+		addi t2, t2, 1                 # Incrementa o contador caso o valor não tiver sido encontrado
+		addi t3, t1, 0                 # Armazena o endereço do valor anterior
+		addi t4, t3, 0                 # Armazena o antepenultimo valor em relação ao indice removido 
+
+		lw t1, -4(t1)
+		lw t0, 0(t1)
+				
+		j remove_middle_value
+	
+	change_value_pointers:
+		lw t0, -4(t1)                   # Carrega o endereço do próximo elemento
+		sw t0, -4(t3)                   # Altera o endereço do elemento anterior ao que será excluído (ver linha 161)
+				
+		lw t0, 0(s2)
+		lw t5, 0(t1)                    # Acessa o ultimo valor da lista 
+ 		beq t5, t0, update_last_pointer # Verifica se o elemento que se deseja remover é o último
 		j update_remove_stats
+	
+	value_not_found:
 		
+		la a0, valuenotfound
+		li a7, 4
+		ecall
+		
+		j input_code
+	
 	list_values:
 		beqz s3, empty_list            # Desvia caso a lista for vazia
 		
