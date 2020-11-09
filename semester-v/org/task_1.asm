@@ -1,8 +1,10 @@
-# @author Junior Vitor Ramisch <junior.ramisch@gmail.com>
-# @author Kellane Lopes Pereira <kellanelopes2000@gmail.com>
-#
-#
+# @author Junior Vitor Ramisch 
+# email: junior.ramisch@gmail.com
+# matrícula: 1811100034
 
+# @author Kellane Lopes Pereira
+# email: kellanelopes2000@gmail.com
+# matrícula: 1811100020
 
 .globl main
 
