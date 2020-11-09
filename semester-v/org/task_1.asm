@@ -1,3 +1,9 @@
+# @author Junior Vitor Ramisch <junior.ramisch@gmail.com>
+# @author Kellane Lopes Pereira <kellanelopes2000@gmail.com>
+#
+#
+
+
 .globl main
 
 .data
@@ -18,7 +24,7 @@
 	valuenotfound:    .string "\tValor não encontrado.\n"
 	amountinserted:   .string "\tQuantidade de elementos inseridos: "
 	amountremoved :   .string "\tQuantidade de elementos excluídos: "
-	length:           .string "\tTamanho da lista:"
+	length:           .string "\tTamanho da lista: "
 	breakline:        .string "\n"
 	tab:   		  .string "\t"
 	space:            .string " "
@@ -161,18 +167,6 @@
 	
 	
 	change_pointers:
-		
-		lw a0, 0(t1)
-		li a7, 1
-		ecall
-
-		la a0, breakline
-		li a7, 4
-		ecall
-		
-		lw a0, 0(t3)
-		li a7, 1
-		ecall
 						
 		lw t0, -4(t1)                # Carrega o endereço do próximo elemento
 		sw t0, -4(t3)                # Altera o endereço do elemento anterior ao que será excluído (ver linha 161)
