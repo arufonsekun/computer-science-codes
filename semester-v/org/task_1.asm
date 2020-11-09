@@ -24,6 +24,7 @@
 	exitmessage:      .string "\tNunca é um adeus, espero te-lô satisfeito, não é muito mas é trabalho honesto.\n"
 	emptylistmessage: .string "\tNão é possível realizar esta operação, a lista está vazia.\n"
 	valuenotfound:    .string "\tValor não encontrado.\n"
+	indexnotfound:    .string "\tÍndice não encontrado.\n"
 	amountinserted:   .string "\tQuantidade de elementos inseridos: "
 	amountremoved :   .string "\tQuantidade de elementos excluídos: "
 	length:           .string "\tTamanho da lista: "
@@ -144,8 +145,16 @@
 		li a7, 5
 		ecall                          # Lê o indice
 		
+		bge a0, s3, index_not_found
 		beqz a0, remove_first
 		j remove_middle 
+	
+	index_not_found:
+		la a0, indexnotfound
+		li a7, 4
+		ecall
+		
+		j input_code
 	
 	update_remove_stats:
 	
