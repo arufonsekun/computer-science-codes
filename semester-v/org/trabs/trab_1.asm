@@ -47,6 +47,7 @@
 		addi s3, zero, 0            # Tamanho da lista
 		addi s4, zero, 0            # Quantidade de elemetos adicionados
 		addi s5, zero, 0            # Quantidade de elemetos removidos
+		addi s6, zero, 0            # Salva o tamanho da lista -1
 		
 		j print_menu
 		
@@ -104,10 +105,11 @@
 		li a7, 5
 		ecall		               # Lê o valor a ser inserido
 		
-		bgt s3, zero, insert_end       # Faz o desvio caso o tamanho da lista não for 0 
+		bgt s3, zero, insert_sorted    # Faz o desvio caso o tamanho da lista não for 0 
 		
-		# Insere o primeiro valor
+		# Caso trivial: Insere o primeiro valor
 		addi s1, s2, 0
+
 		sw a0, 0(s2)                   # Coloca o 1° valor na 1ª posição
 		sw zero, -4(s2)                # Zera o endereço para o próximo valor
 		addi a1, s1, 0                 # Salva o endereço para ser utilizado como penultimo elemento na prox inserção
@@ -118,22 +120,70 @@
 	update_insert_stats:
 		
 		addi s3, s3, 1                 # Atualiza o tamanho da lista
+		addi s6, s3, -1                # Atualiza o tamanho da lista -1
 		addi s4, s4, 1                 # Atualiza a quantidade de elementos adicionados
 		
 		j input_code
 	
-	insert_end:
-		addi sp, sp, -8                # Alloca memória na pilha
-		addi s2, sp, 0                 # Atualiza o valor do último elemento
+	insert_sorted:
+		# addi sp, sp, -8                # Alloca memória na pilha
+		# addi s2, sp, 0                 # Atualiza o valor do último elemento
 		
-		sw a0, 0(s2)                   # Armazena o novo valor
-		sw zero, -4(s2)                # Coloca zero no endereço do próximo valor
+		lw t5, 0(t1)                     # Carrega o valor da 1ª posição
+		ble a0, t5, insert_element       # Caso o valor inserido seja menor ou igual que o atual então insere 
+		beq t2, s6, push_back            # Se o contador == lista.length-1 então insere no fim
+		beq t2, s3, input_code           # Chegou no fim da lista (just in case se loopar infinitamente)
+		
+		addi t2, t2, 1                   # Contador pra controlar onde está sendo inserido (início, meio ou fim)
+		addi t3, t1, 0                   # Guarda o endereço do elemento atual que está comparado
+		lw t1, -4(t1)                    # Carrega o endereço do próximo elemento
+		
+		j insert_sorted
+		# sw a0, 0(s2)                   # Armazena o novo valor
+		# sw zero, -4(s2)                # Coloca zero no endereço do próximo valor
 
-		sw s2, -4(a1)                  # Atualiza o endereço do último valor
-		addi a1, s2, 0                 # Salva o endereço do último elemento
-		addi a2, a1, 0                 # Como as inserções a2 irá se tornar o antepenultimo elemento
+		# sw s2, -4(a1)                  # Atualiza o endereço do último valor
+		# addi a1, s2, 0                 # Salva o endereço do último elemento
+		# addi a2, a1, 0                 # Como as inserções a2 irá se tornar o antepenultimo elemento
 		
-		j update_insert_stats          # Atualiza os contadores de inserção				
+		# j update_insert_stats          # Atualiza os contadores de inserção				
+	
+	
+	insert_element:
+		beqz t2, push_front              # Se o contador for 0 significa que deve ser inserido no início
+			
+		# a0 : novo valor
+		# t3 : anterior
+		# t1 : proximo
+			
+		addi sp, sp, -8
+		sw a0, 0(sp)                     # Armazena o novo valor
+		sw t1, -4(sp)                    # Faz o link com o próximo elemento
+		
+		sw sp, -4(t3)                    # Faz o link do elemento anterior com o endereço do novo valor
+		
+		j update_insert_stats
+		## Insere no meio
+	push_front:
+		addi sp, sp, -8                  # Alloca espaço na pilha
+		sw a0, 0(sp)                     # Armazena o novo valor 
+		sw t1, -4(sp)                    # Faz o link com o próximo elemento
+		
+		addi s1, sp, 0                   # Atualiza o endereço do 1° valor
+		
+		j update_insert_stats
+	
+	push_back:
+		addi sp, sp, -8                  # Alloca espaço na pilha
+		
+		sw a0, 0(sp)                     # Armazena o novo valor  
+		sw zero, -4(sp)                  # Coloca zero no endereço para o próximo valor   
+		
+		sw sp, -4(s2)                    # Armazena o endereço do valor inserido no penúltimo elemento
+		addi s2, sp, 0                   # Atualiza o endereço do último valor
+		addi a1, s2, 0
+		
+		j update_insert_stats	
 	
 	remove_by_index:
 		beqz s3, empty_list            # Desvia caso a lista for vazia
@@ -159,6 +209,7 @@
 	update_remove_stats:
 	
 		addi s3, s3, -1                # Tamanho da lista
+		addi s6, s3, -1
 		addi s5, s5, 1                 # Elementos removidos
 		j input_code
 	
@@ -188,6 +239,7 @@
 	
 	update_last_pointer:
 		addi a1, t3, 0
+		addi s2, t3, 0
 		j update_remove_stats
 	
 	remove_by_value:
@@ -209,7 +261,7 @@
 	remove_middle_value:
 		
 		beq a0, t0, change_value_pointers
-		bge t2, s3, value_not_found    # Se o contador for maior que o tamanho da lista o valor inserido não existe
+		bge t2, s6, value_not_found    # Se o contador for maior que o tamanho da lista o valor inserido não existe
 
 		
 		addi t2, t2, 1                 # Incrementa o contador caso o valor não tiver sido encontrado
