@@ -10,7 +10,7 @@
 
 .data
 	header:           .string "\t+-----------------------------------------------------------------------+\n"
-	welcomessage:     .string "\t|   Bem-vindo ao gerenciador de lista encadeada ultimate v1.0.1         |\n"
+	welcomessage:     .string "\t|   Bem-vindo ao gerenciador de lista encadeada ultimate v1.0.2         |\n"
 	insert:           .string "\t|   1- Insere um elemento na lista                                      |\n"
 	removebyindex:    .string "\t|   2- Remove um elemento pelo seu índice                               |\n"
 	removebyvalue:    .string "\t|   3- Remove um elemento pelo seu valor                                |\n"
