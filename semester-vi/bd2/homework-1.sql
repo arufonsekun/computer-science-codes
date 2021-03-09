@@ -15,16 +15,11 @@ select * from employee;
 
 -- A) Faça uma função capaz de aplicar um aumento de 10% em todos os funcionários;
 CREATE OR REPLACE FUNCTION increase_salary() RETURNS VOID AS $$
-	DECLARE
-		employee_ RECORD;
 	BEGIN
 		RAISE NOTICE 'Aumento de 10% para todos os empregados', '%';
-
-		FOR employee_ IN SELECT * FROM employee LOOP
-			UPDATE employee 
-			set salary = employee_.salary + employee_.salary / 10
-			WHERE id = employee_.id;
-		END LOOP;
+		UPDATE employee 
+		set salary = employee_.salary + employee_.salary / 10
+		WHERE id = employee_.id;
 		RETURN;
 	END;
 $$ LANGUAGE plpgsql;
@@ -36,19 +31,13 @@ $$ LANGUAGE plpgsql;
 -- B) Faça uma função capaz de aplicar um aumento de X% nos funcionários com id
 -- maior que N. Importante: X e N serão passados por argumento. 
 CREATE OR REPLACE FUNCTION increase_salary_conditionally(X INT, N INT) RETURNS VOID AS $$
-        DECLARE
-                employee_ RECORD;
-        BEGIN
+	BEGIN
 		RAISE NOTICE 'Aumento de % para funcionários com id maior que %', concat(X, '%'), N;
 
-                FOR employee_ IN SELECT * FROM employee LOOP
-			IF employee_.id > N THEN
-	                        UPDATE employee
-        	                set salary = employee_.salary + employee_.salary * X / 100
-                	        WHERE id = employee_.id;
-			END IF;
-                END LOOP;
-        END;
+		UPDATE employee
+		set salary = employee_.salary + employee_.salary * X / 100
+		WHERE id = employee_.id and employee_.id > N;
+	END;
 $$ LANGUAGE plpgsql;
 -- Remova o comentário para testar o exercício B
 -- select increase_salary_conditionally(5, 3);
@@ -57,19 +46,10 @@ $$ LANGUAGE plpgsql;
 
 -- C) Faça uma função capaz de remover os funcionários com salário acima da média.
 CREATE OR REPLACE FUNCTION drop_over_payed_employee() RETURNS VOID AS $$
-	DECLARE 
-		avg_salary float;
-		employee_ RECORD;
 	BEGIN
 		SELECT AVG(salary) INTO avg_salary from employee;
 		RAISE NOTICE 'A média dos salários é %', concat('R$', avg_salary);
-
-		FOR employee_ IN SELECT * FROM employee LOOP
-                        IF employee_.salary > avg_salary THEN
-                                DELETE FROM employee
-                                WHERE id = employee_.id;
-                        END IF;
-                END LOOP;
+        DELETE FROM employee WHERE id = employee_.id and employee_.salary > avg_salary;
 	END;
 $$ LANGUAGE plpgsql;
 -- Remova o comentário para testar o exercício C
@@ -91,8 +71,7 @@ CREATE OR REPLACE FUNCTION insert_data(id int, name VARCHAR(50), birthDate DATE,
 		SELECT current_user INTO current_u;
 		SELECT current_date INTO current_d;
 
-		ALTER TABLE employee ADD COLUMN current_usr VARCHAR(50), 
-				     ADD COLUMN current_d DATE;
+		ALTER TABLE employee ADD COLUMN current_usr VARCHAR(50), ADD COLUMN current_d DATE;
 
 		INSERT INTO employee (id, name, birthDate, salary, current_usr, current_d) VALUES
 		(id, name, birthDate, salary, current_u, current_d);
