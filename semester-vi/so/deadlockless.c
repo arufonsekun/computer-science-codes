@@ -33,6 +33,8 @@ void *thread1(void* data){
         if (get_mutex1) {
             printf("Thread ID: %ld got mutex1.\n", pthread_self());
             sleep(1);
+            pthread_mutex_unlock(&mutex1);
+
             get_mutex2 = pthread_mutex_trylock(&mutex2) == GET_MUTEX;
 
             while (!get_mutex2) {
@@ -44,7 +46,7 @@ void *thread1(void* data){
             sleep(1);
 
             pthread_mutex_unlock(&mutex2);
-            pthread_mutex_unlock(&mutex1);
+            pthread_exit(NULL);
         } else {
             printf("\nThread ID: %ld did not get mutex1.\n", pthread_self());
         }
@@ -61,6 +63,8 @@ void *thread2(void* data){
         if (get_mutex2) {
             printf("Thread ID: %ld got mutex2.\n", pthread_self());
             sleep(1);
+            pthread_mutex_unlock(&mutex2);
+            
             get_mutex1 = pthread_mutex_trylock(&mutex1) == GET_MUTEX;
 
             while (!get_mutex1) {
@@ -72,7 +76,7 @@ void *thread2(void* data){
             sleep(1);
 
             pthread_mutex_unlock(&mutex1);
-            pthread_mutex_unlock(&mutex2);
+            pthread_exit(NULL);
         } else {
             printf("\nThread ID: %ld did not get mutex2.\n", pthread_self());
         }
