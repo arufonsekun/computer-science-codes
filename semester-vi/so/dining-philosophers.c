@@ -1,6 +1,14 @@
+/*
+    Nome: Junior Vitor Ramisch 
+    Matrícula: 1811100034
+    Semestre: 2020.2
+    gcc (GCC) 10.2.0
+    Compilar: gcc -o dining-philosophers dining-philosophers.c -lpthread
+    Executar: ./dining-philosophers
+*/
 #include <stdlib.h>
 #include <stdio.h>
-#include <stdbool.h> 
+#include <stdbool.h>
 #include <semaphore.h>
 #include <pthread.h>
 
@@ -27,7 +35,7 @@ void sleep();
 int main() {
 
     printf("----------- Philosophers dining simulation -----------\n");
-
+    printf("|\tHit Ctrl+c to exit                           |\n");
     sem_init(&mutex, 0, 1);
     pthread_t philosophers [N];
 
@@ -41,7 +49,9 @@ int main() {
     for(int i=0; i < N; i++) {
         pthread_join(philosophers[i], NULL);
     }
-
+    
+    printf("------------------------------------------------------\n");
+    
     return 0;
 }
 
@@ -72,6 +82,7 @@ void take_forks(int i) {
     sem_wait(&mutex);
     state[i] = HUNGRY;
     printf("|\tPhilosopher %d is hungry                      |\n", i);
+    printf("|\t                                             |\n");
     
     try2_eat(i);
 
@@ -90,6 +101,7 @@ void give_back(int i) {
     // Starts thinking again
     state[i] = THINKING;
     printf("|\tPhilosopher %d is thinking                    |\n", i);
+    printf("|\t                                             |\n");
     try2_eat(LEFT);
     try2_eat(RIGHT);
     
@@ -104,6 +116,7 @@ void try2_eat(int i) {
     if (isHungry && leftIsnEating && rightIsnEating) {
         state[i] = EATING;
         printf("|\tPhilosopher %d is eating                      |\n", i);
+        printf("|\t                                             |\n");
 
         // Sets semaphore state to UP, it means
         // philosopher acquires critical region
