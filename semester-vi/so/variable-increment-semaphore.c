@@ -16,7 +16,7 @@
 #define INCREMENTING 1
 #define WAITING 0
 #define GOT_MUTEX 0
-#define MAX 5 // Max represents counting range
+#define MAX 10 // Max represents counting range
 
 int counter = 0;
 int state[N] = {INCREMENTING, WAITING, WAITING};
@@ -29,7 +29,6 @@ void *increment_1();
 void *increment_2();
 
 pthread_t Thread0, Thread1, Thread2;
-
 
 int main() {
     pthread_create(&Thread0, NULL, increment_0, NULL);
@@ -45,7 +44,6 @@ int main() {
     printf("Global variable %d\n", counter);
     exit(EXIT_SUCCESS);
 }
-
 
 void *increment_0() {
     int t0_is_incrementing, t1_t2_are_waiting;
@@ -72,7 +70,6 @@ void *increment_0() {
     }
 }
 
-
 void *increment_1() {
 
     int t1_is_incrementing, t0_t2_are_waiting;
@@ -98,7 +95,6 @@ void *increment_1() {
         }
     }
 }
-
 
 void *increment_2() {
 

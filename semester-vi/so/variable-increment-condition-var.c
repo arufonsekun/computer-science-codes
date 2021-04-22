@@ -12,7 +12,7 @@
 #include <pthread.h>
 #include <unistd.h>
 
-#define MAX 5
+#define MAX 
 
 int counter = 0;
 
@@ -25,7 +25,6 @@ void *increment_1();
 void *increment_2();
 
 pthread_t Thread0, Thread1, Thread2, Thread3;
-
 
 int main() {
     
@@ -43,7 +42,6 @@ int main() {
     exit(EXIT_SUCCESS);
 }
 
-
 void *manager() {
     for (;;) {
         pthread_mutex_lock(&mutex);
@@ -52,12 +50,10 @@ void *manager() {
             pthread_mutex_unlock( &mutex );
             pthread_cond_signal(&incrementer0);
         }
-        if(counter >= MAX) return(NULL);
         if (counter % 3 == 1) {
             pthread_mutex_unlock( &mutex );
             pthread_cond_signal(&incrementer1);
         }
-        if(counter >= MAX) return(NULL);
         if (counter % 3 == 2) {
             pthread_mutex_unlock( &mutex );
             pthread_cond_signal(&incrementer2);
@@ -65,7 +61,6 @@ void *manager() {
         if(counter >= MAX) return(NULL);
     }
 }
-
 
 void *increment_0() {
     for (;;) {
@@ -77,7 +72,6 @@ void *increment_0() {
         if(counter >= MAX) return(NULL);
     }
 }
-
 
 void *increment_1() {
     for (;;) {
