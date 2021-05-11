@@ -27,31 +27,7 @@ double NEW[VECTOR_SIZE];
 double TEMP[VECTOR_SIZE];
 int SLICE_SIZE;
 int N_ITERATIONS;
-bool SHOW_THREAD_MESSAGE = true;
-
-void test_command_line_args(int n_threads, int n_iterations)
-{
-    printf("Amount of threads: %d\n", n_threads);
-    printf("Number of iterations: %d\n", n_iterations);
-}
-
-void test_slice()
-{
-    printf("Slice size: %d\n", SLICE_SIZE);
-}
-
-void test_threads_range(int n_threads)
-{
-    printf("Vector size: %d\n", VECTOR_SIZE);
-    int start = 0, end = 0;
-    for (int i = 0; i < n_threads; i++)
-    {
-        start = i * SLICE_SIZE + 1;
-        end = start + SLICE_SIZE - 1;
-        if (end > (VECTOR_SIZE - 2)) end = VECTOR_SIZE - 2;
-        printf("Thread id %d will compute range [%d:%d]\n", i, start, end);
-    }
-}
+bool SHOW_THREAD_MESSAGE = false;
 
 void fill_vectors()
 {
@@ -141,14 +117,10 @@ int main(int argc, char *argv[])
         int n_threads = atoi(argv[1]);
         int n_iterations = atoi(argv[2]);
         N_ITERATIONS = n_iterations;
-        // test_command_line_args(n_threads, n_iterations);
 
         int N = VECTOR_SIZE - EDGES;
         float s_size = (float)N / (float)n_threads;
         SLICE_SIZE = ceil(s_size);
-        // test_slice();
-
-        // test_threads_range(n_threads);
         
         fill_vectors();
         print_vector();
