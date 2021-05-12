@@ -3,8 +3,9 @@
     Matrícula: 1811100034
     Semestre: 2020.2
     gcc (GCC) 10.2.0
-    Compilar: gcc -o one-d-iterative-averaging one-d-iterative-averaging.c -lpthread -lm
-    Executar: ./one-d-iterative-averaging
+    Compile: gcc -o one-d-iterative-averaging one-d-iterative-averaging.c -lpthread -lm
+    Run: ./one-d-iterative-averaging 5 100 > output
+    Check output: gvim output
 */
 
 #include <pthread.h>
@@ -17,7 +18,7 @@
 #include <stdbool.h>
 #include <math.h>
 
-#define VECTOR_SIZE 30
+#define VECTOR_SIZE 10000
 #define EDGES 2
 
 static pthread_barrier_t barrier;
@@ -43,10 +44,7 @@ void print_vector()
 {
     for (int i = 0; i < VECTOR_SIZE; i++)
     {
-        if (NEW[i] > 0)
-            printf("%f ", NEW[i]);
-        else
-            printf("%d ", 0);
+        printf("%f ", NEW[i]);
     }
     printf("\n");
 }
@@ -74,7 +72,7 @@ void *compute(void *t_id)
     {
         for (int j=start; j <= end; j++)
         {
-            NEW[j] = ((double)OLD[j-1] + (double)OLD[j+1]) / 2;
+            NEW[j] = (OLD[j-1] + OLD[j+1]) / 2;
         }
         barrier_state = pthread_barrier_wait(&barrier);
 
