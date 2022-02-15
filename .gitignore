@@ -4,6 +4,10 @@
 ## Java
 **.class
 
+## Haskell
+*.hi
+*.o
+
 ## Tex 
 ## Core latex/pdflatex auxiliary files:
 *.aux
