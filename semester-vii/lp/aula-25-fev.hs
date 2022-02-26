@@ -44,3 +44,8 @@ fibo n
     | n == 1 = 1
     | n == 2 = 1
     | n > 2  = fibo (n-2) + fibo (n-1)
+    
+soma:: Int -> Int -> Int
+soma x y = x + y
+let soma2 = soma 2 -- aplicação parcial da função
+soma2 4
