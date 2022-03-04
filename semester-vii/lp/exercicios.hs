@@ -230,7 +230,10 @@ or' _ _ = True
 --          pelo menos dois elementos;
 --     b. a cabeça da lista, se ela contiver apenas um elemento;
 --     c. zero, caso contrário.
-
+patternMatchingList:: [Int] -> Int
+patternMatchingList [x] = x
+patternMatchingList (x: xs) = x + head xs
+patternMatchingList [] = 0
 
 -- 23. Utilize uma função de alta ordem para realizar a contagem
 -- de elementos de uma lista.
