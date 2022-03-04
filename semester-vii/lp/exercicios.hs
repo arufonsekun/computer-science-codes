@@ -95,3 +95,155 @@ electoralClass age
 -- de 7 é 7 × 5 × 3 × 1 = 105 . Defina uma função para calcular o
 -- fatorial duplo usando recursividade.
 
+doubleFat n
+    | n == 1 = 1
+    | n == 2 = 2
+    | n == 3 = 3
+    | n > 3 = n * doubleFat(n-2)
+
+-- 12. Defina uma função recursiva para calcular a potência de um
+-- número, considerando que o expoente é um número natural. Utilize
+-- o método das multiplicações sucessivas:
+power:: Integer -> Integer -> Integer
+power b p = 
+    if p == 0 then 1
+    else b * power b (p-1)
+
+-- 13. Um funcionário de uma empresa recebe aumento salarial anualmente.
+-- O primeiro aumento é de 1,5% sobre seu salário inicial. Os aumentos
+-- subsequentes sempre correspondem ao dobro do percentual de aumento do
+-- ano anterior. Faça uma função onde é informado o salário inicial do
+-- funcionário, o ano de contratação e o ano atual, e calcula e exibe o
+-- seu salário atual.
+-- currentSalary:: Double -> Integer -> Integer -> Fraction
+currentSalary initSal yearHired currentYear = 
+        initSal + initSal * salaryIncrease
+    where
+        yearsWorking = currentYear - yearHired
+        increasePercentage = 2 ** yearsWorking
+        salaryIncrease = 1.5 * increasePercentage / 100
+
+-- 14. Defina uma função chamada ultimo que seleciona o último elemento de
+-- uma lista não vazia, usando as funções do prelúdio.
+ultimo list = last list
+
+-- Verificar tamanho usando pattern matching
+-- O pattern (x:xs) pega o head e o tail da lista.
+tamanho' :: [Int] -> Int
+tamanho' [] = 0
+tamanho' (x:xs) = 1 + tamanho' xs
+
+-- 15. Defina uma função chamada primeiros que seleciona
+-- todos os elementos de uma lista não vazia, exceto o último,
+-- usando as funções do prelúdio.
+primeiros:: [Int] -> [Int]
+primeiros list =
+    if length list == 1 then []
+    else head list : primeiros(tail list)
+
+-- 16. Faça uma função que receba uma lista de elementos e
+-- retorne a soma de todos eles.
+soma:: [Int] -> Int
+soma list =
+    if null list then 0
+    else head list + soma(tail list)
+
+-- 17. Faça uma função que receba duas listas e retorne
+-- outra lista produto destas duas listas, ou seja, cada
+-- posição das listas de entrada devem ser multiplicadas
+-- e armazenadas na mesma posição na lista de saída.
+produto:: [Int] -> [Int] -> [Int]
+produto l1 l2 =
+    if null l1 && null l2 then []
+    else head l1 * head l2 : produto (tail l1) (tail l2)
+
+-- 18. Defina um novo tipo de dado chamado Produto, que permita
+-- armazenar informações sobre:
+--     a. Produto perecível: código, descrição, ano de validade
+--         e se é comestível ou não.
+--     b. Produto não perecível: código, descrição, fabricante,
+--         ano de fabricação.
+-- Faça testes com este novo tipo de dado.
+data Produto = Code String
+    | Description String
+    | PerishableInfo Int Bool
+    | NotPerishableInfo String Int
+    deriving Show
+
+getProdInfo:: Produto -> String
+getProdInfo produto =
+    case produto of
+        Code cod -> cod
+        Description d -> d
+        PerishableInfo _ isEatable -> if isEatable then "Eh comestivel" else "Nao eh comestivel"
+        NotPerishableInfo manufacturer _ -> "Feito por " ++ manufacturer
+
+-- 19. Defina um novo tipo de dado para armazenar a forma de comercialização de um produto,
+-- com duas opções:
+-- a. Unidade
+-- b. Peso
+
+data SaleUnit = Unidade | Peso
+    deriving Show
+
+data Produto' = Code' String
+    | Description' String
+    | PerishableInfo' String Bool SaleUnit
+    | NotPerishableInfo' String String SaleUnit
+    deriving Show
+
+getProdInfo':: Produto' -> String
+getProdInfo' produto =
+    case produto of
+        Code' cod -> cod
+        Description' d -> d
+        PerishableInfo' _ isEatable unit -> if isEatable then "Eh comestivel" else "Nao eh comestivel"
+        NotPerishableInfo' manufacturer manufacturingDate unit -> "Feito por " ++ manufacturer ++ " no dia " ++ manufacturingDate
+-- getProdInfo' (NotPerishableInfo' "Santa Terezinha" "12/02/2022")
+
+-- 20. Faça uma função que receba um produto e o ano atual e verifique se
+-- ele ainda está válido para uso, retornando um valor booleano. Considere
+-- que produtos não perecíveis sempre estão válidos.
+
+isValid:: Produto -> Int -> Bool
+isValid produto currentYear =
+    case produto of
+        Code c -> False
+        Description d -> False
+        PerishableInfo validityDate _ -> 
+            if validityDate < currentYear then False
+            else True
+        NotPerishableInfo _ _-> True
+
+-- 21. Escreva as funções and e or usando casamento de padrões.
+and' :: Bool -> Bool -> Bool
+and' True True = True
+and' _ _ = False
+
+or' :: Bool -> Bool -> Bool
+or' False False = False
+or' _ _ = True
+
+-- 22. Usando casamento de padrão, defina uma função que, dada uma
+-- lista de números, retorna: 
+--     a. a soma dos dois primeiros elementos, se a lista tiver
+--          pelo menos dois elementos;
+--     b. a cabeça da lista, se ela contiver apenas um elemento;
+--     c. zero, caso contrário.
+
+
+-- 23. Utilize uma função de alta ordem para realizar a contagem
+-- de elementos de uma lista.
+conta list =
+    if null list then 0
+    else 1 + conta(tail list)
+
+tamanho conta list = conta list
+-- tamanho conta [2,1,5,1]
+
+-- 24. Utilize uma função de alta ordem para realizar a filtragem
+-- de uma lista de tuplas que contém o nome e o telefone de determinadas pessoas.
+
+getContacts:: (String, String) -> Bool
+getContacts contact = head (fst contact) == 'J'
+-- filter getContacts [("Junior", "8823-5891"), ("Pai", "8837-8954"), ("mae", "8816-0155")]
