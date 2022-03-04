@@ -234,10 +234,12 @@ or' _ _ = True
 
 -- 23. Utilize uma função de alta ordem para realizar a contagem
 -- de elementos de uma lista.
+conta :: Num p => [a] -> p
 conta list =
     if null list then 0
     else 1 + conta(tail list)
 
+tamanho :: (t1 -> t2) -> t1 -> t2
 tamanho conta list = conta list
 -- tamanho conta [2,1,5,1]
 
