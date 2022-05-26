@@ -18,7 +18,6 @@ def compute_adjacency_list(points, problem_file_name):
     shape = (len(points), len(points))
     adjacency_matrix = np.zeros(shape, dtype=int)
 
-    # Se der ruim, usar enumerate aqui
     for point in points:
         index, x1, y1 = point.split(" ")
         print(f"Computing distances for point {index}")
@@ -35,6 +34,6 @@ def compute_adjacency_list(points, problem_file_name):
 
 if __name__ == "__main__":
     problem_files = get_file_list("./problem-instances/")
-    print(problem_files[2])
-    points = read_problem_instance(problem_files[2])
-    compute_adjacency_list(points, problem_files[2])
+    print(problem_files[23])
+    points = read_problem_instance(problem_files[23])
+    compute_adjacency_list(points, problem_files[23])
