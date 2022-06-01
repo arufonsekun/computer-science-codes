@@ -54,6 +54,6 @@ def compute_adjacency_list(points, problem_file_name):
 
 if __name__ == "__main__":
     problem_files = get_file_list("./problem-instances/")
-    print(problem_files[23])
-    points = read_problem_instance("./problem-instances/", problem_files[23])
-    compute_adjacency_list(points, problem_files[23])
+    print(problem_files[0])
+    points = read_problem_instance("./problem-instances/", problem_files[0])
+    compute_adjacency_list(points, problem_files[0])
