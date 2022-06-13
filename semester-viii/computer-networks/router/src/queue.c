@@ -11,6 +11,7 @@ void print_packet(Packet* p) {
     printf("--------------------------------\n");
     printf("Message type: %d\n", p->message_type);
     printf("Source address: %s\n", p->s_address);
+    printf("Source port: %s\n", p->s_port);
     printf("Destination address: %s\n", p->d_address);
     printf("Destination port: %s\n", p->d_port);
     printf("Payload: %s\n", p->payload);
@@ -36,10 +37,12 @@ Pqueue* enqueue(Pqueue* q, Packet p) {
     q1->packet->s_address = (char*) malloc(strlen(p.s_address) * sizeof(char));
     q1->packet->d_address = (char*) malloc(strlen(p.d_address) * sizeof(char));
     q1->packet->d_port = (char*) malloc(strlen(p.d_port) * sizeof(char));
+    q1->packet->s_port = (char*) malloc(strlen(p.s_port) * sizeof(char));
     q1->packet->payload = (char*) malloc(strlen(p.payload) * sizeof(char));
     q1->packet->s_address = p.s_address;
     q1->packet->d_address = p.d_address;
     q1->packet->d_port = p.d_port;
+    q1->packet->s_port = p.s_port;
     q1->packet->payload = p.payload;
     q1->next = NULL;
 

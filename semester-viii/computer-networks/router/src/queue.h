@@ -4,6 +4,7 @@
 typedef struct packet {
     int message_type;
     char* s_address;
+    char* s_port;
     char* d_port;
     char* d_address;
     char* payload;
