@@ -26,6 +26,9 @@
 #define RESPONSE_FAIL -1
 #define SEND_FAIL -1
 
+int SOCKET;
+struct sockaddr_in server_addr, client_addr;
+
 pthread_mutex_t m_input_queue = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t m_output_queue = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t m_general_queue = PTHREAD_MUTEX_INITIALIZER;
@@ -52,6 +55,33 @@ typedef struct router {
     char* port;
 } Router;
 
+void create_socket(void *args) {
+    Router *r = args;
+    SOCKET = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    if (SOCKET == SOCKET_CREATE_FAIL) { 
+        perror("A criação do socket falhou\n");
+        exit(EXIT_FAILURE); 
+    }
+    
+    memset(&server_addr, 0, sizeof(server_addr));
+
+    server_addr.sin_family = AF_INET; // IPv4
+    server_addr.sin_port = htons(atoi(r->port));
+    
+    if (inet_aton(r->ip, &server_addr.sin_addr) == 0) {
+        printf("Deu problema no momento de converter o endereço IP\n");
+        fprintf(stderr, "inet_aton() failed\n");
+        exit(1);  
+    }
+
+    if (bind(SOCKET, (const struct sockaddr *) &server_addr, sizeof(server_addr)) == SOCKET_BIND_FAIL) {
+        perror("Bind do socket falhou\n");
+        perror("É possível que a porta já esteja em uso\n");
+        perror("bind failed"); 
+        exit(EXIT_FAILURE); 
+    }
+}
+
 int main(int argc, char *argv[]) {
     if (argc == 1) {
         printf("Para instanciar um roteador você precisa passar seu ID como argumento.\n");
@@ -65,6 +95,8 @@ int main(int argc, char *argv[]) {
 
     r->port = get_port(link);
     r->ip = get_ip(link_cp);
+
+    create_socket(r);
 
     pthread_create(&t0, NULL, receiver, r);
     pthread_create(&t1, NULL, sender, r);
@@ -185,8 +217,8 @@ void *packet_handler(void *args) {
 
             if (p.message_type == DATA) {
                 // O pacote desenfileirado é para
-                // o roteador atual, então é adicionado
-                // na fila de entrada para ser mostrado posterirmente.
+                // o roteador atual, então adiciona ele
+                // na fila de entrada para ser mostrado posteriormente.
                 if (strcmp(p.d_address, r->ip) == 0 && strcmp(p.d_port, r->port) == 0) {
                     if (pthread_mutex_lock(&m_input_queue) == GET_MUTEX) {
                         if (input_queue_h == NULL) {
@@ -209,7 +241,7 @@ void *packet_handler(void *args) {
                             output_queue_t = enqueue(output_queue_t, p);
                         }
                         pthread_mutex_unlock(&m_output_queue);
-                        // Passa o controle para a thread Sender,
+                        // Passa o controle para o Sender,
                         // para fazer o envio da nova mensagem.
                         sem_post(&Sender);
                     }
@@ -225,44 +257,21 @@ void *packet_handler(void *args) {
 
 void *receiver(void *args) {
     Router* r = args;
-    struct sockaddr_in servaddr, cliaddr;
 
-    int sockfd, recv_len, clieaddr_len;
-    clieaddr_len = sizeof(cliaddr);
+    struct sockaddr_in client_addr;
+    int recv_len, client_addr_len;
+    client_addr_len = sizeof(client_addr);
     
     char buffer[MESSAGE_LENGTH];
-    char response[] = {"Pacote recebido!\n"};
 
-    if ((sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == SOCKET_CREATE_FAIL) { 
-        perror("receiver: A criação do socket falhou\n");
-        exit(EXIT_FAILURE); 
-    }
-    memset(&servaddr, 0, sizeof(servaddr));
-    memset(&cliaddr, 0, sizeof(cliaddr));
+    memset(&client_addr, 0, client_addr_len);
 
-    servaddr.sin_family = AF_INET; // IPv4
-    servaddr.sin_port = htons(atoi(r->port));
-    
-    if (inet_aton(r->ip, &servaddr.sin_addr) == 0) {
-        printf("receiver: Deu problema no momento de converter o endereço IP\n");
-        fprintf(stderr, "inet_aton() failed\n");
-        exit(1);  
-    }
-
-    if (bind(sockfd, (const struct sockaddr *) &servaddr, sizeof(servaddr)) == SOCKET_BIND_FAIL) {
-        perror("receiver: Bind do socket falhou\n");
-        perror("receiver: É possível que a porta já esteja em uso\n");
-        perror("bind failed"); 
-        exit(EXIT_FAILURE); 
-    }
-
-    int len, n;
     while(1) {
         fflush(stdout);
         memset(buffer, '\0', MESSAGE_LENGTH);
 
-        // recvfrom é bloqueante, então é preciso se preocupar com o while(1)
-        if (recv_len = recvfrom(sockfd, buffer, MESSAGE_LENGTH, 0, (struct sockaddr*) &cliaddr, &clieaddr_len) == RECEIVE_MESSAGE_ERROR) {
+        // recvfrom é bloqueante, então não é preciso se preocupar com o while(1)
+        if (recv_len = recvfrom(SOCKET, buffer, MESSAGE_LENGTH, 0, (struct sockaddr*) &client_addr, &client_addr_len) == RECEIVE_MESSAGE_ERROR) {
             printf("receiver: Houve um problema na hora de receber a mensagem\n");
         }
 
@@ -273,10 +282,10 @@ void *receiver(void *args) {
         p.payload = (char*) malloc(sizeof(char) * 100);
         p.d_port = (char*) malloc(sizeof(char) * 10);
         p.s_port = (char*) malloc(sizeof(char) * 10);
-        p.s_address = inet_ntoa(cliaddr.sin_addr);
+        p.s_address = inet_ntoa(client_addr.sin_addr);
         p.d_address = r->ip;
         p.d_port = r->port;
-        sprintf(p.s_port, "%u", ntohs(cliaddr.sin_port));
+        sprintf(p.s_port, "%u", ntohs(client_addr.sin_port));
         strcpy(p.payload, buffer);
         p.message_type = DATA;
 
@@ -290,36 +299,25 @@ void *receiver(void *args) {
             }
             pthread_mutex_unlock(&m_general_queue);
             // Passa o comando para o packet_handler
-            // para que este trate o pacote de acordo com
+            // para que este trate o novo pacote de acordo com
             // o seu tipo.
             sem_post(&Packet_handler);
-        }
-
-        // Envia resposta para o roteador que iniciou a comunicação
-        if (sendto(sockfd, response, strlen(response), 0, (struct sockaddr*) &cliaddr, clieaddr_len) == RESPONSE_FAIL) {
-            printf("receiver: Houve um problema no momento de responder a mensagem\n");
         }
         printf("\n→ Você tem uma nova mensagem \\0/\n");
         printf("→ Digite sua ação: ");
     }
-    close(sockfd);
+    close(SOCKET);
 }
-
 
 void *sender(void *args) {
     Router *r = args;
 
-    struct sockaddr_in si_other;
-    int s, i, slen = sizeof(si_other);
-    char response[RESPONSE_LENGTH];
+    struct sockaddr_in client_addr;
+    int client_addr_len = sizeof(client_addr);
     char message[MESSAGE_LENGTH];
 
-    if ((s=socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == SOCKET_CREATE_FAIL) {
-        perror("sender: A criação do socket falhou\n");
-        exit(EXIT_FAILURE); 
-    }
-    memset((char*) &si_other, 0, sizeof(si_other));
-    si_other.sin_family = AF_INET;
+    memset((char*) &client_addr, 0, sizeof(client_addr));
+    client_addr.sin_family = AF_INET;
 
     while(1) {
         sem_wait(&Sender);
@@ -327,60 +325,21 @@ void *sender(void *args) {
             Packet* p = output_queue_h->packet;
             strcpy(message, p->payload);
         
-            si_other.sin_port = htons(atoi(p->d_port));
+            client_addr.sin_port = htons(atoi(p->d_port));
 
-            if (inet_aton(r->ip, &si_other.sin_addr) == 0) {
+            if (inet_aton(p->d_address, &client_addr.sin_addr) == 0) {
                 printf("sender: Deu problema no momento de converter o endereço IP\n");
                 fprintf(stderr, "inet_aton() failed\n");
                 exit(1);  
             }
 
-            if (sendto(s, message, strlen(message), 0, (struct sockaddr*) &si_other, slen) == SEND_FAIL) {
+            if (sendto(SOCKET, message, strlen(message), 0, (struct sockaddr*) &client_addr, client_addr_len) == SEND_FAIL) {
                 printf("sender: Houve algum problema no envio da mensagem\n");
-            }
-
-            memset(response, '\0', RESPONSE_LENGTH);
-
-            // Lê a resposta do outro roteador
-            if (recvfrom(s, response, RESPONSE_LENGTH, 0, (struct sockaddr*) &si_other, &slen) == RESPONSE_FAIL) {
-                printf("sender: Roteador de destino teve algum problema ao responder a mensagem ;(\n");
             }
 
             output_queue_h = dequeue(output_queue_h);
             pthread_mutex_unlock(&m_output_queue);
-
-            // Cria o pacote para armazenar a resposta
-            Packet p1;
-            p1.s_address = (char*) malloc(sizeof(char) * 100);
-            p1.d_address = (char*) malloc(sizeof(char) * 100);
-            p1.payload = (char*) malloc(sizeof(char) * 100);
-            p1.d_port = (char*) malloc(sizeof(char) * 10);
-            p1.s_port = (char*) malloc(sizeof(char) * 10);
-            p1.s_address = inet_ntoa(si_other.sin_addr);
-            p1.d_address = r->ip;
-            p1.d_port = r->port;
-            sprintf(p1.s_port, "%u", ntohs(si_other.sin_port));
-            strcpy(p1.payload, response);
-            p1.message_type = DATA;
-
-            // Adiciona o pacote recebido na fila geral.
-            if (pthread_mutex_lock(&m_general_queue) == GET_MUTEX) {
-                if (general_queue_h == NULL) {
-                    general_queue_h = enqueue(general_queue_h, p1);
-                    general_queue_t = general_queue_h;
-                } else {
-                    general_queue_t = enqueue(general_queue_t, p1);
-                }
-                
-                
-                pthread_mutex_unlock(&m_general_queue);
-                // Passa o comando para o packet_handler
-                // para que este trate o pacote de acordo com
-                // o seu tipo.
-                sem_post(&Packet_handler);
-            }
-            printf("\n→ Você tem uma nova mensagem \\0/");
         }
     }
-    close(s);
+    close(SOCKET);
 }
