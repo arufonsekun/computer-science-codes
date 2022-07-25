@@ -34,6 +34,9 @@ def make_span(solution, adjacency_matrix):
         x = solution[i]
         y = solution[i+1]
         cost += adjacency_matrix[x][y]
+    x = solution[0]
+    y = solution[amount_of_cities-1]
+    cost += adjacency_matrix[x][y]
     return cost
 
 
@@ -136,9 +139,9 @@ if __name__ == "__main__":
     countries = {
         # "dj38.tsp": "Djibouti",
         # "qa194.tsp": "Qatar",
-        "uy734.tsp": "Uruguay",
+        # "uy734.tsp": "Uruguay",
         "wi29.tsp": "Western Sahara",
-        "zi929.tsp": "Zimbabwe",
+        # "zi929.tsp": "Zimbabwe",
     }
 
     for file,country in countries.items():
