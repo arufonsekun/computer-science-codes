@@ -137,11 +137,11 @@ def write_results_header():
 
 if __name__ == "__main__":
     countries = {
-        # "dj38.tsp": "Djibouti",
-        # "qa194.tsp": "Qatar",
-        # "uy734.tsp": "Uruguay",
+        "dj38.tsp": "Djibouti",
+        "qa194.tsp": "Qatar",
+        "uy734.tsp": "Uruguay",
         "wi29.tsp": "Western Sahara",
-        # "zi929.tsp": "Zimbabwe",
+        "zi929.tsp": "Zimbabwe",
     }
 
     for file,country in countries.items():
